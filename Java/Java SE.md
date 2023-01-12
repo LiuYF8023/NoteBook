@@ -1,0 +1,4540 @@
+# Java SE
+
+[TOC]
+
+
+
+# 阅读笔记
+
+# 第一章 Java语言概述与开发环境
+
+## 1.1 Java语言的发展简史
+
+JDK1.0 主要包括JRE和JDK两部分
+
+JDK1.1 增加了JIT即时编译系统，JIT与传统编译器的区别在于他能够将之前编译过的指令保存。
+
+JDK1.2 发布JSP/Servlet ESP规范，并且将Java分为了J2EE、J2SE、J2ME三个版本
+
+JDK1.4 最为成熟的版本，大量框架涌现
+
+JDK1.5 增加泛型等，并且发布新的企业规范
+
+2009.4.20 收购
+
+Java SE 7 oracle发布的第一个版本
+
+Java SE 8 新增lambda表达式
+
+。。。
+
+## 1.2 Java程序运行机制
+
+### 1.2.1 高级语言的运行机制
+
+java程序先编译，后解释。所以称其为解释性语言和编译型语言都不为过。
+
+### 1.2.2 Java程序的运行机制和JVM
+
+编译过程
+
+Java源程序（.java）经过javac编译生成（.class）文件，此时的class文件不可执行，并且与平台无关
+
+解释过程
+
+使用java解释器（JVM）解释，生成指定平台的机器码
+
+**JVM向上提供给java字节码文件的借口完全相同，向下适应不同平台的接口互不相同。**这也是为什么java具有很好的跨平台特性。
+
+## 1.3 开发Java的准备
+
+JRE和JDK有什么区别？
+
+JRE是运行时环境，如果只是运行java程序，那么不需要下载jdk
+
+JDK是Java标准版开发套件，如果进行java程序的开发，那么一定安装JDK
+
+## 1.4 安装
+
+## 1.5 Java程序的基本规则
+
+Java程序必须以类的形式存在，类是Java程序的最小程序单位。
+
+由于一个Java源文件中文件名必须与public类相同，所以只能定义一个public类
+
+## 1.7 Java的垃圾回收机制
+
+JRE负责回收哪些不再使用的内存（堆内存）。
+
+Java的堆内存是一个运行时数据区，存放的是正在运行的应用程序所建立的所有对象。
+
+垃圾回收机制是一种动态内存管理技术。
+
+在Java中，如果没有引用变量指向原先分配给某个对象的内存时，该内存便成为垃圾。
+
+# 第二章 理解面向对象
+
+## 2.1 面向对象
+
+### 2.1.1 结构化程序设计简介
+
+结构化分析、结构化设计、结构化编程
+
+### 2.1.2 程序的三种结构
+
+### 2.1.3 面向对象程序设计简介
+
+### 2.1.4 面向对象的基本特征
+
+注意：抽象不是面向对象的特征
+
+Java不支持多继承
+
+基于对象：简言之就是只能使用封装好的对象，而不能自己定义对象，例如JavaScript就是基于对象的
+
+# 第三章 数据类型和运算符
+
+## 3.1 注释
+
+javadoc文档提取
+
+## 3.2 标识符和关键字
+
+### 3.2.1 分隔符
+
+### 3.2.2 Java 9的标识符规则
+
+### 3.2.3 Java关键字
+
+## 3.3 数据类型分类
+
+## 3.4 基本数据类型
+
+byte short int long char float double
+
+1       2      4    8      2      4       8
+
+### 3.4.1 整型
+
+```java
+
+public class demo1 {
+    public static void main(String[] args) {
+        byte b = 54;
+        System.out.println(b);
+
+//        long a1 = 9999999999;
+        long a2 = 9999999999L;
+        System.out.println(a2);
+    }
+}
+```
+
+对于byte和short来说，如果赋值给他的数在其范围内，则可以正常赋值
+
+对于long来说，如果没有超过int的范围，那么默认赋值的是int类型，只不过会转成long
+
+但是，如果赋值的数超过了int的范围，而又没有指定其为L （long的标识），那么会报错。
+
+### 3.4.2 字符型
+
+\r 是换行符，简单来说前面的都不会打印（可能也与jdk版本有关）
+
+```java
+public static void main(String[] args) {
+    String s = "abcde\r123\r\r\r\r\r1234";
+    System.out.println(s); // 输出1234
+    String s2 = s;
+    System.out.println(s2); // 输出1234
+    System.out.println(s.equals(s2)); // true
+    System.out.println("abcde\r\r\r\r\r\r1234");
+}
+```
+
+但是“1234” == “1234\t1234” 不是恒等的
+
+### 3.4.3 浮点型
+
+正无穷大和负无穷大
+
+```java
+double a = Double.POSITIVE_INFINITY;
+System.out.println(a); //Infinity
+double b = Double.NEGATIVE_INFINITY;
+System.out.println(b);//-Infinity
+```
+
+### 3.4.4 数值中使用下划线
+
+为了防止数字太多而看花眼，java7中就已经允许使用下划线
+
+```java
+public static void main(String[] args) {
+        int bval = 0B1000_0000_0000_0000_0000_0000_0000_0011;
+        double pi = 3.14_15_92_65_36;
+        System.out.println(bval);// -2147483645
+        System.out.println(pi);//3.1415926536
+    }
+```
+
+### 3.4.5 布尔型
+
+布尔型一般认为占用一个字节
+
+## 3.5 基本数据类型转换
+
+### 3.5.1 自动类型转换
+
+转换规则如下，主要有两条规则转换线
+
+第一条：byte short int long float double
+
+第二条：char int long float double
+
+这意味着char和byte和short之间不能自动类型转换。
+
+### 3.5.2 强制类型转换
+
+注意一个问题
+
+`float x = 3.5;`是会报错的，因为3.5默认是double类型，所以必须加f
+
+```java
+float x = 3.5F;
+```
+
+字符串转换为int类型的方法
+
+```java
+String s = "123";
+int i = Integer.parseInt(s);
+System.out.println(i);
+```
+
+但是如果s=“abc”，会报错。
+
+### 3.5.3 表达式的类型提升
+
+两个规则
+
+所有的byte、short、char自动被提升到int类型
+
+算术表达式的数据类型自动提升到与表达式中最高等级操作数相同的类型
+
+一个坑，下面的代码是有错误的，因为a-2会自动把short提升为int类型，所以再赋值给short会报错。
+
+```java
+short a = 4;
+a = a - 2;
+```
+
+## 3.6 直接量
+
+直接量就是在程序中通过源代码直接给出的值。
+
+### 3.6.1 直接量的类型
+
+通常来说只有下面的三种类型能够直接指定直接量
+
+基本类型、字符串类型和null类型
+
+### 3.6.2 直接量的赋值
+
+String类型的直接量不能够赋值给其他的变量
+
+null类型的直接量可以直接赋给任何引用类型的变量，包括String类型
+
+boolean类型的变量只能赋值给其他类型的变量
+
+字符串直接量：当程序第一次使用某个字符串直接量时，Java会使用常量池来缓存该字符串直接量，如果程序后面的部分需要用到该字符串直接量，那么会直接使用**常量池中**的字符串直接量。
+
+String类是不可变类？
+
+```java
+public static void main(String[] args) {
+        String s0 = "hello world";
+        String s1 = "hello world";
+        System.out.println(s0 == s1);
+        String s3 = "hello " + "world";
+        System.out.println(s3 == s0);
+    }
+```
+
+在这个例子中，由于Java能够保证每个字符串常量只有一个。所以s0和s1都是字符串常量，并且在编译期就确定，所以判断二者是否恒等一定为真。而s3链接为一个字符串，其也是字符串常量。所以也是恒为true。
+
+## 3.7 运算符
+
+### 3.7.1 算术运算符
+
+这里需要注意有关求余数运算
+
+第一个原则：如果两个操作数都是整数，那么第二个操作数不能为0
+
+第二个原则：如果两个操作数中有至少一个为浮点数，那么允许第二个操作数为0或0.0
+
+```java
+public static void main(String[] args) {
+        System.out.println(5.0 % 0); // NaN
+        System.out.println(5.0 % 0.0);// NaN
+        System.out.println(5 % 0.0);// NaN
+        System.out.println(5 % 0);// 异常
+    }
+```
+
+### 3.7.2 赋值运算符
+
+支持连续赋值
+
+### 3.7.3 位运算符
+
+& 按位与，同为1才是1
+
+| 按位或，只要有一个为1即可为1
+
+~ 按位非
+
+^ 按位异或，两位相同返回0，不同返回1
+
+<< 左移运算符
+
+>> 右移运算符
+
+<<< 无符号左移
+
+这里举个例子看一下，无符号右移。无符号右移，填充位以0填充。
+
+```java
+System.out.println(-5 >>> 2); // 1073741822
+```
+
+移位运算符还需要遵循的一些规则
+
+低于int的总是先自动转为int类型后再移位
+
+对于int整数移位a>>b，如果b > 32，那么会先用b对32求余数，然后再移相应的位数。所以a>>33和a>>1是一样的。
+
+```java
+int a = 8;
+int b = 8;
+System.out.println(a >> 1  == b >> 33);
+```
+
+### 3.7.4 扩展后的赋值运算符
+
+扩展后的运算符是指：+=、-=这种
+
+注意：a = a+5 和 a+=5 虽然结果是一样的，但是底层实现的方式有所不同，所以最好是用扩展后的运算符。
+
+### 3.7.5 比较运算符
+
+基本类型的变量、值不能和引用类型的变量、值使用==进行比较
+
+boolean类型的变量、值不能与其他任意类型的变量、值使用==进行比较
+
+如果两个引用类型之间没有父子继承关系，那么他们的变量也不能使用==进行比较，下面的例子就会出现报错。
+
+```java
+String s = new String("hello");
+List<Integer> l = new ArrayList<Integer>();
+System.out.println(s == l);
+```
+
+### 3.7.6 逻辑运算符
+
+注意&&和&，&如果表示逻辑运算符，此时称为不短路与，不会短路，而&&会短路。
+
+注意||和|，|如果表示逻辑运算符，此时称为不短路或，不会短路，而||会短路。
+
+！非，只需要一个操作符
+
+^ 异或，当两个操作数不同时才会返回true
+
+```java
+boolean bb = false;
+boolean aa = true;
+System.out.println(bb ^ aa); // true
+```
+
+### 3.7.7 三目运算符
+
+三目运算符不能有多个判断语句，但是可以进行嵌套。
+
+### 3.7.8 运算符的结合性和优先级
+
+# 第四章 流程控制与数组
+
+## 4.1 顺序结构
+
+## 4.2 分支结构
+
+## 4.3 循环结构
+
+## 4.4 控制结构
+
+## 4.5 数组类型
+
+### 4.5.1 数组也是一种类型
+
+一个数组智能存放同一种类型的数据
+
+### 4.5.2 定义数组
+
+Java通常支持两种语法格式来定义数组
+
+```java
+int[] arr = new int[1];
+int arr2[] = new int[1];
+```
+
+第一种通常用的比较多。
+
+注意，当我们写
+
+```java
+int[] arr
+```
+
+的时候，只是定义了一个引用变量，此时还没有指向任何有效的内存空间
+
+### 4.5.3 数组的初始化
+
+① 静态初始化
+
+静态初始化就是只需要我们指定数组元素，不需要指定长度
+
+② 动态初始化
+
+动态初始化只需要我们指定数组的大小，系统会为数组自动指定对应数据类型的初值。
+
+### 4.5.4 使用数组
+
+### 4.5.5 foreach循环
+
+语法格式
+
+```java
+foreach(type variableName:array | collection){
+	
+}
+```
+
+foreach不需要知道数组的长度，也不需要根据索引来访问。
+
+foreach最好不要进行赋值的操作，只用来进行数组遍历，看下面这个例子
+
+```java
+public static void main(String[] args) {
+        int[] arr = new int[]{1,2,3,4};
+        for(int temp : arr) {
+           temp = 2; 
+        }
+        System.out.println(arr[0]); // 1
+    }
+```
+
+按道理来说可能把数组进行全赋值为2，实际上并不是，temp只是一个临时的变量。
+
+## 4.6 深入数组
+
+### 4.6.1 内存中的数组
+
+引用变量是访问真实对象的根本方式。
+
+方法中的变量会逐个放入到栈内存里，随着方法的结束，这个方法的内存栈也会销毁。
+
+在程序中创建一个对象的时候，这个对象是保存在堆内存中的，堆内存中的对象不会随着方法的结束而销毁。
+
+### 4.6.2 基本类型数组的初始化
+
+```java
+int[] iArr;
+iArr= new int[5];
+```
+
+从内存的角度来剖析上面的这段
+
+首先，执行 int[] iArr; 时，会在栈内存中开辟一个用于存放空引用iArr的地址，此时并未指向任何有效的内存。
+
+然后，执行 iArr= new int[5]; 此时会在堆内存中开辟相应大小的数组空间，然后将iArr引用指向堆内存的数组空间。
+
+### 4.6.3 引用类型数组的初始化
+
+![Untitled](./pictures/Untitled.jpeg)
+
+```java
+package com.lyf.chap4;
+
+public class demo3 {
+    public static void main(String[] args) {
+        Person[] students;
+        students = new Person[2];
+        Person zhang = new Person();
+        zhang.age = 11;
+        zhang.height = 177;
+
+        Person lee = new Person();
+        lee.age = 13;
+        lee.height = 127;
+
+        students[0] = zhang;
+        students[1] = lee;
+
+        lee.info();
+        students[1].info();
+    }
+}
+
+class Person {
+    public int age;
+    public double height;
+
+    public void info() {
+        System.out.println("age =" + age + " height = " + height);
+    }
+}
+```
+
+当我们执行 Person[] students; 时，此时只在栈内存中定义了一个引用变量，并未指向任何内存区域。
+
+students = new Person[2]; 此时在堆内存中开辟了一个大小为2的Person类型的空间
+
+```java
+Person zhang = new Person();
+zhang.age = 11;
+zhang.height = 177;
+```
+
+栈中创建zhang引用，并在堆中分配内存。
+
+```java
+students[0] = zhang;
+```
+
+student[0]此时存放的是zhang对象在堆内存中的地址，所以下面的式子成立。
+
+```java
+students[0].age == zhang.age
+```
+
+### 4.6.4 没有多维数组
+
+### 4.6.5 Java 8增强的工具类：Arrays
+
+binarySearch() 通过二分查找某个值，可以指定范围
+
+```java
+int[] arr = new int[]{1, 2, 3, 4, 5, 6, 7, 8};
+System.out.println(Arrays.binarySearch(arr, 0, arr.length,7));
+```
+
+copyOf() 将一个数组进行复制，成为一个新的数组。
+
+```java
+int[] arr = new int[]{1, 2, 3, 4, 5, 6, 7, 8};
+System.out.println(arr); // [I@2d98a335
+        
+int[] arr2 = arr;
+System.out.println(arr2); //[I@2d98a335
+
+int[] arr3 = Arrays.copyOf(arr, arr2.length);
+System.out.println(arr3); //[I@16b98e56
+```
+
+注意，int[] arr2 = arr; 的结果是arr和arr2的地址是一样的，也就是两个引用都指向同一个堆内存。
+
+而arr3的这种方法是复制到了一块新的内存。
+
+fill() 将一个范围内的数组元素填充为指定的值
+
+```java
+int[] arr4 = new int[5];
+Arrays.fill(arr4, 0, arr4.length,10);
+```
+
+sort() 对数组元素进行排序
+
+```java
+int[] arr5 = new int[]{3,5,2,7,4,6,7,5,6,7};
+Arrays.sort(arr5);
+```
+
+输出数组元素值的方式
+
+```java
+System.out.println(Arrays.toString(arr5));
+```
+
+System类中提供的数组复制的方法
+
+```java
+public class demo5 {
+    public static void main(String[] args) {
+        int[] x = new int[]{1, 2, 3, 4, 5, 6, 7, 8};
+        int[] y = new int[8];
+        System.arraycopy(x, 0, y, 0, 8);
+        System.out.println(Arrays.toString(y));
+    }
+}
+
+```
+
+还有一些其他的方法，利用CPU的并行提高效率，暂时用不到。
+
+# 第五章 面向对象（上）
+
+多个构造器如果包含了相同的初始化代码，可以把他们放到普通初始化块内完成，并且java还提供了一种静态初始化代码块，用于初始化类，在类的初始化阶段被执行。
+
+如果继承树中的某个类被初始化时，系统会同时初始化该类的所有父类。
+
+## 5.1 类和对象
+
+类是一种引用类型
+
+### 5.1.1 定义类
+
+对于类名，每个单词首字母大写，其他字母全部小写。
+
+> 需要注意的是，static修饰的成员（**静态成员**）不能访问没有static修饰的成员（**非静态成员**），没有static修饰的成员（**非静态成员**）能够访问static修饰的成员（**静态成员**）。
+> 
+
+```java
+public class demo2 {
+    public static void main(String[] args) {
+add(); // 可以访问
+    }
+
+    public static void add(){
+//        div(); 报错
+    }
+
+    public void div(){
+add();
+    }
+}
+```
+
+**1）成员变量**
+
+如果某个类没有定义构造器，那么系统会给一个默认的构造器，但是如果定义了构造器，那么不会再有默认的构造器
+
+成员变量的命名规则，一般第一个单词的首字母小写，后面每个单词的首字母大写，其余的全部小写，可以赋值一个默认值。
+
+**2）方法**
+
+对于修饰符来说，public private protected三个最多同时出现一个，final和abstract最多出现一个，static可以与之前的组合起来修饰方法。
+
+**static修饰的成员变量或者方法属于类的本身，而不是属于类的单个实例。不用static修饰的方法和成员变量，属于类的实例而不是类的本身。**
+
+那么有一个问题，如果类中定义了一个count，用static修饰，那么我实例化两个对象去修改这个值，是独立的还是同步的？
+
+**答案是：不同的对象都会修改这个值，并且不是独立修改的，是共同修改！ 所以说，论文的代码，如果用的static修饰的，很可能创建了多个对象都是改的同一个值！**
+
+① 不用static修饰的情况 输出 1  1
+
+```java
+public class Demo1 {
+    public int counter = 0;
+
+    public Demo1(){
+
+    }
+    public void setCounter() {
+        counter += 1;
+    }
+
+    public int getCounter() {
+        return counter;
+    } 
+}
+
+public class Test1 {
+    public static void main(String[] args) {
+        Demo1 demo11 = new Demo1();
+        Demo1 demo12 = new Demo1();
+
+        demo11.setCounter();
+        System.out.println(demo11.counter);
+        demo12.setCounter();
+        System.out.println(demo12.counter);
+    }
+}
+```
+
+② 用static修饰的情况 输出1 2 
+
+```java
+public class Demo1 {
+    public static int counter = 0;
+
+    public Demo1(){
+        
+    }
+    public void setCounter() {
+        Demo1.counter += 1;
+    }
+
+    public int getCounter() {
+        return counter;
+    }
+}
+
+public class Test1 {
+    public static void main(String[] args) {
+        Demo1 demo11 = new Demo1();
+        Demo1 demo12 = new Demo1();
+
+        demo11.setCounter();
+        System.out.println(Demo1.counter);
+        demo12.setCounter();
+        System.out.println(Demo1.counter);
+    }
+}
+```
+
+**3）构造器**
+
+构造器可以由 public private protected的其中之一修饰。用private修饰的类只能自己使用，没办法在其他类中创建该类的对象。比如下面这种写法。
+
+```java
+public class Demo3 {
+    private int count;
+    private Demo3(){
+        this.count = 0;
+    }
+    public static void main(String[] args) {
+        Demo3 demo3 = new Demo3();
+        demo3.count++;
+        System.out.println(demo3.count);
+    }
+}
+```
+
+### 5.1.2 对象的产生和使用
+
+static修饰的成员变量或方法，可以使用类也可以使用实例对象进行调用，没有使用static修饰的成员变量或方法，只能够通过实例对象进行调用。
+
+### 5.1.3 对象、引用和指针
+
+当我们在创建对象的时候，栈中存储的只是对象的引用地址，真正的对象存储在堆内存中，并且对象的成员变量数据实际也是放在堆内存，以引用的方式指向这些区域。并且，不允许程序员直接访问堆内存，只能通过引用的方式进行访问，（数组和对象都是如此）
+
+> 堆内存中的对象可以有多个引用，多个引用变量可以指向同一个对象
+> 
+
+```java
+Person p = new Person();
+Person p2 = p;
+```
+
+上面这个代码，p和p2都指向同一块堆内存，所以不管使用哪个引用，修改的都是同一块内存区域。
+
+> 如果某个堆内存对象没有任何变量指向，那么该内存将会被回收。
+> 
+
+### 5.1.4 对象的this引用
+
+this的位置不同，作为对象的默认引用有两种情形
+
+- 构造器中引用该构造器正在初始化的对象
+- 在方法中引用调用该方法的对象（java允许对象的一个方法调用另一个方法）
+
+```java
+public class Demo4 {
+    private int count;
+
+    public Demo4(int count) {
+        this.count = count; // 构造器中引用该构造器正在初始化的对象
+    }
+
+    public void func1(){
+        System.out.println("something");
+    }
+
+    public void func2(){
+        this.func1(); // 在方法中引用调用该方法的对象 省略this也是可以的
+    }
+}
+```
+
+> 可以把this当做普通方法的返回值，返回的类型是当前类的对象。这样可以多次连续调用同一个方法。
+> 
+
+## 5.2 方法详解
+
+### 5.2.1 方法的所属性
+
+static修饰的方法属于这个类，所以使用该类的任何对象调用这个方法时都会得到相同的执行结果。
+
+使用不同对象调用同一个普通方法可能会得到不同的结果。
+
+### 5.2.2 方法的参数传递机制
+
+java方法的参数传递方式只有一种：**值传递**。传入的是复制品，参数本身不会受到任何影响。
+
+首先我们来看一个经典的例子，交换两个数值（属于数值类型的）
+
+```java
+public class Demo5 {
+    public static void swap(int a,int b){
+        int temp = a;
+        a = b;
+        b = temp;
+        System.out.println("交换结束之后，变量a的值" + a + "：变量b的值" + b);
+    }
+    public static void main(String[] args) {
+        int a = 6;
+        int b = 9;
+swap(a,b);
+        System.out.println("交换结束之后，变量a的值" + a + "：变量b的值" + b);
+    }
+}
+```
+
+![Untitled](./pictures/Untitled.png)
+
+引用类型的交换
+
+```java
+
+public class Demo6 {
+    public static void swap(DataWarp dw){
+        int temp = dw.a;
+        dw.a = dw.b;
+        dw.b = temp;
+        System.out.println("交换结束之后，变量a的值" + dw.a + "：变量b的值" + dw.b);
+    }
+    public static void main(String[] args) {
+        DataWarp dw = new DataWarp();
+        dw.a = 6;
+        dw.b = 9;
+swap(dw);
+        System.out.println("交换结束之前，变量a的值" + dw.a + "：变量b的值" + dw.b);
+    }
+}
+
+class DataWarp{
+    int a;
+    int b;
+}
+```
+
+![Untitled](./pictures/Untitled%201.png)
+
+为什么会发生这样？
+
+首先，当我们在main中创建对象，我们在main的栈中放入的是dw对象的引用，在堆中真正的创建了一块内存区域，用来存放a和b两个值。当我们调用swap，在swap方法的栈中，我们也有一个dw对象的引用，而且也是指向了堆中同一个区域，所以操作的都是同一个区域
+
+![Untitled](./pictures/Untitled%202.png)
+
+通过地址来看，实际是一样的。
+
+### 5.2.3 形参个数可变的方法
+
+方法指定数量不确定的形参，用三个点进行表示 …
+
+具体可以看看下面这个例子
+
+```java
+public class Demo7 {
+    public static void test(int a,String... books){
+        for (String tmp: books) {
+            System.out.println(tmp);
+        }
+        System.out.println(a);
+    }
+    public static void main(String[] args) {
+test(1,"a","b","c","d","e","f","g","h","i","j");
+    }
+}
+```
+
+### 5.2.4 递归方法
+
+### 5.2.5 方法重载
+
+允许同一个类中定义多个同名的方法，只要形参列表不同就行，如果同一个类中包含了两个或两个以上方法的方法名相同，但是形参列表不同，则被称为方法重载。
+
+- 地用着，方法的所属者，可以是类，也可以是对象
+- 方法名，方法的标识
+- 形参列表，当调用方法时，系统将会根据传入的实参列表匹配
+
+方法名相同，参数列表不同，就是重载。其他部分（返回值类型、修饰符）跟方法重载没关系。
+
+```java
+public class Demo8 {
+    public void test(String book) {
+        System.out.println(1);
+    }
+
+    public void test(String... books) {
+        System.out.println(2);
+    }
+
+    public static void main(String[] args) {
+        Demo8 d = new Demo8();
+        d.test("aa");
+        d.test("aa","bb");
+        d.test(new String[]{"aa"});
+    }
+}
+```
+
+![Untitled](./pictures/Untitled%203.png)
+
+一个参数的时候，默认是调用不是可变参的方法。
+
+## 5.3 成员变量和局部变量
+
+### 5.3.1 成员变量和局部变量是什么
+
+成员变量是指在类中定义的变量，局部变量是指在方法中定义的变量
+
+1）**成员变量**
+
+成员变量又可以细分为
+
+- 实例变量（不用static修饰）：从类的准备阶段开始存在，直到完全销毁这个类
+- 类变量（static修饰）：从类的实例被创建开始存在，直到系统完全销毁这个实例
+
+**2）局部变量**
+
+- 形参：作用域是整个方法
+- 方法局部变量：作用域从该变量定义的位置，到方法的结束
+- 代码块局部变量：代码块中定义该变量的位置，到代码块的结束
+
+### 5.3.2 成员变量的初始化和内存中的运行机制
+
+成员变量，系统会自动为其分配内存空间并初始化
+
+### 5.3.3 局部变量的初始化和内存中的运行机制
+
+系统不会为局部变量进行初始化。
+
+### 5.3.4 变量的使用规则
+
+## 5.4 隐藏和封装
+
+### 5.4.1 理解封装
+
+封装：不允许外部程序直接访问对象内部的信息，而是通过该类所提供的的方法来实现对内部信息的操作和访问。
+
+封装的目的：隐藏类的实现细节、让使用者只能通过预先定义的方法来访问数据、可以进行数据检查、便于修改
+
+### 5.4.2 访问控制符
+
+java一共有四个访问级别，访问控制级从小到大分别是
+
+**private default protected public**
+
+|  | private | default | protected | public |
+| --- | --- | --- | --- | --- |
+| 同一个类中 | √ | √ | √ | √ |
+| 同一个包中 |  | √ | √ | √ |
+| 子类中 |  |  | √ | √ |
+| 全局范围内 |  |  |  | √ |
+
+访问控制符的使用原则
+
+- 绝大部分成员变量都应考虑使用private修饰，少数static修饰、类似全局变量的成员变量才考虑用public
+- 如果某个类用于作为主类，那么这个类的方法只希望被子类使用，那么可以使用protected修饰
+- 希望被其他的类自由调用的方法，应该用public修饰
+
+### 5.4.3 package、import和import static
+
+java允许将一组功能相关的类放在同一个package下，如果希望把一个类放在指定的包结构下，应该在java源程序的第一个非注释行放置如下格式的代码
+
+```java
+package packageName;
+```
+
+源文件使用了package语句，说明该源文件里定义的所有类都属于这个宝，位于包中的每个类的完整类名都应该是包名和类名的组合
+
+### 5.4.4 Java的常用包
+
+- java.lang 这个包下包含了Java语言的核心类，如String、Math、System、Thread等，这个包下的类无需使用import进行导入，系统会自动导入这个包下的所有类
+- java.util 工具类 Arrays、List等
+- [java.net](http://java.net) 网络编程相关的类和接口
+- [java.io](http://java.io) java输入输出编程相关的类和接口
+- java.text java格式化相关的类
+- java.sql java进行jdbc编程的相关类和接口
+- java.awt 包含了抽象窗口工具类
+- java.swing
+
+## 5.5 深入构造器
+
+java必须包含一个或一个以上的构造器
+
+### 5.5.1 使用构造器执行初始化
+
+一般情况下都是进行默认的初始化，如果我们需要在对象创建的时候就实现初始化，那么可以通过构造器来实现。
+
+如果某个类中有两个构造器A B，A中有两个参数，B中有三个参数，且这三个参数的其中两个是A的参数，那么可以在B中使用this.的方式调用A构造器，并且这个this语句必须在第一句。
+
+```java
+public class Demo9 {
+    private int a;
+    private int b;
+    private int c;
+    public Demo9(){
+
+    }
+
+    public Demo9(int a,int b){
+        this.a = a;
+        this.b = b;
+    }
+
+    public Demo9(int a,int b,int c){
+        this(a,b);
+        this.c = c;
+    }
+    public static void main(String[] args) {
+        Demo9 demo = new Demo9(1,2,3);
+    }
+}
+```
+
+## 5.6 类的继承
+
+java只有单继承，每个子类只能够继承一个父类。
+
+### 5.6.1 继承的特点
+
+java.lang.Object是所有类的父类
+
+### 5.6.2 重写父类方法
+
+子类包含与父类同名方法的现象被称为方法重写（override，也称为方法覆盖）
+
+方法的重写要遵循**两同两小一大规则：方法名相同、形参列表相同；子类方法返回值类型比父类方法返回值类型要小或相等、子类方法抛出的异常类要比父类方法抛出的异常类小或相等；子类方法的访问权限应该比父类方法大或相等。**
+
+覆盖方法和被覆盖方法必须同时是类方法或同时是实例方法。
+
+> 子类中覆盖了父类的方法，那么子类的对象无法访问父类中被覆盖的方法，但是可以在子类方法中调用父类中被覆盖的方法，如果是实例方法可以用super，如果是类方法，可以用父类类名
+> 
+
+```java
+public class Demo11 extends Demo10{
+    public String name;
+    public void printExample(){
+        System.out.println("哈哈哈哈");
+    }
+
+    public void test(){
+        super.printExample();
+        Demo10.printExample2();
+    }
+
+    public static void main(String[] args) {
+        Demo11 demo = new Demo11();
+        demo.printExample();
+        demo.test();
+    }
+}
+```
+
+> 注意：如果父类中的方法是private，不可被继承，但是子类中恰好定义了跟该方法相同方法名，相同形参、相同方法返回值的方法，这不是重写
+> 
+
+![Untitled](./pictures/Untitled%204.png)
+
+![Untitled](./pictures/Untitled%205.png)
+
+### 5.6.3 super限定
+
+如果需要在子类方法中调用父类被覆盖的实例方法，则可使用super限定。
+
+> 之前说过this不能用于static修饰的方法，同样的super也不能用于static修饰的方法
+> 
+
+如果super在构造器中使用，则表示super是用于限定该构造器初始化的是该对象从父类继承得到的实例变量，而不是该类自己定义的实例变量。方法也是同样的道理
+
+对于子类父类的同名实例变量，系统查找的顺序是
+
+- 查找该方法中是否有名为a的局部变量
+- 查找当前类中是否包含名为a的成员变量
+- 查找a的直接父类中是否包含名为a的成员变量
+
+特殊情况，如果子类中覆盖父类成员变量的这个变量被声明为了private，则调用的时候会有权限不允许。要想访问父类的成员变量，可以先把子类对象向上转型为父类对象，然后通过父类对象.的方式访问父类的成员变量。
+
+### 5.6.4 调用父类构造器
+
+```java
+package chap5;
+
+/**
+ *@projectName:crazyJava
+ *@package:chap5
+ *@className:Sub
+ *@author:Yaofeng Liu
+ *@description:TODO
+*@date:2022/12/4 21:07
+ *@version:1.0
+ */
+public class Sub extends Base {
+    public String color;
+
+    public Sub(double size, String name, String color) {
+        super(size, name);
+        this.color = color;
+    }
+
+    public static void main(String[] args) {
+        Sub s = new Sub(5.6, "测试对象", "红色");
+        System.out.println(s.size + " -- " + s.name + " -- " + s.color);
+    }
+}
+
+class Base {
+    public double size;
+    public String name;
+
+    public Base(double size, String name) {
+        this.size = size;
+        this.name = name;
+    }
+}
+
+```
+
+super调用的是父类的构造器，其必须出现在子类构造器执行体的第一行，所以this调用和super调用不会同时出现
+
+子类构造器调用父类构造器有以下几种情况
+
+- 子类构造器执行体的第一行使用super显式调用父类构造器，系统将根据super调用里传入的实参列表调用父类对应的构造器
+- 子类构造器执行体的第一行使用this调用本类中重载的构造器，系统根据this调用另一个构造器，执行奔雷中另一个构造器时会调用父类构造器
+- 子类构造器执行体中既没有super调用，也没有this调用，系统将会在执行子类构造器之前，隐式的调用父类无参数的构造器
+
+```java
+package chap5;
+
+/**
+ *@projectName:crazyJava
+ *@package:chap5
+ *@className:Wolf
+ *@author:Yaofeng Liu
+ *@description:TODO
+*@date:2022/12/4 21:24
+ *@version:1.0
+ */
+public class Wolf extends Animal{
+    public Wolf(String name, String length){
+        super(name,length);
+        System.out.println("Wolf的构造器");
+    }
+
+    public static void main(String[] args) {
+        Wolf spawn = new Wolf("hhh","123");
+    }
+}
+class Animal extends Creature{
+    public Animal(String name){
+        System.out.println("Animal的一个参数的构造器");
+    }
+    public Animal(String name,String length){
+        this(name);
+        System.out.println("Animal的两个参数的构造器");
+    }
+}
+
+class Creature {
+    public Creature(){
+        System.out.println("Creature的无参构造器");
+    }
+}
+```
+
+注意输出的顺序
+
+![Untitled](./pictures/Untitled%206.png)
+
+## 5.7 多态
+
+java的引用变量有两个类型，一个是编译时类型，一个是运行时类型。
+
+编译时类型由声明该变量时使用的类型决定，运行时类型由实际赋给该变量的对象决定
+
+### 5.7.1 多态性
+
+什么是多态性，用代码举个例子来看
+
+比如我们有个Base类和Sub类，Sub类是Base类的子类
+
+```java
+package chap5;
+
+/**
+ *@projectName:crazyJava
+ *@package:chap5
+ *@className:SubClass
+ *@author:Yaofeng Liu
+ *@description:TODO
+*@date:2022/12/4 21:37
+ *@version:1.0
+ */
+public class SubClass extends BaseClass{
+    public void sub(){
+        System.out.println("SubClass的基础方法");
+    }
+
+    public void test(){
+        System.out.println("覆盖父类的方法");
+    }
+
+    public static void main(String[] args) {
+        BaseClass bc = new BaseClass();
+        System.out.println(bc.book);
+        bc.base();
+        bc.test();
+
+        SubClass sc = new SubClass();
+        System.out.println(sc.book);
+        sc.sub();
+        sc.test();
+
+        BaseClass bcsc = new SubClass();
+        System.out.println(bcsc.book);
+        bcsc.base();
+        bcsc.test();
+    }
+}
+
+class BaseClass{
+    public int book = 6;
+    public void base(){
+        System.out.println("BaseClass的基础方法");
+    }
+    public void test(){
+        System.out.println("父类被覆盖的方法");
+    }
+}
+
+```
+
+![Untitled](./pictures/Untitled%207.png)
+
+多态实际上就是第三个输出表现的内容。
+
+```java
+        BaseClass bcsc = new SubClass();
+        System.out.println(bcsc.book);
+        bcsc.base();
+        bcsc.test();
+```
+
+上面代码的编译时类型是BaseClass，而运行时类型是SubClass，当调用父类中的被覆盖方法，实际执行的是子类中的覆盖父类的方法
+
+Java允许把一个子类的对象直接赋值给父类应用变量，无需任何类型转换，或者被称为向上转型，向上转型由系统自动完成。
+
+> 通过引用变量来访问其包含的实例变量时，系统总是试图访问它编译时类型所定义的成员变量，而不是它运行时类型所定义的成员变量
+> 
+
+### 5.7.2 引用变量的强制类型转换
+
+进行强制类型转换需要注意的问题
+
+- 基本类型之间的转换只能在数值类型之间进行，包括整数型、字符型和浮点型。数值类型和布尔类型之间不能进行类型转换。
+- 引用类型之间的转换只能在具有继承关系的两个类型之间进行。如果试图把一个父类实例转换成子类类型，则这个对象必须实际上是子类实例才行。即编译时类型为父类类型，运行时类型是子类类型
+
+```java
+package chap5;
+
+public class ConversionTest {
+    public static void main(String[] args) {
+        double d = 13.4;
+        long l = (long) d;
+        System.out.println(l); // 强制类型转换
+        int i = 5;
+//        boolean b = (boolean) i; 错误
+        Object object = "hello world";
+        // Object 与 String之间存在继承关系，所以可以把子类对象的实例赋值给父类对象
+        String objstr = (String) object;
+        System.out.println(objstr);
+
+        Object objInt = Integer.valueOf(5);
+        // 也可以进行强制类型转换
+        Integer integer = (Integer) objInt;
+        System.out.println(integer);
+
+        String str = (String) objInt;
+        System.out.println(str);
+    }
+}
+
+```
+
+String在和Integer进行转换的时候就会报异常，因为两个引用变量之前没有继承关系。
+
+一般使用instanceof来判断是否可以进行类型转换
+
+```java
+if(objInt instanceof String){
+    String str = (String) objInt;
+    System.out.println(str);
+}
+```
+
+### 5.7.3 instanceof 运算符
+
+instanceof的前一个操作数通常是一个引用类型变量，后一个操作数通常是一个类（也可以是一个接口，可以把接口理解成特殊的类）
+
+```java
+public class InstanceofTest {
+    public static void main(String[] args) {
+        Object hello = "hello world";
+        System.out.println("字符串是否是Object类的实例：" + (hello instanceof Object));
+        System.out.println("字符串是否是String类的实例：" + (hello instanceof String));
+        System.out.println("字符串是否是Math类的实例：" + (hello instanceof Math)); // Math 继承了 Object 可以这么写，但是不能转成Math
+        System.out.println("字符串是否是Comparable的实例：" + (hello instanceof Comparable));
+        String a = "hello";
+//        System.out.println("字符串是否是Math类的实例：" + (a instanceof Math)); // 报错
+
+    }
+}
+```
+
+## 5.8 继承与组合
+
+继承的最大坏处，破坏了封装。组合也是一种实现类复用的重要方式，采用组合方式来实现类复用则能提供更好的封装性
+
+### 5.8.1 使用继承的注意点
+
+设计父类应该遵循的原则
+
+- 尽量把父类中的所有成员变量都设置成private访问类型，不要让子类直接访问父类的成员变量
+- 不要让子类随意访问、修改父类的方法
+    - 对于辅助其他的工具方法，应该设置为private
+    - 对于需要外部类调用的方法，那必须用public
+    - 希望父类的某个方法被子类重写，但不希望被其他类自由访问，则可以使用protected来修饰方法、
+- 尽量不要在父类构造器中调用将要被子类重写的方法
+
+```java
+public class SubDemo2 extends BaseDemo2 {
+    private String name;
+
+    public void test() {
+        System.out.println("子类重写父类的方法" + name);
+    }
+
+    public static void main(String[] args) {
+        SubDemo2 s = new SubDemo2();
+    }
+}
+
+class BaseDemo2 {
+    public BaseDemo2() {
+        test();
+    }
+
+    public void test() {
+        System.out.println("父类被覆盖的方法");
+    }
+}
+```
+
+当系统想要创建SubClass对象的时候，会先执行其父类构造方法，而父类构造方法中调用了test方法，并且这个test方法被子类覆盖，所以调用的是子类的test方法，由于name还没进行初始化，所以是null
+
+### 5.8.2 利用组合实现复用
+
+如果需要复用一个类，除了把这个类当成基类来继承，也可以把该类当成另一个类的组合成分，允许新类直接复用该类的public方法。
+
+继承和组合应该什么时候用呢？
+
+- 继承是对已有的类进行改造，把一个较为抽象的类改造成符合特定需求的类
+- 组合：如果两个类之间有明确的整体、部分关系。例如Person类需要复用Arm类的方法，那么此时就要使用组合关系实现复用。
+
+## 5.9 初始化块
+
+### 5.9.1 使用初始化块
+
+初始化块的修饰符只能是static
+
+```java
+public class Person {
+    // 定义一个初始化块
+    {
+        int a = 6;
+        if (a > 4){
+            System.out.println("Person 初始化块，局部变量a的值大于4");
+        }
+        System.out.println("Person的初始化块");
+    }
+
+    // 定义第二个初始化块
+    {
+        System.out.println("Person的第二个初始化块");
+    }
+
+    // 定义无参数的构造器
+    public Person(){
+        System.out.println("Person的无参数构造器");
+    }
+
+    public static void main(String[] args) {
+        new Person();
+    }
+}
+```
+
+当创建Java对象时，系统总是先调用该类里定义的初始化块，如果一个类定义了两个普通初始化块，那么按照顺序来执行，这些初始化块只在创建Java对象的时候隐式执行，如果是static修饰的，那么在类加载时就加入到堆内存中。
+
+### 5.9.2 初始化块和构造器
+
+初始化块是一段固定执行的代码，他不能接受任何参数
+
+### 5.9.3 静态初始化块
+
+静态初始化块总是比普通初始化块更先执行，静态初始化块不能访问非静态的
+
+对于静态初始化块，总是先初始化父类的静态代码块（如果有的话）
+
+```java
+class Root {
+    static {
+        System.out.println("Root的静态初始化块");
+    }
+
+    {
+        System.out.println("Root的普通初始化块");
+    }
+
+    public Root() {
+        System.out.println("Root的无参数的构造器");
+    }
+}
+
+class Mid extends Root {
+    static {
+        System.out.println("Mid的静态初始化块");
+    }
+    {
+        System.out.println("Mid的普通初始化块");
+    }
+    public Mid(){
+        System.out.println("Mid的无参数构造器");
+    }
+
+    public Mid(String msg){
+        this(); // 调用的是无参构造器
+        System.out.println("Mid的有参数构造器" + msg);
+    }
+}
+
+class Leaf extends Mid {
+    static {
+        System.out.println("Leaf的静态初始化块");
+    }
+    {
+        System.out.println("Leaf的普通初始化块");
+    }
+    public Leaf(){
+        super("疯狂java讲义"); // 调用的父类的有参构造器
+        System.out.println("Leaf的无参数构造器");
+    }
+}
+
+public class Test {
+    public static void main(String[] args) {
+        new Leaf();
+        new Leaf();
+    }
+}
+```
+
+上述代码的执行流程
+
+![Untitled](./pictures/Untitled%208.png)
+
+首先我们在第一次new Leaf的时候，由于此时内存中还没有Leaf对象，所以需要进行加载过程，加载的时候，先去找顶级父类，加载Root的静态代码块，然后加载Mid的静态代码块，然后才加载Leaf 的静态代码块，然后在创建对象的时候，也要创建父类的对象，所以在创建对象的时候，先执行普通代码块，然后执行构造器。
+
+第二个new  Leaf，由于Root、Mid、Leaf类已经在堆内存中了，所以不会执行静态代码块了。后面是一样的。
+
+# 第六章 面向对象（下）
+
+自动拆箱、自动装箱功能 可以把8个基本类型的值包装成对象使用，可以把基本类型值直接赋给对应的包装类引用变量，也允许把包装类直接赋给对应的基本类型变量。
+
+final：系统不允许对final修饰的变量进行重新赋值，并且子类不可继承父类的final修饰的变量。final允许Java实现不可变类。
+
+abstract和interface两个关键字分别用于定义抽象类和接口，抽象类主要作为多个类的模板，接口定义了多类应该遵守的规则。
+
+枚举类：不能自由的创建对象的类，枚举类的对象在定义类的时候就已经固定，枚举类创建的实例都是有限并且确定的。
+
+## 6.1 Java8 增强的包装类
+
+8个对应的基本数据类型的包装类。自动装箱和自动拆箱允许基本数据类型和其包装类之间的任意相互赋值
+
+```java
+public class AutoBoxingUnboxing {
+    public static void main(String[] args) {
+        Integer obj = 5;
+        Object boolObj = true;
+        int i = obj;
+        System.out.println(i);
+        if (boolObj instanceof Boolean) {
+            boolean b = (Boolean) boolObj;
+            System.out.println(b);
+        }
+    }
+}
+```
+
+进行自动装箱和自动拆箱必须注意类型匹配。
+
+包装类还能够实现基本类型变量和字符串之间的转换。
+
+字符串转基本类型：
+
+```java
+XXX.parseXXX()
+XXX.valueOf()
+```
+
+基本类型转字符串
+
+```java
+String.valueOf()
+```
+
+```java
+public class Primitive2String {
+    public static void main(String[] args) {
+        String str = "123";
+        int it1 = Integer.parseInt(str);
+        int it2 = Integer.valueOf(str);
+        System.out.println(it1 + it2);
+
+        String floatStr = "4.56";
+        float ft1 = Float.parseFloat(floatStr);
+        float ft2 = Float.valueOf(floatStr);
+        System.out.println(ft1 + ft2);
+
+        String ftStr = String.valueOf(2.345f);
+        String dbStr = String.valueOf(2.345);
+        System.out.println(ftStr + " " + dbStr);
+    }
+}
+```
+
+包装类的实例进行比较的情况比较复杂，包装类的实例实际上是引用类型，只有两个包装类指向同一个对象才会返回true
+
+```java
+Integer a = Integer.valueOf(6);
+System.out.println(a > 5 ? "是的" : "不是的"); // 是的
+```
+
+但是两个包装类比较就很复杂
+
+```java
+Integer ina = 2;
+Integer inb = 2;
+System.out.println(ina == ina); // true
+
+Integer biga = 128;
+Integer bigb = 128;
+System.out.println(biga == bigb); // false
+```
+
+这是因为，如果我们把一个-128-127内的数字进行装箱，他总是引用cache数组的同一个数组元素，所以他们总是相同的，但是如果把-128-127之外的自动装箱成Integer，系统总是重新创建一个Integer实例，所以其必然不会相等
+
+Java7支持了包装类之间的比较方法
+
+```java
+System.out.println(Integer.compare(biga, bigb)); // 0
+System.out.println(Integer.compare(biga + 1, bigb)); // 1
+System.out.println(Integer.compare(biga, bigb + 1)); // -1
+```
+
+Java8更是支持了无符号运算
+
+```java
+public class UnsignedTest {
+    public static void main(String[] args) {
+        byte b = -3;
+        System.out.println(Byte.toUnsignedInt(b));
+        int val = Integer.parseUnsignedInt("ab", 16);
+        System.out.println(val);
+        System.out.println(Integer.toUnsignedString(-12, 16));
+        // 转换成无符号数之后求商
+        System.out.println(Integer.divideUnsigned(-2, 3));
+
+        // 转换成无符号数之后求余数
+        System.out.println(Integer.remainderUnsigned(-2, 7));
+    }
+}
+
+```
+
+```java
+253
+171
+fffffff4
+1431655764
+2
+```
+
+## 6.2 处理对象
+
+Java对象都是Object的实例，都能够直接调用该类中定义的方法。
+
+### 6.2.1 打印对象和toString方法
+
+当我们正常打印对象或者是使用对象的toString方法时，通常返回值都是类名+@+hashCode，所以需要重写一下toString方法
+
+```java
+public class PrintObject {
+    public static void main(String[] args) {
+        Person p = new Person("111");
+        System.out.println(p);
+    }
+}
+
+class Person{
+    private String name;
+
+    public Person(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public String toString() {
+        return name;
+    }
+}
+```
+
+### 6.2.2 == 和 equals方法
+
+基本数据类型且都是数值类型，不一定必须要求数据类型完全相同，比如10.0 和 10 在使用 == 的时候，也是返回true
+
+引用数据类型，只有指向同一个对象的时候，才会返回true， **== 不能用于比较类型上没有父子关系的两个对象**
+
+```java
+public class Equals {
+    public static void main(String[] args) {
+        int it = 65;
+        float fl = 65.0f;
+        System.out.println(it == fl);
+        char ch = 'A';
+        System.out.println(ch == it);
+        String s1 = new String("hello");
+        String s2 = new String("hello");
+
+        System.out.println(s1 == s2);
+        System.out.println(s1.equals(s2));
+
+    }
+}
+```
+
+> “hello”和new String(”hello”)有什么区别？
+> 
+
+首先，”hello“属于是字符串直接量，JVM会使用常量池来管理这些字符串，而new String(”hello”)也是先将“hello”交给常量池保管，然后再调用String的构造方法产生新的对象。
+
+> 常量池中都有什么？ 它管理的是在编译时被确定并保存在已编译的.class文件中的一些数据，包括类、方法、接口中的变量，还包括字符串常量。
+> 
+
+举个例子
+
+```java
+public class StringCompareTest {
+    public static void main(String[] args) {
+        String s1 = "疯狂Java";
+        String s2 = "疯狂";
+        String s3 = "Java";
+
+        String s4 = "疯狂" + "Java";
+        String s5 = "疯" + "狂" + "Java";
+        String s6 = s2 + s3;
+        String s7 = "疯狂" + s3;
+
+        System.out.println(s1 == s4);
+        System.out.println(s1 == s5);
+        System.out.println(s1 == s6);
+        System.out.println(s1 == s7);
+        System.out.println(s1.equals(s4));
+        System.out.println(s1.equals(s5));
+        System.out.println(s1.equals(s6));
+        System.out.println(s1.equals(s7));
+				System.out.println(s1 == s8);
+        System.out.println(s1.equals(s8));
+    }
+}
+```
+
+![Untitled](./pictures/Untitled%209.png)
+
+s1 s2 s3都是直接被放在常量池中的，所以s4的字符串可以在编译的时候就确定下来，同样的道理s5也是，而s6s7不能在编译的时候确定，所以在比较的时候返回的是false
+
+一般来说，我们需要重写equals方法
+
+```java
+public class OverrideEqualsRight {
+    public static void main(String[] args) {
+        Person2 p1 = new Person2("孙悟空","123123123");
+        Person2 p2 = new Person2("孙行者","123123123");
+        Person2 p3 = new Person2("孙悟饭","12314325");
+        // p1和p2的str相同 输出 true
+        System.out.println(p1.equals(p2));
+        System.out.println(p2.equals(p3));
+    }
+}
+
+class Person2{
+    private String name;
+    private String idStr;
+
+    public Person2(){
+
+    }
+
+    public Person2(String name, String idStr) {
+        this.name = name;
+        this.idStr = idStr;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        // 如果两个对象是同一个对象
+        if (obj == this){
+            return true;
+        }
+        // 只有当obj是Person对象
+        if (obj != null && obj.getClass() == Person2.class){
+            Person2 person2 = (Person2)obj;
+            // 并且当前对象的idStr与obj的相等时，才可以判断两个对象相等
+            if(this.getIdStr().equals(person2.getIdStr())){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getIdStr() {
+        return idStr;
+    }
+
+    public void setIdStr(String idStr) {
+        this.idStr = idStr;
+    }
+}
+```
+
+没有重写的equals方法只是比较对象的地址。重写应该遵循下面几个原则。
+
+自反性：x.equals(x) 一定true
+
+对称性：对于任意的x和y，如果y.equals(x)返回true，那么x.equals(y)也应该返回true
+
+传递性：任意的xyz，如果x.equals(y)返回true，那么y.equals(z)也应该返回true
+
+一致性：对任意x和y，如果对象中用于等价比较的信息没有改变，那么无论调用多少次x.equals(y)，结果应该都是一样的
+
+对任何不是null的x，x.equals(一定返回false)
+
+## 6.3 类成员
+
+### 6.3.1 类成员
+
+类变量属于整个类，只有在该类被卸载的时候，该类变量所占有的内存才被系统的垃圾回收机制回收。类变量生存范围几乎等同该类的生存范围
+
+当通过对象来访问类变量时，系统会在底层转换为通过该类来访问变量。
+
+一条重要的规则：类成员不能访问实例成员。
+
+### 6.3.2 单例类
+
+大部分时候都把类的构造器定义成public访问权限，允许任何类自由创建该类的对象。如果一直创建会导致系统开销不断增加。
+
+如果一个类始终只能创建一个实例，则这个类被称为**单例类**。
+
+```java
+public class SingletonTest {
+    public static void main(String[] args) {
+        Singleton s1 = Singleton.getInstance();
+        Singleton s2 = Singleton.getInstance();
+        System.out.println(s1 == s2);
+    }
+}
+
+class Singleton{
+    // 使用一个类变量来缓存曾经创建过的实例
+    private static Singleton instance;
+    // 构造器使用private修饰
+    private Singleton(){
+
+    }
+    // 提供一个静态方法，用于返回Singleton实例
+    // 该方法可以加入自定义控制，保证只产生一个singleton对象
+    public static Singleton getInstance(){
+        // 如果instance为null 表明还没创建过 不为null说明创建过了
+        if (instance== null){
+						instance= new Singleton();
+        }
+        returninstance; // 不为null 无论怎么创建，都返回之前创建过的对象
+    }
+}
+```
+
+有两个关键点
+
+① 用一个类变量缓存创建过的实例
+
+② 用一个类方法获取实例，在类方法中判断是否创建过这个对象
+
+## 6.4 final修饰符
+
+final关键字可以用于修饰类、变量和方法，既可以是成员变量，也可以是局部变量。
+
+> final修饰的变量一旦被赋值，就不能再重新赋值，注意是不能被重新赋值，在没赋值之前还是可以赋值的。
+> 
+
+### 6.4.1 final成员变量
+
+final成员变量修饰的值，如果不进行初始化，那么他总是默认的值，所以Java规定，final修饰的成员变量必须由程序员显式地指定初始值。
+
+**类变量：**静态初始化块 或 声明该类变量时指定初始值
+
+**实例变量：**非静态初始化块、声明该实例变量或构造器中指定
+
+final修饰的类变量，要么声明的时候指定初始值，要么在静态初始化块中指定。
+
+final修饰的实例变量，要么在普通初始化块或构造器中，要么就在定义的时候指定。
+
+```java
+public class FinalVariableTest {
+    // 定义成员变量的时候就指定默认值
+    final int a = 6;
+
+    final String str;
+    final int c;
+    final static doubled;
+
+    {
+        // 普通代码块初始化final修饰的实例变量
+        str = "Hello, world!";
+    }
+
+    static {
+        // 静态代码块初始化 final修饰的类变量
+d= 5.6;
+    }
+
+    public FinalVariableTest(){
+        // 构造器中初始化 final修饰的实例变量
+        c = 5;
+    }
+
+    public void changeFinal(){
+        // 普通方法不能为final赋值
+    }
+
+    public static void main(String[] args) {
+        FinalVariableTest finalVariableTest = new FinalVariableTest();
+        System.out.println(finalVariableTest.a);
+        System.out.println(finalVariableTest.d);
+        System.out.println(finalVariableTest.c);
+    }
+}
+```
+
+final成员变量在显式初始化之前不能直接访问，但是可以通过方法来访问，就很奇怪，并且方法中的age不报错？
+
+![Untitled](./pictures/Untitled%2010.png)
+
+### 6.4.2 final局部变量
+
+对于局部变量来说，可以在定义的时指定默认值，也可以不指定默认值，一旦指定了值就不能再重新指定了。
+
+### 6.4.3 final修饰基本类型变量和引用类型变量的区别
+
+final修饰基本类型，这个基本类型变量不能被改变，但是如果是引用类型变量，那么只是说明这个引用变量中存的对象的地址不能改变，而这个对象实际上是可以改变的。
+
+我们用一个数组和一个自定义对象的例子来说明上述结论
+
+```java
+*/
+public class FinalReference {
+    public static void main(String[] args) {
+        final int[] iArr = {5,6,12,9};
+        System.out.println(Arrays.toString(iArr));
+
+        Arrays.sort(iArr);
+        System.out.println(Arrays.toString(iArr));
+
+        iArr[2] = -8;
+        System.out.println(Arrays.toString(iArr));
+
+        final Person3 p = new Person3(45);
+        p.setAge(23);
+
+        System.out.println(p.getAge());
+
+        // p = null; 不合法
+    }
+}
+
+class Person3{
+    private int age;
+
+    public Person3(int age) {
+        this.age = age;
+    }
+
+    public Person3(){
+
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+}
+```
+
+### 6.4.4 可执行“宏替换”的final变量
+
+final的一个重要用途就是定义宏变量，当定义final变量时就为该变量指定了初始值，而且该初始值可以在编译的实时就确定下来，那么这个final变量本质上就是一个宏变量。
+
+```java
+public static void main(String[] args) {
+      final int a = 5 + 2;
+      final double b = 1.2 / 3;
+      final String str = "疯狂" + "Java讲义:";
+      final String book = "疯狂Java讲义:" + 99.0;
+      final String book2 = "疯狂Java讲义:" + String.valueOf(99.0);
+      System.out.println(book == "疯狂Java讲义:99.0"); // true
+      System.out.println(book2 == "疯狂Java讲义:99.0"); // false
+  }
+```
+
+上面的结果还是一个原因，由于book在编译的时候就被确定下来，所以实际上就是保存在常量池中的字符串，而book2在定义的时候还没确定下来，所以就不会被当成宏变量处理。
+
+### 6.4.5 final方法
+
+final修饰的方法不能被重写，如果不希望子类继承父类的某个方法，可以使用final进行修饰
+
+```java
+public class FinalMethodTest {
+    public final void test(){
+
+    }
+}
+
+class Sub extends FinalMethodTest {
+    public void test(){} // 编译错误
+}
+
+```
+
+但是如果父类的test方法使用的是private修饰，那么仍然可以在子类中定义与该方法具有相同方法名、相同形参列表、相同返回值的方法。
+
+```java
+public class FinalMethodTest {
+    private final void test(){
+
+    }
+}
+
+class Sub extends FinalMethodTest {
+    public void test(){} 
+}
+
+```
+
+final修饰的方法只是不能被重写，但是完全可以重载
+
+```java
+public class FinalMethodTest {
+    public final void test(){
+
+    }
+
+    public final void test(String name){
+
+    }
+}
+```
+
+### 6.4.6 final类
+
+final修饰的类不可以有子类，例如Math类就通过final进行修饰
+
+### 6.4.7 不可变类
+
+创建自定义的不可变类，需要遵循的规则：
+
+- 使用private和final修饰符来修饰该类的成员变量
+- 提供带参数的构造器，用于根据传入参数来初始化类里的成员变量
+- 仅提供getter方法，不能提供setter方法，因为普通方法无法修改final修饰的成员变量
+- 如果有必要，重写Object类的hashCode()和equals()
+
+String类的equals和hashCode方法
+
+```java
+public class ImmutableStringTest {
+    public static void main(String[] args) {
+        String s1 = new String("Hello, world!"); 
+        String s2 = new String("Hello, world!");
+        System.out.println(s1 == s2); // false
+        System.out.println(s1.equals(s2)); // true
+
+        System.out.println(s1.hashCode()); // -1880044555
+        System.out.println(s2.hashCode()); // -1880044555
+    }
+}
+```
+
+> hashCode是根据字符序列计算得到的，返回的是int
+> 
+
+下面我们自定义一个不可变的Address类
+
+```java
+package chap6;
+public class Address {
+    private final String detail;
+    private final String postCode;
+
+    public Address() {
+        this.detail = "";
+        this.postCode = "";
+    }
+
+    public Address(String detail, String postCode) {
+        this.detail = detail;
+        this.postCode = postCode;
+    }
+
+    public String getDetail() {
+        return detail;
+    }
+
+    public String getPostCode() {
+        return postCode;
+    }
+
+    // 重写equals方法
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj != null && obj.getClass() == Address.class) {  // 不为空 并且属于Address类的实例
+            Address ad = (Address) obj; // 这里就可以强制转成Address类 属于向下转型
+            if (this.getDetail().equals(ad.getDetail()) && this.getPostCode().equals(ad.getPostCode())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return detail.hashCode() + postCode.hashCode() * 31;
+    }
+}
+```
+
+当final关键字修饰的是引用变量的时候，虽然引用的地址没法改变，但是其内容是可以改变的，例如我们定义一个Name类，这个类提供了相应的获取名字的方法
+
+```java
+class Name{
+    private String firstName;
+    private String lastName;
+    public Name(){
+
+    }
+
+    public Name(String firstName, String lastName){
+        this.firstName = firstName;
+        this.lastName = lastName;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+}
+```
+
+在Person类中，我们可以通过set方法修改对应的name
+
+```java
+public class Person4 {
+    private final Name name;
+    public Person4(Name name) {
+        this.name = name;
+    }
+
+    public Name getName() {
+        return name;
+    }
+
+    public static void main(String[] args) {
+        Name n = new Name("wukong","sun");
+        Person4 p = new Person4(n);
+
+        System.out.println(p.getName().getFirstName());
+        n.setFirstName("bajie");
+        System.out.println(p.getName().getFirstName());
+    }
+}
+```
+
+但是name实际上使用final修饰，所以我们是不希望对其进行修改的
+
+```java
+public class Person4 {
+    private final Name name;
+    public Person4(Name name) {
+        this.name = new Name(name.getFirstName(),name.getLastName());
+    }
+
+    public Name getName() {
+        return new Name(name.getFirstName(),name.getLastName());
+    }
+
+    public static void main(String[] args) {
+        Name n = new Name("wukong","sun");
+        Person4 p = new Person4(n);
+
+        System.out.println(p.getName().getFirstName());
+        n.setFirstName("bajie");
+        System.out.println(p.getName().getFirstName());
+    }
+}
+```
+
+我们挨个进行分析，首先未修改之前，我们执行下列操作
+
+```java
+Name n = new Name("wukong","sun");
+Person4 p = new Person4(n);
+```
+
+我们实际上是把name这个实例对象，用n赋值给他了，所以我们在修改n.setFirstName()的时候，实际上也修改了final修饰的name中的值。
+
+改进之后，我们创建对象
+
+```java
+Name n = new Name("wukong","sun");
+Person4 p = new Person4(n);
+```
+
+这个Person4对象实际上不是n，而只是用了n中的值，重新创建了一个对象
+
+```java
+public Person4(Name name) {
+    this.name = new Name(name.getFirstName(),name.getLastName());
+}
+```
+
+这里的
+
+```java
+p.getName().getFirstName()
+```
+
+调用的是Person4的对象，输出wukong没问题
+
+当我们执行n.setFirstName("bajie");由于我们创建对象只用到了n的值，而不是直接把引用赋值了，所以这条语句并不会改变我们final修饰的name对象，当我们执行
+
+```java
+public Name getName() {
+    return new Name(name.getFirstName(),name.getLastName());
+}
+```
+
+获取的是我们后来创建的新的name对象，而不是我们在main函数中的对象，这样就保证了Person4的不可变性，Person4也就成为了真正的不可变类。
+
+### 6.4.8 缓存实例的不可变类
+
+```java
+class CacheImmutable {
+    private static int MAX_SIZE = 10;
+    private static CacheImmutable[] cache = new CacheImmutable[MAX_SIZE];
+    public static int pos = 0;
+    private final String name;
+
+    private CacheImmutable(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public static CacheImmutable valueOf(String name) {
+        // 遍历已经缓存的对象
+        for (int i = 0; i < MAX_SIZE;i++){
+            // 如果有相同的实例了，那么直接返回该缓存的实例
+            if (cache[i]!= null && cache[i].getName().equals(name)){
+                return cache[i];
+            }
+        }
+
+        // 如果缓存池已经满了
+        if (pos == MAX_SIZE){
+            // 覆盖第一个对象
+            cache[0] = new CacheImmutable(name);
+            pos = 1;
+        }else {
+            cache[pos++] = new CacheImmutable(name);
+        }
+        return cache[pos - 1];
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj){
+            return true;
+        }
+
+        if (obj != null && obj.getClass() == CacheImmutable.class){
+            CacheImmutable ci = (CacheImmutable)obj;
+            return name.equals(ci.getName());
+        }
+        return false;
+    }
+
+    public int hashCode(){
+        return name.hashCode();
+    }
+}
+public class CacheImmmutableTest {
+    public static void main(String[] args) {
+        CacheImmutable c1 = CacheImmutable.valueOf("hello");
+        CacheImmutable c2 = CacheImmutable.valueOf("hello");
+        CacheImmutable c3 = CacheImmutable.valueOf("hello2");
+        System.out.println(c1 == c2);
+        System.out.println(c1 == c3);
+    }
+}
+```
+
+上面这个例子是我们自定义的一个缓存的实例，并且在Integer中使用的也是类似的策略，并且下面两种方法
+
+```java
+Integer in1 = new Integer(10);
+Integer in2 = Integer.valueOf(10);
+```
+
+第一种方式不会创建缓存，性能比较差
+
+第二种方式会创建缓存，所以后面的Java版本已经普遍使用后面的方式
+
+```java
+public static void main(String[] args) {
+    // 生成新的Integer对象
+    Integer in1 = new Integer(6);
+    Integer in2 = Integer.valueOf(6);
+
+    // 直接从缓存中取出Integer对象
+    Integer in3 = Integer.valueOf(6);
+    System.out.println(in1 == in2); // false
+    System.out.println(in2 == in3); // true
+
+    Integer in4 = Integer.valueOf(200);
+    Integer in5 = Integer.valueOf(200);
+    System.out.println(in4 == in5); // false
+}
+```
+
+in1没有缓存，所以in1 不等于 in2，由于in2和in3都缓存了，所以使用的实际上是同一个对象。
+
+由于Integer只能缓存-128~127之间的数据，所以200不能被缓存。
+
+## 6.5 抽象类
+
+之前定义的一些方法都是有方法体的方法，在某些情况下，父类只知道其子类应该包含怎样的方法，但无法准确的知道这些子类如何实现这些方法。
+
+> 使用抽象方法是只有方法签名，没有方法实现的方法
+> 
+
+### 6.5.1 抽象方法和抽象类
+
+抽象方法和抽象类必须使用abstract修饰符来修饰，**有抽象方法的类只能被定义成抽象类**，抽象类可以没有抽象方法。
+
+- 抽象类必须使用abstract修饰符来修饰，抽象方法也必须使用abstract修饰符来修饰，抽象方法不能有方法体
+- 抽象类不能被实例化
+- 抽象类可以包含成员变量和、方法、构造器、初始化块、内部类（接口、枚举等）抽象类的构造器不能用于创建实例，主要是被子类调用
+- 含有抽象方法的类，（直接定义抽象方法、继承了一个抽象父类，但没有完全实现父类包含的抽象方法，或实现了一个接口，但没有完全实现接口包含的抽象方法）
+
+一个例子，定义了三个类Shape抽象父类、Triangle、Circle
+
+```java
+public abstract class Shape {
+    {
+        System.out.println("执行Shape的初始化块");
+    }
+
+    private String color;
+    public abstract double calPerimeter();
+    public abstract String getType();
+
+    // 定义Shape的构造器，该构造器并不是用于创建Shape对象 而是用于创建子类
+    public Shape(){
+
+    }
+
+    public Shape(String color) {
+        System.out.println("执行Shape的构造器");
+        this.color = color;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+}
+```
+
+```java
+public class Triangle extends Shape{
+    private double a;
+    private double b;
+    private double c;
+
+    public Triangle(String color,double a, double b, double c){
+        super(color);
+        setSides(a, b, c);
+    }
+
+    public void setSides(double a,double b,double c){
+        if(a >= b+c || b >= a+c || c >= a +b){
+            System.out.println("两边之和必须大于第三边");
+            return;
+        }
+        this.a = a;
+        this.b = b;
+        this.c = c;
+    }
+    @Override
+    public double calPerimeter() {
+        return a + b + c;
+    }
+
+    @Override
+    public String getType() {
+        return "三角形";
+    }
+}
+```
+
+```java
+public class Circle extends Shape {
+    private double radius;
+
+    public Circle(String color, double radius) {
+        super(color);
+        this.radius = radius;
+    }
+
+    public void setRadius(double radius) {
+        this.radius = radius;
+    }
+
+    @Override
+    public double calPerimeter() {
+        return 2 * Math.PI * radius;
+    }
+
+    @Override
+    public String getType() {
+        return getColor() + "圆形";
+    }
+
+    public static void main(String[] args) {
+        Shape s1 = new Triangle("黑色",3,4,5);
+        Shape s2 = new Circle("黄色",3);
+        System.out.println(s1.getType());
+        System.out.println(s1.calPerimeter());
+        System.out.println(s2.getType());
+        System.out.println(s2.calPerimeter());
+    }
+}
+```
+
+abstract不能够用于修饰成员变量，不能够用于修饰局部变量，也不能用于修饰构造器。
+
+> static修饰一个方法时，表明这个方法属于该类本身，如果该方法被定义成抽象方法，将会导致通过该类来调用该方法时出现错误，所以static和abstract不能同时修饰某个方法，即没有所谓的类抽象方法。
+> 
+
+虽然这两个修饰符不能够同时修饰某个方法，但是这两个能够同时修饰内部类。
+
+> private和abstract不能够同时修饰一个方法，因为abstract修饰的方法必须被重写才有意义，private修饰的话没法被子类重写。
+> 
+
+### 6.5.2 抽象类的作用
+
+抽象类不能创建实例，只能当成父类来被继承
+
+模板设计模式也是十分常见并且简单的设计模式之一，父类的普通方法依赖一个抽象方法，这个抽象方法推迟到子类中实现。简单来说，父类中的普通方法缺少了比较的运行条件，其运行的前提必须在子类中给出，才能计算。
+
+```java
+public abstract class SpeedMeter {
+    private double turnRate;
+
+    public SpeedMeter() {
+
+    }
+
+    public abstract double calGirth();
+
+    public void setTurnRate(double turnRate) {
+        this.turnRate = turnRate;
+    }
+
+    public double getSpeed() {
+        return calGirth() * turnRate;
+    }
+}
+```
+
+```java
+public class CarSpeedMeter extends SpeedMeter{
+    private double radius;
+    public CarSpeedMeter(double radius) {
+        this.radius = radius;
+    }
+
+    @Override
+    public double calGirth() {
+        return radius * 2 * Math.PI;
+    }
+
+    public static void main(String[] args) {
+        CarSpeedMeter csm = new CarSpeedMeter(0.34);
+        csm.setTurnRate(15);
+        System.out.println(csm.getSpeed()); // 因为可以继承父类的方法
+    }
+}
+```
+
+- 抽象父类可以只定义需要使用的某些方法，把不能实现的部分抽象成抽象方法，交给子类来实现
+- 父类中可能包含需要其他系列方法的方法，这些被调用方法既可以由父类实现，也可以由其子类实现
+
+## 6.6 Java9改进的接口
+
+抽象类是从多个类中抽象出来的模板，如果抽象的再彻底一点就能够得到一个特殊的抽象类——“接口”，在Java9中允许进行定义默认方法和类方法。也增加了一种私有方法。
+
+### 6.6.1 接口的概念
+
+接口是从多个相似类中抽象出来的规范，接口不提供任何实现。接口里定义的是一组公用的方法。
+
+### 6.6.2 Java9中接口的定义
+
+```java
+[修饰符] interface 接口名 extends 父接口1, 父接口2 ... 
+{
+	零个到多个常量定义...
+	零个到多个抽象方法定义...
+	零个到多个内部类、接口、枚举定义
+	零个到多个私有方法、默认方法或类方法定义
+}
+```
+
+- 修饰符可以是public或者省略，省略默认采用的是包权限访问控制符
+- 接口名与类名采用相同的命名规则
+- 接口可以多继承，只能继承接口，不能继承类
+
+接口中的一些规范
+
+**1）成员变量**
+
+成员变量只能是静态常量，并且总是使用public static final来修饰，即使不写，系统也会给自动加上
+
+```java
+public static final int MAX_SIZE = 50;
+int MAX_SIZE = 50; 
+```
+
+上面两个在接口中是一样的，由于接口没有构造器和初始化块，所以只能在定义的时候就指定初始值。
+
+**2）方法**
+
+只能是抽象实例方法、类方法、默认方法或私有方法
+
+如果不是默认方法、类方法或私有方法，系统会自动为普通方法添加abstract修饰符，并且总是public abstract，普通方法不能有方法体，而类方法、私有方法默认方法**必须**要有方法体。
+
+**3）内部类**
+
+包含内部接口、枚举，默认采用的都是public static
+
+下面我们定义一个接口。
+
+```java
+public interface Output {
+    // 接口里定义的成员变量只能是常量 并且一定是public static final修饰
+    public static final int MAX_SIZE = 1024;
+
+    // 接口里定义的普通方法只能是public abstract
+    public abstract void out();
+
+    // 接口中定义默认方法，需要使用default修饰
+    public default void print(String... name){
+        for (String msg : name){
+            System.out.println(msg);
+        }
+    }
+
+    public default void test(){
+        System.out.println("默认的test方法");
+    }
+
+    // 接口中定义类方法，使用static修饰
+    static String staticTest(){
+        return "接口里的类方法";
+    }
+
+    // 定义私有方法
+    private void foo(){
+        System.out.println("foo 私有方法");
+    }
+
+    // 定义私有静态方法
+    private static void bar(){
+        System.out.println("bar私有静态方法");
+    }
+    
+}
+```
+
+对于不是类方法的方法而言，需要使用接口的实现类来调用这些默认方法。**默认方法就是带有方法体的实例方法。**
+
+Java8允许在接口中定义类方法，类方法必须使用static修饰，该方法不能使用default修饰，并且还必须使用public修饰
+
+当两个默认方法或类方法包含一段相同的实现逻辑时，程序必然考虑将这段实现逻辑抽取成工具方法，而每个工具方法应该是被隐藏的。而私有方法恰好是被隐藏的
+
+### 6.6.3 接口的继承
+
+接口可以多继承
+
+```java
+interface InterfaceA {
+    int PROP_A = 5;
+
+    public abstract void testA();
+}
+
+interface InterfaceB {
+    int PROP_B = 6;
+
+    public abstract void testB();
+}
+
+interface InterfaceC extends InterfaceA, InterfaceB {
+    int PROP_C = 7;
+
+    public abstract void testC();
+}
+
+public class InterfaceExtendsTest {
+    public static void main(String[] args) {
+        System.out.println(InterfaceC.PROP_A);
+        System.out.println(InterfaceC.PROP_B);
+        System.out.println(InterfaceC.PROP_C);
+    }
+}
+```
+
+### 6.6.4 使用接口
+
+接口的用途
+
+定义变量，也可用于进行强制类型转换
+
+调用接口中定义的常量
+
+被其他类实现
+
+一个类可以继承多个接口，实现接口使用的implement关键字，一个类可以继承一个父类，实现多个接口。
+
+> inplements必须放在extends之后
+> 
+
+一个类实现了一个接口之后，必须完全实现这些接口中所定义的全部抽象方法，否则该类将保留从父接口那里继承到的抽象方法，该类就也要定义成抽象类
+
+> **父类引用指向子类对象**，这个父类引用没办法调用子类对象实例中的方法吧？
+> 
+
+```java
+class test2{
+    public void testFun(){
+        System.out.println("输出");
+    }
+}
+public class test extends test2{
+    public void testFun2(){
+        System.out.println("输出2");
+    }
+    public static void main(String[] args) {
+        test2 t = new test();
+        t.testFun2(); // 错误
+    }
+}
+```
+
+比如说这段代码，父类应用t指向的子类对象，但是实际上没办法通过t.的方式调用testFun2()
+
+### 6.6.5 接口和抽象类
+
+**1）接口和抽象类的共同之处**
+
+- 都不能被实例化，但是可以被其他类实现和继承
+- 都可以包含抽象方法，并且继承的普通子类都必须实现这些抽象方法
+
+**2）区别**
+
+- 接口只能包含抽象方法、静态方法、默认方法和私有方法，不能为普通方法提供实现，而抽象类可以有普通方法，并实现。
+- 接口只能定义静态方法，抽象类可以定义普通成员变量和静态方法
+- 接口不能有构造器，抽象类可以有构造器
+- 接口不能含有初始化块，抽象类可以有初始化块。
+- 一个类只能有一个直接父类，并且包括抽象父类。**一个类可以实现多个接口，一个接口可以继承多个接口**
+
+### 6.6.6 面向接口编程
+
+## 6.7 内部类
+
+内部类的作用
+
+- 内部类提供了更好的封装，不允许同一个包中的其他类访问该类
+- 内部类成员可以访问外部类的私有数据，但是外部类不能访问内部类的实现细节
+- 匿名内部类适合用于创建那些一次使用的类
+
+private、protected、static 只能用于修饰内部类
+
+非静态内部类不能拥有静态成员。
+
+### 6.7.1 非静态内部类（外部类实例对象的一部分）
+
+内部类，只要是在类的内部都可以定义内部类。
+
+使用static修饰的类是静态内部类，不使用static修饰的是非静态内部类。
+
+1）外部类不使用任何访问权限修饰符，则只能被同一个包中的其他类访问
+
+```java
+package A
+class B{}
+public class C{}
+```
+
+2）内部类的上一级是外部类，有四个作用域：同一个类、同一个包、父子类和任何位置。
+
+例子：
+
+```java
+public class Cow {
+    private double weight;
+
+    public Cow() {
+
+    }
+
+    public Cow(double weight) {
+        this.weight = weight;
+    }
+
+    private class CowLeg {
+        // 非静态内部类的两个实例变量
+        private double length;
+        private String color;
+
+        public CowLeg(double length, String color) {
+            this.length = length;
+            this.color = color;
+        }
+
+        public void info() {
+            System.out.println("当前牛腿的颜色" + color + ",长度是" + length);
+            System.out.println("牛的重量" + weight);
+        }
+
+        public double getLength() {
+            return length;
+        }
+
+        public void setLength(double length) {
+            this.length = length;
+        }
+
+        public String getColor() {
+            return color;
+        }
+
+        public void setColor(String color) {
+            this.color = color;
+        }
+    }
+
+    public void test() {
+        CowLeg cowLeg = new CowLeg(1.12, "黑白相间");
+        cowLeg.info();
+    }
+
+    public static void main(String[] args) {
+        Cow cow = new Cow(378.9);
+        cow.test();
+    }
+}
+```
+
+上面的程序，实际上开辟了两个栈区，其内存模型如下
+
+![Untitled](./pictures/Untitled%201.jpeg)
+
+在非静态内部类的方法中访问某个变量，其访问优先级如下
+
+首先先找有没有符合的局部变量，没有的话，去查内部类的成员变量，还没有的话，去查外部类的成员变量。
+
+如果外部类成员变量、内部类成员变量与内部类里的方法的局部变量同名，可以使用this、this外部类类名.this作为限定来区分。
+
+举个例子
+
+```java
+public class DiscernVariable {
+    private String prop = "外部类的成员变量";
+
+    private class InClass {
+        String prop = "内部类的成员变量";
+
+        public void info() {
+            String prop = "局部变量";
+            System.out.println(DiscernVariable.this.prop);
+            System.out.println(this.prop);
+            System.out.println(prop);
+        }
+    }
+    
+    public void test() {
+        InClass inClass = new InClass();
+        inClass.info();
+    }
+
+    public static void main(String[] args) {
+        new DiscernVariable().test();
+    }
+}
+```
+
+非静态内部类成员可以访问外部类的private成员，外部类如果想要访问非静态内部类的成员，则必须通过现实创建非静态内部类对象来调用访问其实例成员。
+
+```java
+public class Outer {
+    private int outProp = 9;
+    class Inner{
+        private int inProp = 9;
+        public void accessOuterProp(){
+            System.out.println("外部类的outProp值：" + outProp);
+        }
+    }
+
+    public void accessInnerProp(){
+//        System.out.println("内部类的InnerProp值" + inProp);
+        System.out.println("内部类的InnerProp值" + new Inner().inProp);
+    }
+
+    public static void main(String[] args) {
+        Outer outer = new Outer();
+        outer.accessInnerProp();
+    }
+}
+
+```
+
+非静态内部类里不能有静态方法、静态成员变量、静态初始化块。
+
+### 6.7.2 静态内部类（外部类的一部分）
+
+被static修饰的内部类被称为类内部类，这个时候可以将内部类看成是外部类的一部分，而不是外部类对象的一部分了
+
+可以包含静态成员，也可以包含非静态成员。static不能修饰外部类，可以修饰内部类，因为外部类的上一层是包。
+
+静态内部类不能访问外部类的实例成员，只能访问外部类的类成员。
+
+```java
+public class StaticInnerClassTest {
+    private int prop1 = 5;
+    private static intprop2= 9;
+    static class StaticInnerClass{
+        private static intage;
+        public void accessOuterProp(){
+//            System.out.println(prop1); // 报错
+            System.out.println(prop2); // 正确
+        }
+    }
+}
+```
+
+静态内部类的对象不是寄生在外部类的实例对象中，而是寄生在外部类的类本身。
+
+静态内部类可以看做是外部类的一个属性，外部类不能直接访问静态内部类的成员，但是可以使用类名.的方式，也可以使用静态内部类对象的方式调用
+
+```java
+package chap6;
+
+public class AccessStaticInnerClass {
+    static class StaticInnerClass{
+        private static int prop1 = 5;
+        private int prop2 = 9;
+    }
+
+    public void accessInnerProp(){
+        System.out.println(StaticInnerClass.prop1);
+        System.out.println(new StaticInnerClass().prop2);
+    }
+
+    public static void main(String[] args) {
+        new AccessStaticInnerClass().accessInnerProp();
+    }
+}
+```
+
+> 接口内部类只能是静态内部类，因为它默认使用public static修饰
+> 
+
+### 6.7.3 使用内部类
+
+1）在外部类内部使用内部类
+
+在外部类中使用内部类，与在一个类中调用另一个静态类相似，唯一的区别是，**不要在外部类的静态成员中使用非静态内部类。**
+
+2）在外部类以外使用非静态内部类
+
+不同访问权限的内部类的使用范围
+
+- 省略访问修饰符的内部类：只能被与外部类处于同一个包的类访问
+- 使用protected修饰的内部类：只能可被与外部类处于同一个包的类或外部类的子类访问
+- 使用public修饰的内部类：可以在任何位置被访问
+
+在外部类以外的地方使用内部类，应该是 **外部类.内部类** 这种使用方式
+
+由于非静态内部类对象必须寄生在外部类的对象，所以在创建静态内部类对象的时候，必须先创建外部类对象。
+
+```java
+OuterInstance.new InnerConstructor()
+```
+
+```java
+public class CreateInnerInstance {
+    public static void main(String[] args) {
+        Out.In in = new Out().new In("测试信息");
+        // 语法有点特殊
+    }
+}
+class Out{
+    class In{
+        public In(String msg){
+            System.out.println(msg);
+        }
+    }
+}
+```
+
+从上面的程序可以看出，内部类的对象必须通过外部类的对象进行创建。
+
+当创建一个子类时，子类构造器总会调用父类的构造器，因此在创建非静态内部类的子类（SubClass ）时，必须保证让子类构造器可以调用非静态内部类的构造器，调用非静态内部类的构造器时，必须存在一个外部类对象（out）。
+
+```java
+public class SubClass extends Out.In{
+    public SubClass(Out out) {
+        out.super("hello"); // 调用父类的构造器 public In(String msg) 通过外部类对象调用内部类的构造器
+    }
+}
+```
+
+非静态内部类的子类可以是外部类，其需要保留一个引用，该引用指向父类所在的外部类对象，也就是说，如果有一个内部类子类对象的存在，那么一定存在一个与之对应的外部类对象
+
+3）在外部类以外使用静态内部类
+
+在外部类以外的地方创建静态内部类的实例
+
+```java
+public class CreateStaticInnerInstance {
+    public static void main(String[] args) {
+        StaticOut.StaticIn in = new StaticOut.StaticIn();
+    }
+}
+
+class StaticOut{
+    static class StaticIn{
+        public StaticIn(){
+            System.out.println("静态内部类的构造器");
+        }
+    }
+}
+```
+
+注意与2）的区别
+
+当程序需要使用内部类时，应该优先考虑使用静态内部类。
+
+### 6.7.4 局部内部类
+
+把一个内部类放在一个方法里定义，这个内部类就是一个局部内部类，局部内部类只在方法里有效。不能使用访问控制符和static修饰符修饰。实际开发中很少使用局部内部类
+
+```java
+public class LocalInnerClass {
+    public static void main(String[] args) {
+        // 定义局部内部类
+        class InnerBase{
+            int a;
+        }
+        // 定义局部内部类的子类
+        class InnerSub extends InnerBase{
+            int b;
+        }
+        // 创建局部内部类的对象
+        InnerSub is = new InnerSub();
+        is.a = 5;
+        is.b = 8;
+        System.out.println(is.a);
+        System.out.println(is.b);
+    }
+}
+```
+
+### 6.7.5 Java8 改进的匿名内部类
+
+语法格式
+
+```java
+new 实现接口() | 父类构造器(实参列表){
+	// 匿名内部类的类体部分
+}
+```
+
+匿名内部类必须继承一个父类，或者实现一个接口
+
+- 不允许将匿名内部类设置为抽象类，因为匿名内部类在定义的时候就需要创建匿名内部类的对象
+- 匿名内部类没有构造器，但是可定义初始化块。
+
+最常用的方式就是创建某个接口类型的对象
+
+```java
+public class AnonymousTest {
+    public void test(Product p){
+        System.out.println(p.getName() + " " + p.getPrice());
+    }
+
+    public static void main(String[] args) {
+        AnonymousTest ta = new AnonymousTest();
+        // 调用test方法，需要传入一个Product对象
+        ta.test(new Product() {
+            @Override
+            public double getPrice() {
+                return 567.8;
+            }
+
+            @Override
+            public String getName() {
+                return "3060ti显卡";
+            }
+        });
+    }
+}
+
+interface Product{
+    public double getPrice();
+    public String getName();
+}
+```
+
+匿名内部类不能是抽象类，所以需要实现抽象父类或者接口包含的所有抽象方法。
+
+通过接口创建匿名内部类时，匿名内部类不能显式创建构造器，因此匿名内部类只有一个隐式的无参数构造器，所以new不能加参数。但如果是通过继承父类来创建匿名内部类，则是可以与父类相似的构造器形参列表
+
+```java
+package chap6;
+
+public class AnonymousInner {
+    public void test(Device d){
+        System.out.println(d.getName() + " " + d.getPrice());
+    }
+
+    public static void main(String[] args) {
+        AnonymousInner ai = new AnonymousInner();
+        ai.test(new Device("显卡") {
+            @Override
+            public double getPrice() {
+                return 67.8;
+            }
+        });
+
+        Device d = new Device() {
+            {
+                System.out.println("匿名内部类初始化块");
+            }
+            @Override
+            public double getPrice() {
+                return 56.2;
+            }
+            public String getName(){
+                return "jianpan";
+            }
+        };
+        ai.test(d);
+    }
+}
+
+abstract class Device{
+    private String name;
+    public abstract double getPrice();
+    public Device(){}
+    public Device(String name){
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+}
+```
+
+在匿名内部类中访问局部变量，则该局部变量默认被设置为final
+
+```java
+package chap6;
+
+public class ATest {
+    public static void main(String[] args) {
+        int age = 8;
+        A a = new A() {
+            @Override
+            public void test() {
+                System.out.println(age);
+            }
+        };
+        a.test();
+    }
+}
+
+interface A{
+    void test();
+}
+```
+
+如果我们在int age = 8;的后面写age=2；那么这个age就不是final修饰的了，所以我们在匿名内部类中就不能使用age了。
+
+## 6.8 Java8 新增的Lambda表达式
+
+Lambda表达式支持将代码块作为方法参数，通过表达式来创建只有一个抽象方法的接口的实例。
+
+### 6.8.1 Lambda表达式入门
+
+![Untitled](./pictures/Untitled%202.jpeg)
+
+上面这个图中，使用Lambda表达式，省去了new的过程，不需要指出重写的方法的名字，Lambda表达式的代码块将会代替实现抽象方法的方法体，Lambda表达式就相当于一个匿名方法。
+
+总结来看，Lambda表达式就是为了代替匿名内部类的繁琐语法。
+
+- 形参列表：如果形参列表中只有一个参数，形参列表的圆括号可以省略
+- 箭头 →
+- 代码块：如果代码块只有一条语句，则可以省略代码块的花括号。
+
+Lambda表达式的几种简化写法
+
+```java
+package chap6;
+
+public class LambdaQs {
+    public void eat(Eatable e) {
+        System.out.println(e);
+        e.teste();
+    }
+
+    public void drive(Flyable f) {
+        System.out.println(f);
+        f.fly("晴天");
+    }
+
+    public void test(Addable add) {
+        System.out.println(add.add(5, 3));
+    }
+
+    public static void main(String[] args) {
+        LambdaQs lq = new LambdaQs();
+        
+        **lq.eat(() -> System.out.println("苹果的味道不错"));**
+        
+        **lq.drive(weather -> {
+            System.out.println("今天的天气是：" + weather);
+            System.out.println("直升机平稳着落");
+        });**
+        **lq.test((a, b) -> a + b);**
+    }
+}
+
+interface Eatable {
+    void teste();
+}
+
+interface Addable {
+    int add(int a, int b);
+}
+
+interface Flyable {
+    void fly(String weather);
+}
+```
+
+第一个粗体代码，使用的是相当于不带形参的匿名方法，由于该Lambda表达式只有一行代码，因此可以省略代码块的花括号
+
+第二个粗体代码，调用drive方法，调用该方法需要一个Flyable类型的参数，实际传入的是Lambda表达式
+
+第三个粗体代码，Lambda表达式的代码块中只有一行语句，这行语句的返回值将作为该代码块的返回值。
+
+上面的程序为什么能够运行呢？
+
+### 6.8.2 Lambda表达式与函数式接口
+
+函数式接口代表只包含一个抽象方法的接口。函数式接口可以包含多个默认方法、类方法，但只能声明一个抽象方法。
+
+Lambda表达式的目标类型必须是明确得到函数式接口，为了保证Lambda表达式的目标类型是一个明确的函数式接口，可以有如下三种常见的方式。
+
+- 将Lambda表达式赋值给函数式接口类型的变量
+- 将Lambda表达式作为函数式接口类型的参数传给某个方法
+- 使用函数式接口对Lambda表达式进行强制类型转换
+
+## 6.9 枚举类
+
+实例有限并且固定的类，称之为枚举类。
+
+### 6.9.1 手动实现枚举类
+
+直接使用静态常量表示枚举，存在什么问题？
+
+- 类型不安全，如果两个类型是int的，则完全可以进行加法运算
+- 没有命名空间
+- 打印输出的意义不明确，因为可能打印出来的是数字，所以我们并不知道它表示什么意义
+
+### 6.9.2 枚举类入门
+
+一个java源文件中，最多只能定义一个public访问权限的枚举类，且该Java源文件也必须和该枚举类的类名相同。
+
+枚举类与普通类的区别
+
+- 枚举类可以实现一个或多个接口，enum默认继承的是java.lang.Enum，而不是Object
+- 使用enum定义、非抽象的枚举类默认会使用final修饰，因此枚举类不能派生子类
+- 枚举类的构造器只能用private，即使省略了，也默认使用的是private
+- 枚举类的所有实例必须在枚举类的第一行显示列出，否则这个枚举类永远都不能产生实例
+- 枚举类默认提供values方法，该方法能够很方便的便利所有的枚举值
+
+```java
+package chap6;
+
+public class EnumTest {
+    public void judge(SeasonEnum s){
+        switch (s){
+            case SPRING:
+                System.out.println("春暖花开");
+                break;
+            case SUMMER:
+                System.out.println("春暖花开");
+                break;
+            case FALL:
+                System.out.println("春暖花开");
+                break;
+            case WINTER:
+                System.out.println("春暖花开");
+                break;
+        }
+    }
+    public static void main(String[] args) {
+        for (SeasonEnum s:SeasonEnum.values()){
+            System.out.println(s);
+        }
+        new EnumTest().judge(SeasonEnum.SPRING);
+    }
+}
+```
+
+### 6.9.3 枚举类的成员变量、方法和构造器
+
+定义一个Gender类
+
+```java
+package chap6;
+
+public enum Gender {
+    MALE,FEMALE;
+    public String name;
+}
+```
+
+测试类
+
+```java
+package chap6;
+
+public class GenderTest {
+    public static void main(String[] args) {
+        Gender g = Enum.valueOf(Gender.class,"FEMALE");
+        g.name = "女";
+        System.out.println(g + "代表" + g.name);
+    }
+}
+```
+
+存在一个封装的问题，因为g.name可以被随意的修改，会导致程序的混乱。
+
+改进
+
+```java
+package chap6;
+
+public enum Gender {
+    MALE,FEMALE;
+    public String name;
+
+    public void setName(String name) {
+        switch (this){
+            case MALE:
+                if (name.equals("男")){
+                    this.name = name;
+                }else {
+                    System.out.println("参数错误");
+                }
+                break;
+            case FEMALE:
+                if (name.equals("女")){
+                    this.name = name;
+                }else {
+                    System.out.println("参数错误");
+                }
+                break;
+        }
+    }
+
+    public String getName(){
+        return this.name;
+    }
+}
+```
+
+但是仍然不够好，通常来说，枚举类应该设计成不可变的类，也就是说，他的成员变量不应该改变。
+
+```java
+public enum Gender {
+    MALE("男"),FEMALE("女");
+    public String name;
+
+    private Gender(String name) {
+        this.name = name;
+    }
+
+    public String getName(){
+        return this.name;
+    }
+}
+```
+
+在使用的时候，我们在枚举类中列出枚举值，实际上就是调用构造器创建枚举类对象，无须使用new关键字
+
+```java
+package chap6;
+
+public class GenderTest {
+    public static void main(String[] args) {
+        Gender g = Gender.valueOf("FEMALE");
+        System.out.println(g + "代表" + g.name);
+    }
+}
+```
+
+### 6.9.4 实现接口的枚举类
+
+枚举类也可以实现一个或多个接口。与普通类实现一个或多个接口完全一样，枚举类实现一个或多个接口时，也需要包含接口所包含的方法。
+
+抽象枚举类（只要包含了抽象方法）他就是抽象枚举类。
+
+### 6.9.5 包含抽象方法的枚举类
+
+```java
+package chap6;
+
+public enum Operation {
+    PLUS {
+        public double eval(double x, double y) {
+            return x + y;
+        }
+    },
+    MINUS {
+        public double eval(double x, double y) {
+            return x - y;
+        }
+    };
+
+    public abstract double eval(double x, double y);
+
+    public static void main(String[] args) {
+        System.out.println(Operation.PLUS.eval(6,4));
+    }
+}
+```
+
+其中，PLUS和MINUS是匿名内部子类。
+
+## 6.10 对象与垃圾回收
+
+垃圾回收机制特征
+
+- 垃圾回收机制只负责回收堆内存中的对象，不会回收任何物理资源（数据库连接、网络IO等资源）
+- 程序无法精准控制垃圾回收，垃圾回收会在合适的时候进行
+- 垃圾回收机制回收任何对象之前都会调用finalize()方法，该方法可能使该对象重新复活（让一个引用变量重新引用该对象），从而导致垃圾回收机制取消回收。
+
+### 6.10.1 对象在内存中的状态
+
+- 可达状态：如果被创建的对象有一个以上得到引用变量去引用它，则这个对象处于可达状态
+- 可恢复状态：某个对象不再有任何引用变量引用他，这个时候垃圾回收机制就准备回收这个对象。系统调用所有的可恢复对象的finalize（）方法
+- 不可达状态：当一个对象没有任何引用指向，并且调用了finalize（）方法之后仍然没有把他变成可达状态，那么这个对象就会被真正的回收。
+
+```java
+public class StatusTranfer {
+    public static void test(){
+        String a = new String("Java"); // 1
+        a = new String("Java a"); // 2
+    }
+    public static void main(String[] args) {
+        test();
+    }
+}
+```
+
+执行1之后，”Java“字符串对象处于可达状态。执行2之后，“Java a”进入可达状态，“Java”变成了可恢复状态。
+
+当某个对象被其他类的类变量引用，只有类销毁，该对象才会进入可恢复状态。当被其他对象的实例变量引用时，只有该对象被销毁后，该对象才会进入可恢复状态。
+
+### 6.10.2 强制垃圾回收
+
+- 调用System类的gc()静态方法
+- 调用Runtime对象的gc()实例方法 Runtime.getRuntime().gc()
+
+```java
+package chap6;
+
+public class GcTest {
+    public static void main(String[] args) {
+        for (int i = 0;i < 4;i++){
+            new GcTest();
+            System.gc();
+        }
+    }
+
+    protected void finalize(){
+        System.out.println("正在回收");
+    }
+}
+
+```
+
+### 6.10.3 finalize()方法
+
+- 不应该主动调用finalize()，该方法应该交给垃圾回收机制
+- finalize()不一定会执行
+- 当JVM执行可恢复对象的finalize()方法时，可能使该对象或系统中其他对象重新变成可达状态
+- 即使finalize()执行出现异常，也不会报告异常
+
+### 6.10.4 对象的软、弱和虚引用
+
+Java四种引用方式
+
+- 强引用：创建一个对象，并把这个对象赋值给引用变量，是最常见的。此时对象处于可达状态，不会被系统垃圾回收机制强制回收
+- 软引用：通过SoftReference类来实现，当一个对象只有软引用，可能被回收。系统空间足够，那么不会被回收，不够则会被回收。
+- 弱引用：通过WeakReference类实现，弱引用比软引用级别更低，不管内存是否足够，都会回收对象
+- 虚引用：PhantomReference类实现，如果一个对象只有一个虚引用，那么它和没有引用的效果大致相似。虚引用主要用于跟踪对象被垃圾回收的状态，不能单独使用，必须和引用队列配合使用。
+
+弱引用实例
+
+```java
+package chap6;
+
+import java.lang.ref.WeakReference;
+
+public class ReferenceTest {
+    public static void main(String[] args) throws Exception{
+        String str = new String("Java");
+        // 创建一个弱引用
+        WeakReference wr = new WeakReference(str); // 1
+        // 切断str引用和Java字符串之间的引用
+        str = null;  // 2
+        // 取出若应用所引用的对象
+        System.out.println(wr.get()); // 3
+        // 强制垃圾回收
+        System.gc();
+        System.runFinalization();
+
+        // 再次取出弱引用所引用的变量
+        System.out.println(wr.get()); // 4
+    }
+}
+```
+
+上面的代码，当我们执行str = null切断了str和“Java”之间的引用，当我们获取弱引用指向的对象的时候，由于内存不紧张，所以不会回收。当我们强制执行垃圾回收，则会回收掉“Java”所在内存，输出null
+
+# 第七章 Java基础类库
+
+## 7.1 与用户互动
+
+### 7.1.1 运行java程序的参数
+
+```java
+package chap7;
+
+public class ArgsTest {
+   public static void main(String[]args) {
+      System.out.println(args.length);
+      for (inti= 0;i<args.length;i++) {
+         System.out.println(args[i]);
+      }
+   }
+}
+```
+
+### 7.2.2 使用Scanner获取键盘输入
+
+默认情况下，Scanner的分隔符可以是空格、Tab空白、回车
+
+- hasNextXxx() 用于判断是否还有下一个输入项
+- nextXxx() 用于获取下一个输入项
+
+```java
+package chap7;
+
+import java.util.Scanner;
+
+public class ScannerKeyBoardTest {
+	public static void main(String[] args) {
+		Scanner sc = new Scanner(System.in);
+		// 只把回车作为分隔符
+		sc.useDelimiter("\n");
+		while (sc.hasNextInt()){
+			System.out.println("键盘输入的是：" + sc.nextInt());
+		}
+	}
+}
+```
+
+> 如果只想把回车作为分隔符，那么使用过userDelimiter方法可以实现
+> 
+
+Scanner还能用于读取文件中的内容，不单单是用户输入的内容
+
+```java
+package chap7;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
+
+public class ScannerFileTest {
+	public static void main(String[] args) throws FileNotFoundException {
+		Scanner sc = new Scanner(new File("src/chap7/ScannerKeyBoardTest.java"));
+		while (sc.hasNextLine()){
+			System.out.println(sc.nextLine());
+		}
+	}
+}
+```
+
+## 7.2 系统相关
+
+### 7.2.1 System类
+
+Java无法完成访问操作系统底层硬件的信息
+
+```java
+package chap7;
+
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Map;
+import java.util.Properties;
+
+public class SystemTest {
+	public static void main(String[] args) {
+		// 获取系统的所有环境变量
+		Map<String,String> env = System.getenv();
+		for (String name: env.keySet()) {
+			System.out.println(name);
+		}
+		System.out.println("================");
+		for (String name: env.values()) {
+			System.out.println(name);
+		}
+		System.out.println("获取指定环境变量的值" + System.getenv("JAVA_HOME"));
+		// 将所有的系统属性保存到prop中
+		Properties props = System.getProperties();
+		try {
+			props.store(new FileOutputStream("prop.txt"),"System properties");
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+
+		// 输出指定的值
+		System.out.println(System.getProperty("os.name"));
+	}
+}
+```
+
+一些其他的方法
+
+```java
+package chap7;
+
+public class SystemMethodTest {
+   public static void main(String[]args) {
+      // 获取系统时间
+      System.out.println(System.currentTimeMillis());
+      System.out.println(System.nanoTime()); // 以纳秒为单位
+
+      
+   }
+}
+
+```
+
+System.identityHashCode(s) 返回对象的精确HashCode 即使自定义类的HashCode方法被重写了，也不影响
+
+```java
+package chap7;
+
+public class IdentityHashCodeTest {
+	public static void main(String[] args) {
+		// 两个对象指向的都是Hello
+		String s1 = new String("Hello");
+		String s2 = new String("Hello");
+
+		// 由于String的Hash计算规则是 根据字符串内容，所以HashCode是一样的
+		System.out.println(s1.hashCode() == s2.hashCode());
+
+		// 使用System的方法去判断
+		System.out.println(System.identityHashCode(s1) == System.identityHashCode(s2));
+
+		//
+		String s3 = "Java";
+		String s4 = "Java";
+		System.out.println(System.identityHashCode(s3) == System.identityHashCode(s4));
+	}
+}
+```
+
+> String str = “abc” 和 String str = new String(”abc”) 有什么区别
+> 
+
+下面这个图就能很好说明了
+
+> String str = “abc”
+> 
+
+![Untitled](./pictures/Untitled%2011.png)
+
+> String str = new String(”abc”)
+> 
+
+![Untitled](./pictures/Untitled%2012.png)
+
+所以程序中，使用System方法计算真实Hashcode new的方式得到的是false，而 String str = “abc”得到的是true
+
+### 7.7.2 Runtime类与Java9 的ProcessHandle
+
+Runtime是java程序运行时的环境，可以访问JVM相关的信息，例如处理器的数量、内存信息等
+
+```java
+package chap7;
+
+import java.io.IOException;
+
+public class RuntimeTest {
+	public static void main(String[] args) {
+		Runtime rt = Runtime.getRuntime();
+		System.out.println(rt.availableProcessors());
+		System.out.println(rt.freeMemory());
+		System.out.println(rt.maxMemory());
+
+		// 还可以单独启动一个进程来运行操作系统的命令
+		try {
+			System.out.println(rt.exec("notepad.exe"));
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
+}
+```
+
+> ProcessHandle类
+> 
+
+```java
+package chap7;
+
+import java.io.IOException;
+import java.util.concurrent.CompletableFuture;
+
+public class ProcessHandleTest {
+	public static void main(String[] args) {
+		Runtime rt = Runtime.getRuntime();
+		// 运行笔记本程序
+		try {
+			Process p = rt.exec("notepad.exe");
+			ProcessHandle ph = p.toHandle();
+			System.out.println("进程是否运行：" + ph.isAlive());
+			System.out.println("进程ID：" + ph.pid());
+			System.out.println("父进程：" + ph.parent());
+
+			// 获取ProcessHandle.info的信息
+			ProcessHandle.Info info = ph.info(); // ProcessHandle.Info 内部接口
+
+			System.out.println("进程命令：" + info.command());
+			System.out.println("进程参数：" + info.arguments());
+			System.out.println("进程启动时间：" + info.startInstant());
+			System.out.println("进程累计运行时间：" + info.totalCpuDuration());
+
+			// 通过CompletableFuture在进程结束的时候运行某个任务
+			CompletableFuture<ProcessHandle> cf = ph.onExit();
+			cf.thenRunAsync(()->{
+				System.out.println("程序退出！");
+			});
+			Thread.sleep(5000);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		} catch (InterruptedException e) {
+			throw new RuntimeException(e);
+		}
+
+	}
+}
+```
+
+## 7.3 常用类
+
+### 7.3.1 Object类
+
+所有类、数组、枚举类的父类
+
+Java的object类提供了一个clone方法，能够得到当前对象的一个副本。由于这个方法使用protected修饰，所以只能被子类重写或调用，而不能被继承。
+
+实现克隆的步骤如下
+
+- 自定义类实现Cloneable接口。实现该接口的对象可以实现自我克隆，接口里没有定义任何方法。
+- 自定义类实现自己的clone方法
+- 实现clone方法时通过super.clone，调用Object实现的clone方法来得到该对象的副本，并返回该副本。
+
+```java
+package chap7;
+
+public class CloneTest {
+	public static void main(String[] args) throws CloneNotSupportedException {
+		User u1 = new User(29);
+		User u2 = u1.clone();
+		System.out.println(u1 == u2);
+		System.out.println(u1.address == u2.address);
+	}
+}
+
+class Address{
+	String detail;
+	public Address(String detail){
+		this.detail = detail;
+	}
+}
+
+// 实现Cloneable接口
+class User implements Cloneable{
+	int age;
+	Address address;
+	public User(int age){
+		this.age = age;
+		address = new Address("深圳南山");
+	}
+	public User clone() throws CloneNotSupportedException {
+		return (User)super.clone();
+	}
+}
+```
+
+当我们使用clone方法时，克隆的是对象的一个副本，如果对象中有引用类型，那么其在堆内存指向的值是与被克隆对象指向同一个位置，内存图如下
+
+![Untitled](./pictures/Untitled%203.jpeg)
+
+### 7.3.2 Java7新增的**Objects**类
+
+java工具类的命名规范是添加一个s结尾，所以**Objects**类是**Object**类的工具类。
+
+```java
+package chap7;
+
+import java.util.Objects;
+
+public class ObjectTest {
+	static ObjectTest obj = null;
+	public static void main(String[] args) {
+		System.out.println(Objects.toString(obj));
+		System.out.println(Objects.hashCode(obj));
+		// TODO: 2023/1/12 通常下面的用于验证不能为空 
+		System.out.println(Objects.requireNonNull(obj,"不能为null"));
+	}
+}
+```
+
+### 7.3.3 Java9改进的String、StringBuffer和StringBuilder类
+
+这三个类都是用来封装字符串的，都实现了CharSequence接口
+
+- String类是不可变类，一旦一个String对象被创建，那么对象中的字符序列是不可改变的
+- StringBuffer对象代表一个字符序列可变的字符串，通过一些方法可以改变字符串的字符序列，如果我们得到了满意的字符序列，那么我们可以toString 转换为String对象
+- StringBuilder与StringBuffer类似，只不过StringBuffer是线程安全的，而StringBuilder没实现线程安全，所以StringBuilder性能是高的，通常优先考虑使用StringBuilder
+
+在Java9中，使用byte[]加一个encoding-flag保存字符串，每个字符占一个字节，相比于char[]的方式（占两个字节）更省空间
+
+**1）String类**
+
+```java
+package chap7;
+
+import java.nio.charset.Charset;
+
+public class StringTest {
+	public static void main(String[] args) {
+		// 创建一个包含0个字符的String对象，不是null
+		String s1 = new String();
+		// 使用指定byte数组，转换成指定字符编码的String对象
+		byte[] b1 = new byte[]{'1','2'};
+		String s2 = new String(b1, Charset.forName("utf-8"));
+		System.out.println(s2);
+		// 根据StringBuffer创建String对象
+		StringBuffer sb = new StringBuffer("123");
+		String s3 = new String(sb);
+		System.out.println(s3);
+		StringBuilder sb2 = new StringBuilder("123");
+		String s4 = new String(sb2);
+		System.out.println(s4);
+
+		// 常用方法
+		// 获取指定位置的字符 charAt()
+		// 判断是否是以某个字符串结尾
+		String s5 = new String("akjshgjkalkf.com");
+		System.out.println(s5.endsWith(".com"));
+
+		// 忽略大小写进行比较
+		String s6 = new String("Abc");
+		String s7 = new String("abc");
+		System.out.println(s6.equalsIgnoreCase(s7));
+
+		// 字符串出现的位置
+		String s8 = new String("askfhkalhakgnjklasdf");
+		// 第一次出现的位置
+		System.out.println(s8.indexOf('a'));
+		// 在某个位置之后，第一次出现的位置 返回的是绝对位置
+		System.out.println(s8.indexOf('a',3));
+		// 子串的位置
+		System.out.println(s8.indexOf("hakg"));
+
+		// lastIndexOf 相同的道理，最后出现的位置
+
+		// replace 替换旧字符串为新字符串
+		String s9 = new String("asfjhkkjasfn");
+		// 是否以xxx字符串开头
+		System.out.println(s9.startsWith("asf"));
+
+		// 将一些基本类型转为String
+		String s10 = String.valueOf(10);
+		// 将String转为基本类型
+		int a = Integer.parseInt(s10);
+	}
+}
+```
+
+**2）StringBuffer和StringBuilder**
+
+```java
+package chap7;
+
+public class StringBuilderTest {
+   public static void main(String[]args) {
+      StringBuildersb= new StringBuilder();
+				sb.append("java");
+				sb.insert(0,"hello");
+				sb.replace(5,6,",");
+				sb.delete(2,4);
+				sb.reverse();
+				      System.out.println(sb);
+				      System.out.println(sb.length());
+				      System.out.println(sb.capacity());
+				sb.setLength(3);
+				      System.out.println(sb);
+				      System.out.println(sb.capacity());
+				sb.append("akfhakuhfkadshgfukadshfgkjasd");
+				      System.out.println(sb.length());
+				      System.out.println(sb.capacity());
+   }
+}
+
+```
+
+### 7.3.4 Math类
+
+Math类中的所有方法都是类方法
+
+### 7.3.5 Java7的ThreadLocalRandom与Random
+
+Random类提供了生成伪随机数，有两个构造器，一个无参一个可以传入long种子
+
+ThreadLocalRandom在并发访问的环境下能够减少多线程资源竞争
+
+```java
+package chap7;
+
+import java.util.Arrays;
+import java.util.Random;
+
+public class RandomTest {
+	public static void main(String[] args) {
+		Random r = new Random();
+		System.out.println(r.nextBoolean());
+		// 随机填充数组
+		byte[] b = new byte[16];
+		r.nextBytes(b);
+		System.out.println(Arrays.toString(b));
+		// 生成高斯数
+		System.out.println(r.nextGaussian());
+		// 生成0-26之间的伪随机数
+		System.out.println(r.nextInt(26));
+
+	}
+}
+```
+
+有关于种子的使用，当我们使用的种子相同时，产生的结果也是相同的
+
+```java
+package chap7;
+
+import java.util.Random;
+
+public class SeedTest {
+	public static void main(String[] args) {
+		Random r1 = new Random(50);
+		Random r2 = new Random(50);
+		Random r3 = new Random(100);
+		System.out.println(r1.nextInt());
+		System.out.println(r2.nextInt());
+		System.out.println(r3.nextInt());
+
+		// 使用时间作为种子
+		Random rand = new Random(System.currentTimeMillis());
+		System.out.println(rand.nextInt());
+
+		// 多线程随机
+		ThreadLocalRandom tlr = ThreadLocalRandom.current();
+		int val1 = tlr.nextInt();
+		System.out.println(val1);
+	}
+}
+```
+
+### 7.3.6 BigDecimal类
+
+float double容易造成精度丢失
+
+在使用BigDecimal类的时候，建议使用String参数的构造器。或者如果一定要用浮点数类型进行对象创建，则可以使用BigDecimal.valueOf(double value)
+
+```java
+package chap7;
+
+import java.math.BigDecimal;
+
+public class BigDecimalTest {
+	public static void main(String[] args) {
+		BigDecimal f1 = new BigDecimal("0.05");
+		BigDecimal f2 = BigDecimal.valueOf(0.01);
+		BigDecimal f3 = new BigDecimal(0.05);
+		System.out.println(f1.add(f2));
+		System.out.println(f1.subtract(f2));
+		System.out.println(f1.multiply(f2));
+		System.out.println(f1.divide(f2));
+
+		// 下面的容易精度丢失
+		System.out.println(f3.add(f2));
+		System.out.println(f3.subtract(f2));
+		System.out.println(f3.multiply(f2));
+		System.out.println(f3.divide(f2));
+	}
+}
+```
+
+如果我们想要对于浮点数进行运算，那么需要先把double类型包装成BigDecimal，然后计算完之后，再转回double输出，可以定义以下工具类（部分）
+
+```java
+package chap7;
+
+import java.math.BigDecimal;
+
+public class Arith {
+   private static final intDEF_DIV_SCALE= 10;
+   private Arith(){
+
+   }
+   public static double add(doublev1,doublev2){
+      BigDecimalb1= BigDecimal.valueOf(v1);
+      BigDecimalb2= BigDecimal.valueOf(v2);
+      returnb1.add(b2).doubleValue();
+
+   }
+   public static void main(String[]args) {
+      System.out.println(Arith.add(1,2));
+
+   }
+}
+
+```
+
+## 7.4 日期、时间类
+
+### 7.4.1 Date类
+
+Date类基本已经过时了
+
+### 7.4.2 Calendar类
+
+Calendar和Date可以互相的转换
+
+注意Calendar的月份下标从0开始。
+
+```java
+package chap7;
+
+import java.util.Calendar;
+import java.util.Date;
+
+public class CalendarTest {
+   public static void main(String[]args) {
+      // Calendar是抽象类，不能用构造器，但是可以使用getInstance方法获取对象
+      Calendarc= Calendar.getInstance();
+      // 取出Date对象
+      Datedate=c.getTime();
+
+      // 因为Calendar没有构造器，所以想要把Date转为Calendar 必须先构建Calendar实例，然后传参数
+      Calendarc2= Calendar.getInstance();
+c2.setTime(date);
+
+      // Calendar的常用方法
+      Calendarcalendar= Calendar.getInstance();
+      System.out.println(calendar.get(Calendar.YEAR));
+      System.out.println(calendar.get(Calendar.MONDAY));
+      System.out.println(calendar.get(Calendar.DATE));
+c.set(2003,10,23,12,32,12);
+      System.out.println(c.getTime());
+
+      // 向前推一年
+c.add(Calendar.YEAR,-1);
+      // 向前推八个月
+c.roll(Calendar.MONTH,-8);
+      System.out.println(c.getTime());
+   }
+}
+
+```
+
+> add和roll有什么区别
+> 
+
+对于add
+
+```java
+Calendar call = Calendar.getInstance();
+	call.set(2003,10,30,12,32,12);
+	call.add(Calendar.MONTH,3);
+	System.out.println(call.getTime()); // Sun Feb 29 12:32:12 CST 2004
+```
+
+会动态的修改上一级或下一级的范围
+
+roll就是，当被修改的字段超出允许范围，不会修改上一级字段
+
+比如2003年7月，roll六个月，不是变成2004年，还是2003年，但是下一级与add相同。
+
+> 设置Calendar的容错性
+> 
+
+```java
+package chap7;
+
+import java.util.Calendar;
+
+public class LenientTest {
+   public static void main(String[]args) {
+      Calendarcal= Calendar.getInstance();
+cal.set(Calendar.MONTH,13);
+      System.out.println(cal.getTime());
+
+cal.setLenient(false);
+cal.set(Calendar.MONTH,13);
+      System.out.println(cal.getTime());
+   }
+}
+
+```
+
+> set方法延迟修改
+> 
+
+延迟修改就是可以一直修改，不断叠加，延时修改的前提是，不能中途进行打印等操作
+
+```java
+package chap7;
+
+import java.util.Calendar;
+
+public class LazyTest {
+	public static void main(String[] args) {
+		Calendar cal = Calendar.getInstance();
+		cal.set(2003,7,31); // 这是设置为8月
+		System.out.println(cal.getTime());
+		cal.set(Calendar.MONTH,8); // 这是设置为9月 但是9月没有31号，所以会显示10月1号
+		System.out.println(cal.getTime());
+		cal.set(Calendar.DATE,5);
+		System.out.println(cal.getTime());
+	}
+}
+```
+
+上面输出的是
+
+Sun Aug 31 17:26:17 CST 2003
+Wed Oct 01 17:26:17 CST 2003
+Sun Oct 05 17:26:17 CST 2003
+
+如果把第二个打印注释掉，则输出下面的内容
+
+Sun Aug 31 17:27:09 CST 2003
+Fri Sep 05 17:27:09 CST 2003
+
+### 7.4.3 Java8新增的日期、时间包
+
+```java
+package chap7;
+
+import java.time.*;
+
+public class TimeTest {
+	public static void main(String[] args) {
+		// Clock
+		Clock c = Clock.systemUTC();
+		System.out.println(c.instant()); // 获取当前时间
+		System.out.println(c.millis()); // 获取对应毫秒
+
+		// Duration 用于获取持续时间
+		Duration d = Duration.ofSeconds(6000);
+		System.out.println(d.toHours()); // 时间转换
+
+		Clock c2 = Clock.offset(c,d);
+		System.out.println(c2.instant());
+
+		// Instant 获取当前时间
+		Instant instant = Instant.now();
+		System.out.println(instant);
+
+		// LocalDate
+		LocalDate ld = LocalDate.now();
+		System.out.println(ld);
+
+		LocalTime lt = LocalTime.now();
+		System.out.println(lt);
+
+		LocalDateTime ldt = LocalDateTime.now();
+		System.out.println(ldt);
+	}
+}
+```
+
+# 第八章 Java集合
+
+## 8.1 Java集合概述
+
+Java的集合类主要由两个接口派生而出：Collection和Map
+
+如果访问List集合，那么可以使用索引。访问Map集合，可以使用键。访问Set，只能根据元素本身来访问。
+
+## 8.2 Collection和Iterator接口
+
+Collection接口是List、Set和Queue的父接口，主要的方法如下
+
+① add和addAll
+
+```java
+public static void main(String[] args) {
+        Collection c = new ArrayList();
+        c.add("lyf");
+        Collection c2 = new ArrayList();
+        c2.add("test");
+        c2.add("test2");
+        c.addAll(c2);
+
+        System.out.println(c.toString()); // [lyf, test, test2]
+    }
+```
+
+② contains()和constainsAll()
+
+判断集合是否包含或者包含某个集合中的元素
+
+```java
+public static void main(String[] args) {
+        Collection c1 = new ArrayList();
+        c1.add(1);
+        c1.add(2);
+        c1.add(3);
+        c1.add(4);
+
+        Collection c2 = new ArrayList();
+        c2.add(1);
+        c2.add(4);
+        System.out.println(c1.contains(2)); // true
+        System.out.println(c1.containsAll(c2)); // true
+    }
+```
+
+③ remove、removeAll、retainAll
+
+remove是删除集合中第一次出现的指定元素，如果后面还有相同值，那么不会删除
+
+removeAll则是删除所有指定出现的元素
+
+retainAll是删除除了指定元素之外的所有元素
+
+```java
+public static void main(String[] args) {
+        Collection c1 = new ArrayList();
+        c1.add(1);
+        c1.add(2);
+        c1.add(3);
+        c1.add(1);
+        c1.add(2);
+        c1.add(1);
+        c1.add(4);
+        Collection c2 = new ArrayList();
+        c2.add(1);
+        System.out.println(Arrays.toString(c1.toArray())); // [1, 2, 3, 1, 2, 1, 4]
+        c1.remove(3);
+        System.out.println(Arrays.toString(c1.toArray())); // [1, 2, 1, 2, 1, 4]
+        c1.removeAll(c2);
+        System.out.println(Arrays.toString(c1.toArray())); // [2, 2, 4]
+
+        Collection c3 = new ArrayList(); 
+        c3.add(4);
+
+        c1.retainAll(c3);
+        System.out.println(Arrays.toString(c1.toArray()));// [4]
+}
+```
+
+注意，Collection所有的实现类都重写了toString() 方法，直接print可以一次性输出集合中的所有元素，输出可以直接这样写`System.*out*.println(c1);`
+
+### 8.2.1 使用Lambda表达式遍历集合
+
+Java 8为Iterable新增了一个forEach()方法，参数类型是函数式接口，可以使用lambda表达式来遍历集合元素。
+
+```java
+public static void main(String[] args) {
+        Collection books = new HashSet();
+        books.add("test1");
+        books.add("test3");
+        books.add("test2");
+        books.forEach(obj ->System.out.println(obj));
+    }
+```
+
+### 8.2.2 使用Java 8增强的Iterator遍历集合元素
+
+Iterator主要用来遍历。
+
+几个常见的方法
+
+hasNext() 如果被迭代的集合元素还没有被遍历完，则返回true
+
+next() 返回集合里的下一个元素
+
+remove() 删除集合里上一次next方法返回的元素
+
+forEachRemaining 可以使用Lambda表达式来遍历集合元素
+
+```jsx
+Collection c = new ArrayList();
+        c.add(1);
+        c.add(2);
+        c.add(3);
+        c.add(4);
+        Iterator it = c.iterator();
+        it.forEachRemaining(obj -> System.out.println(obj));
+//        while(it.hasNext()){
+//            int temp = (int)it.next();
+////            System.out.println(temp);
+//            if(temp == 3){
+//                it.remove();
+//            }
+//        }
+```
+
+注意迭代器it的位置，不注意位置会导致错误的遍历。
+
+iterator必须依附于Collection对象，是一对一的关系。
+
+在迭代的时候，迭代器并不是吧元素本身传递给了迭代变量，而是把集合元素的值传给了迭代变量，所以不会改变集合元素本身的值。
+
+所以如果我们修改temp的值，实际上并不会影响集合本身的对应的值。
+
+```jsx
+it.remove(temp)
+```
+
+会发生报错，也不是报异常了，根本没有传参数的方法了。
+
+### 8.2.3 使用Lambda表达式变量Iterator
+
+Lambda表达式的目标类型是Comsumer。
+
+### 8.2.4 使用foreach循环变量集合元素
+
+Collection中存放的是Object对象，所以我们使用foreach进行循环遍历更加方便
+
+### 8.2.5 使用Java 8新增的Predicate操作对象
+
+其方法是removeIf，能够批量的删除符合过滤条件的所有元素，可以使用Lambda表达式作为参数
+
+```java
+public static void main(String[] args) {
+    Collection books = new HashSet();
+    books.add(new String("轻量级Java EE企业应用实战"));
+    books.add(new String("疯狂Java讲义"));
+    books.add(new String("疯狂IOS讲义"));
+    books.add(new String("疯狂Ajax讲义"));
+    books.add(new String("疯狂Android讲义"));
+
+    books.removeIf(ele -> ((String)ele).length() < 10);
+    System.out.println(books);
+}
+```
+
+  books.removeIf(ele -> ((String)ele).length() < 10);表示移除长度小于10的字符元素。
+
+**一个更加复杂的需求**
+
+假设我们要统计多个需求
+
+书名出现 疯狂 二字的数量
+
+书名出现 Java 的数量
+
+书名长度大于10的数量
+
+```java
+package com.lyf.chap8;
+
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.function.Predicate;
+
+public class demo4 {
+    public static void main(String[] args) {
+        Collection books = new HashSet();
+        books.add(new String("轻量级Java EE企业应用实战"));
+        books.add(new String("疯狂Java讲义"));
+        books.add(new String("疯狂IOS讲义"));
+        books.add(new String("疯狂Ajax讲义"));
+        books.add(new String("疯狂Android讲义"));
+
+        System.out.println(calAll(books,ele->((String)ele).contains("疯狂")));
+        System.out.println(calAll(books,ele->((String)ele).contains("Java")));
+        System.out.println(calAll(books,ele->((String)ele).length() < 10));
+    }
+
+    public static int calAll(Collection books, Predicate p){
+        int total = 0;
+        for (Object obj:books) {
+            if(p.test(obj)){
+                total++;
+            }
+        }
+        return total;
+    }
+}
+
+```
+
+下面这几个都是Predicate 参数，然后我们通过定义一个函数，传入Predicate 参数，通过test方法，来判断符合条件的字符串的数量。
+
+```java
+ele->((String)ele).contains("疯狂")
+ele->((String)ele).contains("Java")
+ele->((String)ele).length() < 10
+```
+
+### 8.2.6 使用Java 8新增的Stream操作集合
+
+独立使用Stream的方法
+
+使用Stream或者XxxStream的builder()类方法创建该Stream对应的Builder
+
+重复调用Builder的add()方法向该流中添加多个元素
+
+调用Builder的builder方法获取对应的Stream
+
+调用Stream的聚集方法
+
+一个例子
+
+```java
+package com.lyf.chap8;
+
+import com.sun.security.jgss.GSSUtil;
+
+import java.util.stream.IntStream;
+
+public class demo5 {
+    public static void main(String[] args) {
+        IntStream is = IntStream.builder()
+                .add(20)
+                .add(30)
+                .add(-1)
+                .add(10)
+                .build();
+        // 调用聚集方法的代码每次只能够执行一次
+// -------------------------------------------------------------------------------------------
+        **System.out.println("max: " + is.max().getAsInt());
+        System.out.println("min: " + is.min().getAsInt());
+        System.out.println("sum: " + is.sum());
+        System.out.println("count: " + is.count());
+        System.out.println("avg: " + is.average());
+        System.out.println("pow all > 100?: " + is.allMatch(ele -> ele * ele > 100));
+        System.out.println("pow any > 100?: " + is.anyMatch(ele -> ele * ele > 100));
+
+        // 将is映射为一个新的Stream，其元素是原来的2n+1
+        IntStream newIs = is.map(ele -> ele * 2 + 1);**
+// -------------------------------------------------------------------------------------------
+        // 使用方法引用的方式来遍历元素集合 “函数式接口 变量名 = 类实例::方法名”
+        newIs.forEach(System.out::println);
+    }
+}
+
+```
+
+由于Stream的聚集方法同时只能执行一次，所以上面虚线内的只能执行一次
+
+Stream提供了聚集方法，这些方法可以是中间方法，也可以是末端方法
+
+中间方法：中间操作允许流保持打开状态，并允许直接调用后续方法。比如map方法
+
+末端方法：末端方法是对流的最终操作。当对某个Stream执行末端方法之后，这个流就会被消耗，并且不再可用，比如sum、count、average
+
+之前在8.2.5中有一个案例，对于符合条件的进行筛选，我们需要重新写一个calAll方法，但是用了Stream之后，只需要一行代码即可
+
+```java
+Collection books = new HashSet();
+books.add(new String("轻量级Java EE企业应用实战"));
+books.add(new String("疯狂Java讲义"));
+books.add(new String("疯狂IOS讲义"));
+books.add(new String("疯狂Ajax讲义"));
+books.add(new String("疯狂Android讲义"));
+
+// 统计书名出现疯狂的个数
+System.out.println(books.stream().filter(ele -> ((String)ele).contains("疯狂")).count());
+
+// 统计书名出现Java的个数
+System.out.println(books.stream().filter(ele -> ((String)ele).contains("Java")).count());
+
+// 统计字符串长度大于10的
+System.out.println(books.stream().filter(ele -> ((String)ele).length() > 10).count());
+
+// 先调用Stream的mapToInt() 方法获取原有的Stream对应的IntStream
+books.stream().mapToInt(ele -> ((String)ele).length()).forEach(System.out::println);
+```
+
+Stream编程：只要能够把对象转换为Stream对象，后面的操作就都可以使用Stream来完成。
+
+## 8.3 Set集合
+
+可以理解成Set集合和Collection基本相同，但是Set不允许包含重复元素。如果将相同元素添加到Set中会失败。
+
+### 8.3.1 HashSet类
+
+HashSet按照Hash算法来存储集合中的元素，存取和查找的性能比较好。
+
+HashSet的特点
+
+不能够保证元素的排列顺序，顺序可能与添加顺序不同，顺序也有可能发生变化。
+
+HashSet不是同步的，如果多个线程同时访问一个HashSet，必须通过代码来保证其同步，是线程不安全的。
+
+集合元素可以是null
+
+元素存储的时候会根据hashCode()方法获取该对象的hashCode值，然后根据hashCode值决定存储位置。
+
+两个元素相同的标准是两个对象通过equals()方法比较相等，而且两个对象的hashCode()方法返回值也相等。
+
+```java
+package com.lyf.chap8;
+
+import java.sql.SQLOutput;
+import java.util.HashSet;
+
+public class demo7 {
+    public static void main(String[] args) {
+        HashSet books = new HashSet();
+        books.add(new A());
+        books.add(new A());
+        books.add(new B());
+        books.add(new B());
+        books.add(new C());
+        books.add(new C());
+
+        System.out.println(books);
+    }
+}
+
+class A{
+    public boolean equals(Object obj){
+        return true;
+    }
+}
+
+class B{
+    public int hashCode() {
+        return 1;
+    }
+}
+
+class C{
+    @Override
+    public int hashCode() {
+        return 2;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return true;
+    }
+}
+
+```
+
+上面的代码我们写了三个类，并且不同程度的重写了hashCode()和equals()，结果如下
+
+```java
+[com.lyf.chap8.B@1, com.lyf.chap8.B@1, com.lyf.chap8.C@2, com.lyf.chap8.A@27d6c5e0, com.lyf.chap8.A@7ef20235]
+```
+
+我们可以看到，最终的结果只有C才被添加了一次，A被添加了两次，这说明如果equals结果为true，hashCode不同，则HashSet会认为其是两个不同的对象。同样的道理，hashCode一样，equals不一样也会认为是两个不同对象。
+
+### 8.3.2 LinkedHashSet
+
+LinkedHashSet需要维护元素的插入元素，性能略低于HashSet
+
+```java
+public static void main(String[] args) {
+        LinkedHashSet<Object> books = new LinkedHashSet<>();
+        books.add("疯狂Java讲义");
+        books.add("轻量级Java EE企业应用实战");
+        System.out.println(books);
+
+        books.remove("疯狂Java讲义");
+        books.add("疯狂Java讲义");
+        System.out.println(books);
+    }
+```
+
+LinkedHashSet使用了链表记录集合元素的添加顺序，但是LinkedHashSet不允许集合元素重复
+
+### 8.3.3 TreeSet类
+
+TreeSet是SortedSet接口的实现类，TreeSet可以**保证集合元素处于排序状态**。
+
+```java
+public static void main(String[] args) {
+    TreeSet nums = new TreeSet();
+    nums.add(5);
+    nums.add(2);
+    nums.add(10);
+    nums.add(-9);
+
+    System.out.println(nums);
+
+    // comparator
+    nums.comparator();
+    System.out.println(nums);
+
+    // 返回最后一个元素
+    System.out.println(nums.last());
+    // 返回第一个元素
+    System.out.println(nums.first());
+
+    // lower 返回集合中位于制定元素之前的元素 前一个
+    System.out.println(nums.lower(4));
+
+    // lower 返回集合中位于制定元素之后的元素 后一个
+    System.out.println(nums.higher(4));
+
+    // headSet是返回小于4的元素集合
+    System.out.println(nums.headSet(4));
+
+    // headSet是返回大于等于4的元素集合
+    System.out.println(nums.tailSet(4));
+
+    // 返回集合中返回此Set的子集合 左闭右开
+    System.out.println(nums.subSet(2,6));
+}
+```
+
+TreeSet有两种排序的规则，自然排序和定制排序
+
+**自然排序**
+
+TreeSet会调用compareTo方法比较元素之间的大小关系，然后将元素按照**升序**排列
+
+如果想把一个对象添加到TreeSet时，则该对象的类必须事先Comparable接口，否则将会抛出异常。
+
+因为Comparable接口中的compareTo方法时，都需要把被比较对象强制转换为相同的类型，所以TreeSet都需要添加同一个类的对象。
+
+compareTo的比较规则
+
+obj1.compareTo(obj2) 如果返回0，表明两个对象相等
+
+obj1.compareTo(obj2) 如果返回正整数，表明obj1 > obj2
+
+obj1.compareTo(obj2) 如果返回负整数，表明obj1 < obj2
+
+**定制排序**
+
+![Untitled](./pictures/Untitled%2013.png)
