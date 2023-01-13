@@ -459,7 +459,7 @@ iArr= new int[5];
 
 ### 4.6.3 引用类型数组的初始化
 
-![Untitled](./pictures/Untitled.jpeg)
+![Untitled](pictures\Untitled.jpeg)
 
 ```java
 package com.lyf.chap4;
@@ -789,7 +789,7 @@ swap(a,b);
 }
 ```
 
-![Untitled](./pictures/Untitled.png)
+![Untitled](pictures\Untitled.png)
 
 引用类型的交换
 
@@ -817,13 +817,13 @@ class DataWarp{
 }
 ```
 
-![Untitled](./pictures/Untitled%201.png)
+![Untitled](pictures\Untitled%201.png)
 
 为什么会发生这样？
 
 首先，当我们在main中创建对象，我们在main的栈中放入的是dw对象的引用，在堆中真正的创建了一块内存区域，用来存放a和b两个值。当我们调用swap，在swap方法的栈中，我们也有一个dw对象的引用，而且也是指向了堆中同一个区域，所以操作的都是同一个区域
 
-![Untitled](./pictures/Untitled%202.png)
+![Untitled](pictures\Untitled%202.png)
 
 通过地址来看，实际是一样的。
 
@@ -878,7 +878,7 @@ public class Demo8 {
 }
 ```
 
-![Untitled](./pictures/Untitled%203.png)
+![Untitled](pictures\Untitled%203.png)
 
 一个参数的时候，默认是调用不是可变参的方法。
 
@@ -1035,9 +1035,9 @@ public class Demo11 extends Demo10{
 > 注意：如果父类中的方法是private，不可被继承，但是子类中恰好定义了跟该方法相同方法名，相同形参、相同方法返回值的方法，这不是重写
 > 
 
-![Untitled](./pictures/Untitled%204.png)
+![Untitled](pictures\Untitled%204.png)
 
-![Untitled](./pictures/Untitled%205.png)
+![Untitled](pictures\Untitled%205.png)
 
 ### 5.6.3 super限定
 
@@ -1145,7 +1145,7 @@ class Creature {
 
 注意输出的顺序
 
-![Untitled](./pictures/Untitled%206.png)
+![Untitled](pictures\Untitled%206.png)
 
 ## 5.7 多态
 
@@ -1210,7 +1210,7 @@ class BaseClass{
 
 ```
 
-![Untitled](./pictures/Untitled%207.png)
+![Untitled](pictures\Untitled%207.png)
 
 多态实际上就是第三个输出表现的内容。
 
@@ -1442,7 +1442,7 @@ public class Test {
 
 上述代码的执行流程
 
-![Untitled](./pictures/Untitled%208.png)
+![Untitled](pictures\Untitled%208.png)
 
 首先我们在第一次new Leaf的时候，由于此时内存中还没有Leaf对象，所以需要进行加载过程，加载的时候，先去找顶级父类，加载Root的静态代码块，然后加载Mid的静态代码块，然后才加载Leaf 的静态代码块，然后在创建对象的时候，也要创建父类的对象，所以在创建对象的时候，先执行普通代码块，然后执行构造器。
 
@@ -1661,7 +1661,7 @@ public class StringCompareTest {
 }
 ```
 
-![Untitled](./pictures/Untitled%209.png)
+![Untitled](pictures\Untitled%209.png)
 
 s1 s2 s3都是直接被放在常量池中的，所以s4的字符串可以在编译的时候就确定下来，同样的道理s5也是，而s6s7不能在编译的时候确定，所以在比较的时候返回的是false
 
@@ -1847,7 +1847,7 @@ d= 5.6;
 
 final成员变量在显式初始化之前不能直接访问，但是可以通过方法来访问，就很奇怪，并且方法中的age不报错？
 
-![Untitled](./pictures/Untitled%2010.png)
+![Untitled](pictures\Untitled%2010.png)
 
 ### 6.4.2 final局部变量
 
@@ -2708,7 +2708,7 @@ public class Cow {
 
 上面的程序，实际上开辟了两个栈区，其内存模型如下
 
-![Untitled](./pictures/Untitled%201.jpeg)
+![Untitled](pictures\Untitled%201.jpeg)
 
 在非静态内部类的方法中访问某个变量，其访问优先级如下
 
@@ -3053,7 +3053,7 @@ Lambda表达式支持将代码块作为方法参数，通过表达式来创建�
 
 ### 6.8.1 Lambda表达式入门
 
-![Untitled](./pictures/Untitled%202.jpeg)
+![Untitled](pictures\Untitled%202.jpeg)
 
 上面这个图中，使用Lambda表达式，省去了new的过程，不需要指出重写的方法的名字，Lambda表达式的代码块将会代替实现抽象方法的方法体，Lambda表达式就相当于一个匿名方法。
 
@@ -3559,12 +3559,12 @@ public class IdentityHashCodeTest {
 > String str = “abc”
 > 
 
-![Untitled](./pictures/Untitled%2011.png)
+![Untitled](pictures\Untitled%2011.png)
 
 > String str = new String(”abc”)
 > 
 
-![Untitled](./pictures/Untitled%2012.png)
+![Untitled](pictures\Untitled%2012.png)
 
 所以程序中，使用System方法计算真实Hashcode new的方式得到的是false，而 String str = “abc”得到的是true
 
@@ -3687,7 +3687,7 @@ class User implements Cloneable{
 
 当我们使用clone方法时，克隆的是对象的一个副本，如果对象中有引用类型，那么其在堆内存指向的值是与被克隆对象指向同一个位置，内存图如下
 
-![Untitled](./pictures/Untitled%203.jpeg)
+![Untitled](pictures\Untitled%203.jpeg)
 
 ### 7.3.2 Java7新增的**Objects**类
 
@@ -4537,4 +4537,4 @@ obj1.compareTo(obj2) 如果返回负整数，表明obj1 < obj2
 
 **定制排序**
 
-![Untitled](./pictures/Untitled%2013.png)
+![Untitled](pictures\Untitled%2013.png)

@@ -12,7 +12,7 @@ jar包不统一，jar包不兼容。工程升级维护过程操作繁琐
 
 Maven的本质是一个项目管理工具，将项目开发和管理过程抽象成一个项目对象模型（POM 项目对象模型）
 
-![Untitled](./pictures/Untitled.png)
+![Untitled](pictures\Untitled.png)
 
 ### 1.2 Maven的作用
 
@@ -22,7 +22,7 @@ Maven的本质是一个项目管理工具，将项目开发和管理过程抽象
 
 统一开发结构：提供标准的、统一的项目结构
 
-![Untitled](./pictures/Untitled%201.png)
+![Untitled](pictures\Untitled%201.png)
 
 ## 2、下载与安装
 
@@ -32,15 +32,15 @@ Maven的本质是一个项目管理工具，将项目开发和管理过程抽象
 
 配置MAVEN_HOME,在系统变量中新建变量，然后添加
 
-![Untitled](./pictures/Untitled%202.png)
+![Untitled](pictures\Untitled%202.png)
 
 配置path
 
-![Untitled](./pictures/Untitled%203.png)
+![Untitled](pictures\Untitled%203.png)
 
 在cmd中运行，会提示报错
 
-![Untitled](./pictures/Untitled%204.png)
+![Untitled](pictures\Untitled%204.png)
 
 因为我们没有配置JAVA_HOME，直接使用的IDEA，所以还要配置一下，教程如下
 
@@ -48,7 +48,7 @@ Maven的本质是一个项目管理工具，将项目开发和管理过程抽象
 
 然后，**关闭cmd，重新打开，再次输入mvn**
 
-![Untitled](./pictures/Untitled%205.png)
+![Untitled](pictures\Untitled%205.png)
 
 ## 3、Maven基础概念
 
@@ -56,7 +56,7 @@ Maven的本质是一个项目管理工具，将项目开发和管理过程抽象
 
 用于存储资源，包含各种jar包
 
-![Untitled](./pictures/Untitled%206.png)
+![Untitled](pictures\Untitled%206.png)
 
 **仓库分类**
 
@@ -82,11 +82,11 @@ version（版本号）：定义当前版本号。
 
 如何更改仓库的路径
 
-![Untitled](./pictures/Untitled%207.png)
+![Untitled](pictures\Untitled%207.png)
 
 在setting.xml中进行修改
 
-![Untitled](./pictures/Untitled%208.png)
+![Untitled](pictures\Untitled%208.png)
 
 改成需要的保存的路径即可
 
@@ -115,7 +115,7 @@ version（版本号）：定义当前版本号。
 
 ### 4.1 Maven工程目录结构
 
-![Untitled](./pictures/Untitled%209.png)
+![Untitled](pictures\Untitled%209.png)
 
 ### 4.2 构建命令
 
@@ -133,7 +133,7 @@ mvn install #安装到本地仓库
 
 编译后生成的文件如下
 
-![Untitled](./pictures/Untitled%2010.png)
+![Untitled](pictures\Untitled%2010.png)
 
 **遇到的问题**
 
@@ -147,25 +147,25 @@ mvn install #安装到本地仓库
 
 **4.2.3 mvn test**
 
-![Untitled](./pictures/Untitled%2011.png)
+![Untitled](pictures\Untitled%2011.png)
 
-![Untitled](./pictures/Untitled%2012.png)
+![Untitled](pictures\Untitled%2012.png)
 
 **4.2.4 mvn package**
 
-![Untitled](./pictures/Untitled%2013.png)
+![Untitled](pictures\Untitled%2013.png)
 
 **4.2.5 mvn install**
 
 安装后的文件是安装到你的maven仓库中，按照com itheima project 1.0分层，最终在1.0下才是你的jar包
 
-![Untitled](./pictures/Untitled%2014.png)
+![Untitled](pictures\Untitled%2014.png)
 
 ### 4.3 插件创建工程
 
 这个也不常用
 
-![Untitled](./pictures/Untitled%2015.png)
+![Untitled](pictures\Untitled%2015.png)
 
 ## 5、第一个Maven项目（IDEA生成）
 
@@ -173,23 +173,23 @@ mvn install #安装到本地仓库
 
 **5.1.1 新建项目**
 
-![Untitled](./pictures/Untitled%2016.png)
+![Untitled](pictures\Untitled%2016.png)
 
 **5.1.2 更改项目结构**
 
-![Untitled](./pictures/Untitled%2017.png)
+![Untitled](pictures\Untitled%2017.png)
 
 如果想快速添加其他项目，并且与上一个项目同级，记得删掉这个部分
 
-![Untitled](./pictures/Untitled%2018.png)
+![Untitled](pictures\Untitled%2018.png)
 
 快速创建java项目
 
-![Untitled](./pictures/Untitled%2019.png)
+![Untitled](pictures\Untitled%2019.png)
 
 ### 5.2 快速创建javaweb项目
 
-![Untitled](./pictures/Untitled%2020.png)
+![Untitled](pictures\Untitled%2020.png)
 
 ### 5.3 Tomcat
 
@@ -197,21 +197,21 @@ mvn install #安装到本地仓库
 
 到maven仓库搜索
 
-![Untitled](./pictures/Untitled%2021.png)
+![Untitled](pictures\Untitled%2021.png)
 
 选择一个版本
 
-![Untitled](./pictures/Untitled%2022.png)
+![Untitled](pictures\Untitled%2022.png)
 
 将其中的内容复制下来
 
-![Untitled](./pictures/Untitled%2023.png)
+![Untitled](pictures\Untitled%2023.png)
 
 如果说找不到，那么刷新一下maven就好了
 
-![Untitled](./pictures/Untitled%2024.png)
+![Untitled](pictures\Untitled%2024.png)
 
-![Untitled](./pictures/Untitled%2025.png)
+![Untitled](pictures\Untitled%2025.png)
 
 学习到这里，综合来看一下，pom文件的组成都有哪些
 
@@ -289,11 +289,11 @@ mvn install #安装到本地仓库
 
 加入我们想要在项目2中使用项目3
 
-![Untitled](./pictures/Untitled%2026.png)
+![Untitled](pictures\Untitled%2026.png)
 
 依赖传递冲突问题
 
-![Untitled](./pictures/Untitled%2027.png)
+![Untitled](pictures\Untitled%2027.png)
 
 ### 6.3 可选依赖（控制别人是否看到）
 
@@ -310,7 +310,7 @@ mvn install #安装到本地仓库
 </dependencies>
 ```
 
-![Untitled](./pictures/Untitled%2028.png)
+![Untitled](pictures\Untitled%2028.png)
 
 ### 6.4 排除依赖（主动断开）
 
@@ -334,11 +334,11 @@ mvn install #安装到本地仓库
 
 排除前
 
-![Untitled](./pictures/Untitled%2029.png)
+![Untitled](pictures\Untitled%2029.png)
 
 排除后
 
-![Untitled](./pictures/Untitled%2030.png)
+![Untitled](pictures\Untitled%2030.png)
 
 ### 6.5 依赖范围
 
@@ -352,13 +352,13 @@ mvn install #安装到本地仓库
 
 是否参与打包（package指令范围内）
 
-![Untitled](./pictures/Untitled%2031.png)
+![Untitled](pictures\Untitled%2031.png)
 
 注意第三个是千万不能打包进去。
 
 **6.5.2 依赖范围传递性**
 
-![Untitled](./pictures/Untitled%2032.png)
+![Untitled](pictures\Untitled%2032.png)
 
 ## 7、生命周期与插件
 
@@ -374,7 +374,7 @@ post-clean
 
 default：核心工作：编译测试打包部署。执行到哪，就把前面的全部执行完。
 
-![Untitled](./pictures/Untitled%2033.png)
+![Untitled](pictures\Untitled%2033.png)
 
 site：产生报告，发布站点
 

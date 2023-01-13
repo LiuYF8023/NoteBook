@@ -24,19 +24,19 @@
 
 ### 1.3.1 在本地的一些操作
 
-![image-20230113124321640](pictures\image-20230113124321640.png)
+![image-20230113124321640](pictures/image-20230113124321640.png)
 
 ① git init 
 
 执行命令后，会在当前根目录生成一个.git隐藏目录
 
-![image-20230113124642869](pictures\image-20230113124642869.png)
+![image-20230113124642869](pictures/image-20230113124642869.png)
 
 ② git status
 
 查看状态
 
-![image-20230113124835967](pictures\image-20230113124835967.png)
+![image-20230113124835967](pictures/image-20230113124835967.png)
 
 相关解释：
 
