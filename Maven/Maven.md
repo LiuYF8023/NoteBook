@@ -213,6 +213,64 @@ mvn install #安装到本地仓库
 
 ![Untitled](./pictures/Untitled%2025.png)
 
+学习到这里，综合来看一下，pom文件的组成都有哪些
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <!-- 指定pom的模型版本-->
+  <modelVersion>4.0.0</modelVersion>
+  <!-- 组织id-->
+  <groupId>com.itheima</groupId>
+    <!-- 项目id-->
+  <artifactId>web02</artifactId>
+    <!-- 版本号 RELEASE表示发行版 SNAPSHOT表示开发版-->
+  <version>1.0-SNAPSHOT</version>
+  <!-- 打包方式，web工程打包为war java工程 打包为jar-->
+  <packaging>war</packaging>
+
+  <name>web02 Maven Webapp</name>
+  <!-- FIXME change it to the project's website -->
+  <url>http://www.example.com</url>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven.compiler.source>1.7</maven.compiler.source>
+    <maven.compiler.target>1.7</maven.compiler.target>
+  </properties>
+
+    <!-- 设置当前工程的所有依赖-->
+  <dependencies>
+      <!-- 具体的依赖-->
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.11</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+    <!-- 构建-->
+  <build>
+      <!-- 设置插件-->
+    <plugins>
+        <!-- 具体的插件-->
+      <plugin>
+        <groupId>org.apache.tomcat.maven</groupId>
+        <artifactId>tomcat7-maven-plugin</artifactId>
+        <version>2.2</version>
+        <configuration>
+          <port>80</port>
+          <path>/</path>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>
+```
+
 ## 6、依赖管理
 
 ### 6.1 配置依赖
@@ -321,3 +379,5 @@ default：核心工作：编译测试打包部署。执行到哪，就把前面�
 site：产生报告，发布站点
 
 # 二、Maven提高部分
+
+这块先把SSM学了
