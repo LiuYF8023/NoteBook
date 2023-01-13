@@ -1,9 +1,6 @@
 # XML
 
-Created: August 25, 2022
-Created by: Anonymous
-Tags: Java Web
-名称: XML
+[TOC]
 
 # 1、概念
 
