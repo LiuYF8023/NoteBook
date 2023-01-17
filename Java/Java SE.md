@@ -4080,6 +4080,97 @@ public class TimeTest {
 }
 ```
 
+## 7.5 正则表达式
+
+
+
+## 7.6 变量处理和方法处理
+
+### 7.6.1 Java 9增强的MethodHandle
+
+这种方法是一种轻量级的引用方式，不会检查方法的访问权限，也不管方法所属的类、实例方法或静态方法
+
+```java
+package chap7;
+
+import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodHandles;
+import java.lang.invoke.MethodType;
+
+public class MethodHandleTest {
+	private static void hello() {
+		System.out.println("hello world !");
+	}
+
+	private int hello(String name) {
+		System.out.println("执行带参数的hello" + name);
+		return 1;
+	}
+
+	public static void main(String[] args) throws Throwable {
+		// 获取类方法
+		MethodType type = MethodType.methodType(void.class);
+		MethodHandle mtd = MethodHandles.lookup().findStatic(MethodHandleTest.class, "hello", type);
+		mtd.invoke();
+
+		// 获取实例方法
+		MethodHandle mtd2 = MethodHandles.lookup()
+				.findVirtual(MethodHandleTest.class, "hello", MethodType.methodType(int.class, String.class));
+		System.out.println(mtd2.invoke(new MethodHandleTest(),"孙悟空"));
+	}
+}
+
+```
+
+上面的程序我们能够看到，MethodType.methodType() 通过传入的参数判定获取哪个方法，其中可以填入方法的返回值类型和参数类型，比如静态方法没有传入参数，也没有返回值，所以填void.class。而对于实例方法，则有返回值和形参。然后我们得到了方法的类型type之后，我们可以通过MethodHandles.lookup()方法，然后findStatic是返回静态方法，findVirtual是返回实例方法。参数是类的.class 反射机制获取类的对象，第二个参数是String name，方法的名字。第三个参数是MethodType对象。
+
+### 7.6.2 Java 9增加的VarHandle
+
+用于动态的操作数组的元素或者对象的成员变量。
+
+```java
+package chap7;
+
+import java.lang.invoke.MethodHandles;
+import java.lang.invoke.VarHandle;
+
+public class VarHandleTest {
+   public static void main(String[] args) throws Throwable{
+      String[] sa = new String[]{"JAVA", "Kotlin", "GO"};
+      // 获取sa的VarHandle对象
+      VarHandle vh = MethodHandles.arrayElementVarHandle(String[].class);
+      // 比较并设置
+      boolean r = vh.compareAndSet(sa, 2, "GO", "Lua");
+      System.out.println(r);
+
+      // 获取sa数组的第二个元素
+      System.out.println(vh.get(sa, 1));
+
+      // 获取并设置第三个元素
+      System.out.println(vh.getAndSet(sa, 2, "Swift"));
+
+      //
+      VarHandle vh2 = MethodHandles.lookup().findVarHandle(User2.class,"name", String.class);
+
+      User2 u2 = new User2();
+      vh2.set(u2,"sunwukong");
+
+      System.out.println(u2.name);
+      VarHandle vh3 = MethodHandles.lookup().findStaticVarHandle(User2.class,"MAX_AGE", int.class);
+      vh3.set(37);
+      System.out.println(User2.MAX_AGE);
+
+   }
+}
+
+class User2 {
+   String name;
+   static int MAX_AGE;
+}
+```
+
+
+
 # 第八章 Java集合
 
 ## 8.1 Java集合概述
