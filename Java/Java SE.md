@@ -4629,3 +4629,488 @@ obj1.compareTo(obj2) 如果返回负整数，表明obj1 < obj2
 **定制排序**
 
 ![Untitled](pictures\Untitled%2013.png)
+
+### 8.3.4 EnumSet类
+
+专为枚举类设计的集合类，其中的元素必须是指定枚举类型的枚举值，其中的元素也是有序的，顺序是根据枚举值在Enum类内定义的顺序。
+
+EnumSet在内部以位向量的形式存储。不允许加入null元素
+
+```java
+package chap7;
+
+import java.util.EnumSet;
+
+public class enumSetTest {
+   public static void main(String[] args) {
+      // 创建一个Season枚举类集合
+      EnumSet se = EnumSet.allOf(Season.class);
+      System.out.println(se);
+      // 创建一个EnumSet空集合，指定其集合元素是Season类的枚举值
+      EnumSet se2 = EnumSet.noneOf(Season.class);
+      System.out.println(se2);
+      // 手动添加元素
+      se2.add(Season.SPRING);
+      System.out.println(se2);
+      // 以指定枚举值创建集合
+      EnumSet se3 = EnumSet.of(Season.SPRING,Season.WINNER);
+      System.out.println(se3);
+      //
+      EnumSet se4 = EnumSet.range(Season.SPRING,Season.FALL);
+      System.out.println(se4);
+      EnumSet se5 = EnumSet.complementOf(se4); // se5 + se4 = Season
+      System.out.println(se5);
+
+   }
+}
+
+enum Season{
+   SPRING,SUMMER,FALL,WINNER
+}
+```
+
+我们可以通过Collection的方式创建EnumSet，必须保证Collection中的元素都是同一个枚举类的枚举值
+
+```java
+package chap7;
+
+import java.util.Collection;
+import java.util.EnumSet;
+import java.util.HashSet;
+
+public class EnumSetTest2 {
+   public static void main(String[] args) {
+      Collection c = new HashSet();
+      c.clear();
+      c.add(Season.SPRING);
+      c.add(Season.WINNER);
+      // 复制Collection集合中的所有元素来创建EnumSet集合
+      EnumSet es = EnumSet.copyOf(c);
+      System.out.println(es);
+      c.add("askjfhafk");
+//    es = EnumSet.copyOf(c); 出问题
+      System.out.println(es);
+   }
+}
+```
+
+### 8.3.5 各Set实现类的性能分析
+
+HashSet 的性能总是比TreeSet要好，因为TreeSet需要使用额外的红黑树算法来维护集合元素的次序，只有需要保持次序的时候，才去使用TreeSet。
+
+Set 中HashSet、TreeSet和EnumSet都是线程不安全的
+
+## 8.4 List集合
+
+List允许重复元素，可以通过索引来访问指定位置的集合元素。
+
+### 8.4.1 Java 8改进的List接口和ListIterator接口
+
+```java
+package chap7;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class ListTest {
+   public static void main(String[] args) {
+      List books = new ArrayList();
+      books.add("jaksgk");
+      books.add("jaksgk");
+      books.add("jaksgk");
+      books.add("jaksgk");
+      System.out.println(books);
+      books.add(1,new String("asjfgk"));
+      for (int i = 0;i < books.size();i++){
+         System.out.println(books.get(i));
+      }
+      books.remove(3);
+      System.out.println(books);
+      // 判定位置
+      System.out.println(books.indexOf(new String("asjfgk")));
+      // 将第二个替换成新的字符串对象
+      books.set(1,new String("askjdfhak"));
+      System.out.println(books);
+      // 截取子集合
+      System.out.println(books.subList(1,3));
+   }
+}
+```
+
+Java8 中为List集合增加了sort和replaceAll两个常用的默认方法，两种都可以使用Lambda表达式作为参数。
+
+迭代器的使用，有正向迭代器和反向迭代器
+
+```java
+package chap7;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.ListIterator;
+
+public class ListIteratorTest {
+   public static void main(String[] args) {
+
+      List bookList = new ArrayList();
+      bookList.add("1");
+      bookList.add("2");
+      bookList.add("3");
+      bookList.add("4");
+      ListIterator it = bookList.listIterator();
+      while (it.hasNext()){
+         System.out.println(it.next());
+      }
+      while (it.hasPrevious()){
+         System.out.println(it.previous());
+      }
+   }
+}
+```
+
+### 8.4.2 ArrayList和Vector实现类
+
+二者都可以实现自动扩容
+
+- ArrayList是线程不安全的
+- Vector是线程安全的，所以性能比ArrayList要低
+
+### 8.4.3 固定长度的List
+
+```java
+package chap7;
+
+import java.util.Arrays;
+import java.util.List;
+
+public class FixedSizeList {
+   public static void main(String[] args) {
+      List fixedList = Arrays.asList("asgfas","asf");
+      System.out.println(fixedList.getClass());
+      fixedList.forEach(System.out::println);
+   }
+}
+```
+
+使用Arrays.asList生成的是一个固定长度的List集合，程序只能遍历访问该集合里的元素，不可增加、删除该集合的元素。
+
+## 8.5 Queue集合
+
+模拟的是队列这种数据结构
+
+### 8.5.1 PriorityQueue实现类
+
+并不是按照加入的顺序排列，而是按照队列元素的大小重新进行排列。
+
+```java
+package chap8;
+
+import java.util.PriorityQueue;
+
+public class PriorityQueueTest {
+   public static void main(String[] args) {
+      PriorityQueue pq = new PriorityQueue();
+      pq.offer(6);
+      pq.offer(-3);
+      pq.offer(20);
+      pq.offer(18);
+      System.out.println(pq);
+      System.out.println(pq.poll());
+   }
+}
+```
+
+### 8.5.2 Deque接口和ArrayDeque实现类
+
+双端队列
+
+
+
+### 8.5.3 LinkedList实现类
+
+```java
+package chap8;
+
+import java.util.LinkedList;
+
+public class LinkedListTest {
+   public static void main(String[] args) {
+      LinkedList books = new LinkedList();
+      books.offer("amgjkdsjg"); // 尾部加入
+      books.push("amhfshdjbg"); // 顶部加入
+      books.offer("顶部加入")
+   }
+}
+```
+
+### 8.5.4 各种线性表的性能分析
+
+- 如果需要遍历List集合元素，ArrayList、Vector这种应该使用随机访问，LinkedList应该使用迭代器来遍历集合元素
+- 执行插入、删除操作较多，应该考虑LinkedList集合
+- 多线程情况，可以将Collections封装成线程安全的集合
+
+## 8.6 Java 8增强的Map集合
+
+直接看用法
+
+```java
+package chap8;
+
+import java.util.HashMap;
+import java.util.Map;
+
+public class MapTest {
+   public static void main(String[] args) {
+      Map map = new HashMap();
+      map.put("Java",12873);
+      map.put("C",1534);
+      map.put("Go",128423573);
+      System.out.println(map.containsKey("Java"));
+      System.out.println(map.containsValue(1534));
+      for (Object key: map.keySet()){
+         System.out.println(key + " = " + map.get(key));
+      }
+   }
+}
+```
+
+### 8.6.1 Java8 新增的Map方法
+
+```java
+package chap8;
+
+import java.util.HashMap;
+import java.util.Map;
+
+public class MapTest2 {
+   public static void main(String[] args) {
+      Map map = new HashMap();
+      map.put("Java",12873);
+      map.put("C",1534);
+      map.put("Go",128423573);
+      // 尝试替换key
+      map.replace("疯狂XML讲义",66);
+      System.out.println(map);
+      // 使用原value与传入参数计算的结果覆盖原有value
+      map.merge("疯狂ios讲义",10,(oldVal,para) -> (Integer)oldVal + (Integer) para);
+      System.out.println(map);
+   }
+}
+```
+
+### 8.6.2 Java 8改进的HashMap和Hashtable实现类
+
+二者都是Map接口的典型实现类，二者的区别如下
+
+- Hashtable是一个线程安全的Map实现，但是HashMap是不安全的。
+- Hashtable不允许使用null作为key和value，而hashmap可以用null作为key和value
+
+```java
+package chap8;
+
+import java.util.HashMap;
+
+public class NullInHashMap {
+   public static void main(String[] args) {
+      HashMap hm = new HashMap();
+      hm.put(null,null);
+      hm.put(null,null);
+      hm.put("a",null);
+      System.out.println(hm);
+   }
+}
+```
+
+### 8.6.3 LinkedHashMap实现类
+
+### 8.6.4 使用Properties读写属性文件
+
+```java
+package chap8;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.util.Properties;
+
+public class PropertiesTest {
+   public static void main(String[] args) throws Throwable {
+      Properties props = new Properties();
+      props.setProperty("username","afyu");
+      props.setProperty("password","123134");
+      // 将key value保存到a.ini文件中
+      props.store(new FileOutputStream("a.ini"),"comment line");
+      Properties props2 = new Properties();
+      props2.setProperty("adjhfgas","skjf");
+      props2.load(new FileInputStream("a.ini"));
+      System.out.println(props2);
+   }
+}
+```
+
+### 8.6.5 SortedMap接口和TreeMap实现类
+
+
+
+# 第九章 泛型
+
+## 9.1 泛型入门
+
+### 9.1.1 编译时不检查类型的异常
+
+如果不检查类型，那么就会导致集合中可能什么类型也有，就会导致异常
+
+### 9.1.2 使用泛型
+
+```java
+package chap9;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class GenericList {
+   public static void main(String[] args) {
+      List<String> strList = new ArrayList<>();
+      strList.add("ak,sjfk");
+      strList.add("ak,sjfk");
+      strList.add("ak,sjfk");
+//    strList.add(5);
+      strList.forEach(str -> System.out.println(str.length()));
+   }
+}
+```
+
+使用泛型之后，如果再添加相应的不符合的类型，就会发生编译错误。
+
+### 9.1.3 Java9 增强的菱形语法
+
+Java7之后，构造器后不需要再添加类型，可以自行推断。
+
+```java
+package chap9;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+public class DiamondTest {
+   public static void main(String[] args) {
+      List<String> books = new ArrayList<>();
+      books.add("疯狂Java讲义");
+      books.add("疯狂IOS讲义");
+      books.forEach(ele -> System.out.println(ele.length()));
+
+      Map<String,List<String>> schoolsInfo = new HashMap<>();
+      List<String> schools = new ArrayList<>();
+      schools.add("ajhgfk");
+      schools.add("skjgfk");
+      schoolsInfo.put("sgdf",schools);
+      schoolsInfo.forEach((key,value) -> System.out.println(key + "=" + value));
+   }
+}
+```
+
+java9 允许在创建内部类的时候使用菱形语法
+
+```java
+package chap9;
+
+public class AnnoymousDiamond {
+   public static void main(String[] args) {
+      Foo<String> f = new Foo<String>() {
+         @Override
+         public void test(String s) {
+            System.out.println();
+         }
+      };
+
+      Foo<?> fo = new Foo<>() {
+         @Override
+         public void test(Object o) {
+            System.out.println();
+         }
+      };
+      
+      Foo<? extends Number> fn = new Foo<Number>() {
+         @Override
+         public void test(Number number) {
+            System.out.println();
+         }
+      }
+   }
+}
+
+interface Foo<T>{
+   void test(T t);
+}
+```
+
+第二个匿名内部类，我们使用通配符，系统内推断的上限就是Object类型。
+
+## 9.2 深入泛型
+
+### 9.2.1 定义泛型接口、类
+
+```java
+package chap9;
+
+import java.util.Set;
+
+public class Fanxing {
+   public static void main(String[] args) {
+
+   }
+}
+
+interface List<E> {
+   void add(E e);
+   Iterable<E> iterator();
+}
+
+interface Iterator<E>{
+   // E 完全可以当做类型使用
+   E next();
+   boolean hasNext();
+}
+
+interface Map<K,V> {
+    Set<K> keySet();
+   
+}
+```
+
+泛型可以表示一个通用的类型，灵活性比较高。
+
+### 9.2.2 从泛型类派生子类
+
+如果一个类定义了泛型，比如下面的类
+
+```java
+public class Apple<E>{}
+```
+
+当我们在继承这个类的时候，必须声明泛型的具体类型，而不能直接去写Apple<E>
+
+```java
+public class Apple<String>{}
+```
+
+### 9.2.3 并不存在泛型类
+
+所以List<String> 和 List<Integer> 是同一个类。
+
+## 9.3 类型通配符
+
+Java泛型设计的原则就是只要代码在编译的时候没有出现警告，那么就不会遇到ClassCastException异常。
+
+### 9.3.1 使用通配符类型
+
+为了表示各种泛型List的父类，可以使用类型通配符，类型通配符是一个问号（？）即，List<?>
+
+### 9.3.2 设定类型通配符的上限
+
+### 9.3.2 设定类型通配符的下限
+
+## 9.4 泛型方法
+
