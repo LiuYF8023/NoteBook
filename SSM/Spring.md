@@ -304,3 +304,276 @@ public class App2 {
 
 这个时候就需要用到我们的依赖注入
 
+## 5.1 DI入门案例思路分析
+
+### 5.1.1 基于IoC管理Bean
+
+
+
+### 5.1.2 Service中使用new形式创建的Dao对象是否保留？（否）
+
+
+
+### 5.1.3 Service中需要的Dao对象如何进入到Service中？（提供方法）
+
+在这里我们提供的是Set方法
+
+```java
+public void setBookDao(BookDao bookDao) {
+   this.bookDao = bookDao;
+}
+```
+
+那么谁会用到这个setBookDao方法呢，很明显是bean要用到，那么怎么用，就需要我们在bean中进行配置。
+
+### 5.1.4 Service与Dao间的关系如何描述？（配置）
+
+在bean中，我们要明确调用关系。由于我们在service接口中调用了dao，所以我们在bean中也是需要在service标签中配置dao，配置关系如下
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!--    1、导入spring的坐标spring-context-->
+
+    <!--    2、配置bean-->
+
+    <bean id="bookDao" class="com.itheima.dao.impl.BookDaoImpl"/>
+    <bean id="bookService" class="com.itheima.service.impl.BookServiceImpl">
+    <!--
+        配置service与dao的关系
+        我们在service中，使用到了dao，所以我们在bean中应该在service中配置dao
+    -->
+        <property name="bookDao" ref="bookDao"/>
+    </bean>
+</beans>
+```
+
+注意两个标签：name和ref
+
+- name标签 bookDao 指的是 service接口中命名的对象，即 private BookDao bookDao;
+- ref标签 bookDao 指的是在当前的xml文件中，<bean id="bookDao" class="com.itheima.dao.impl.BookDaoImpl"/>  这一条中的id。
+
+# 六、bean配置
+
+## 6.1 bean基础配置
+
+![image-20230127155902297](pictures/image-20230127155902297.png)
+
+上面是之前学到的一些知识，但是如果不同人开发，bean的名字不一样怎么办，这就涉及到bean的别名配置
+
+## 6.2 bean别名配置
+
+bean别名配置只需要在标签中添加一个name属性，之间可以用逗号、分号、空格分隔。
+
+```java
+BookService bookService = (BookService)ctx.getBean("service3"); // 别名
+```
+
+并且这个别名也可以用于依赖注入，所以我们在bean中ref写别名也是可以的。
+
+```xml
+<bean id="bookService" name="service service2 service3" class="com.itheima.service.impl.BookServiceImpl">
+<!--
+    配置service与dao的关系
+    我们在service中，使用到了dao，所以我们在bean中应该在service中配置dao
+-->
+    <property name="bookDao" ref="biemingdao"/>
+</bean>
+```
+
+## 6.3 bean作用范围配置
+
+当我们连续获取两次BookDao对象，对其地址进行输出不难发现，这实际上是同一个对象，也就是说，Spring构造的对象默认是单例的
+
+```java
+BookDao bookDao1 = (BookDao)ctx.getBean("bookDao");
+BookDao bookDao2 = (BookDao)ctx.getBean("bookDao");
+System.out.println(bookDao1);
+System.out.println(bookDao2);
+```
+
+**输出**
+
+​	com.itheima.dao.impl.BookDaoImpl@56235b8e
+​	com.itheima.dao.impl.BookDaoImpl@56235b8e
+
+那么如何变为多例，有一个scope标签
+
+```xml
+<bean id="bookDao" class="com.itheima.dao.impl.BookDaoImpl" scope="prototype"/>
+```
+
+**输出**
+
+​	com.itheima.dao.impl.BookDaoImpl@56235b8e
+​	com.itheima.dao.impl.BookDaoImpl@3632be31
+
+结果已经变为多例。
+
+### 6.3.1 为什么bean默认为单例
+
+Spring管理的就是通用的对象，所以默认就是单例。
+
+### 6.3.2 适合交给容器进行管理的bean
+
+- 表现层对象：Servlet
+- 业务层对象：Service
+- 数据层对象：Dao
+- 工具对象：
+
+### 6.3.3 不适合交给容器进行管理的bean
+
+封装实体的域对象
+
+# 七、bean实例化
+
+## 7.1 bean是如何创建的
+
+### 7.1.1 使用构造方法进行创建的
+
+```java
+public BookDaoImpl(){
+   System.out.println("dao is running ...");
+}
+```
+
+当我们在接口的实现类中定义无参构造方法，最终输入了无参构造方法中的内容，说明Spring使用的是无参构造的方法进行对象创建，并且无论是public还是private，都能够进行对象创建，这里用到的是反射。
+
+但是有参构造方法就会报错，Spring的报错信息应该怎么阅读。一般是从最底下看，逐渐往上找。大部分情况下最下面一条就能解决问题。
+
+![image-20230127165015569](pictures/image-20230127165015569.png)
+
+### 7.1.2 静态工厂造对象
+
+工厂类的定义如下
+
+```java
+package com.itheima.factory;
+
+import com.itheima.dao.OrderDao;
+import com.itheima.dao.impl.OrderDaoImpl;
+
+public class OrderDaoFactory {
+   public static OrderDao getOrderDao() {
+      System.out.println("set up");
+       return new OrderDaoImpl();
+   }
+}
+```
+
+其中返回的是接口实现类的对象
+
+我们在bean中，配置的是工厂类的class，并且还要指定哪个方法是用来生成对象的。
+
+```xml
+<bean id="orderDao" class="com.itheima.factory.OrderDaoFactory" factory-method="getOrderDao"/>
+```
+
+main程序中
+
+```java
+public class AppForInstanceOrder {
+   public static void main(String[] args) {
+        ApplicationContext ctx = new ClassPathXmlApplicationContext("applicationContext.xml");
+      // 记得要在maven 中配置SpringFramework
+
+      OrderDao orderDao = (OrderDao) ctx.getBean("orderDao");
+      orderDao.save();
+   }
+}
+```
+
+注意maven中需要配置SpringFramework，并且还要与jdk的版本对应起来。
+
+那么为什么不直接生成对象，因为工厂类中可能还要做一些其他的配置。
+
+### 7.1.3 实例工厂造对象
+
+在实例工厂中，我们定义的获取对象的方法如下，不再是静态方法
+
+```java
+package com.itheima.factory;
+
+import com.itheima.dao.UserDao;
+import com.itheima.dao.impl.UserDaoImpl;
+
+public class UserDaoFactory {
+   public UserDao getUserDao(){
+      return new UserDaoImpl();
+   }
+}
+```
+
+我们配置的bean也有所差别，注意，我们首先需要把实例化工厂的bean配置好
+
+```xml
+<bean id="userFactory" class="com.itheima.factory.UserDaoFactory"/>
+```
+
+然后，我们再配置dao的bean
+
+```xml
+<bean id="userDao" factory-method="getUserDao" factory-bean="userFactory"/>
+```
+
+这个时候，dao不需要再写class，而是需要写factory-method和factory-bean这两个东西
+
+- factory-method 是实例化产生对象的方法，getUserDao是方法名
+- factory-bean 是我们配置的实例化工厂的bean，userFactory是id
+
+在main方法中，我们获取bean仍然传入userDao字段
+
+```java
+public class AppForInstanceUser {
+   public static void main(String[] args) {
+      ApplicationContext ctx = new ClassPathXmlApplicationContext("applicationContext.xml");
+      UserDao userDao = (UserDao) ctx.getBean("userDao");
+      userDao.save();
+   }
+}
+```
+
+Spring对上面的过程进行了改进，我们就定义一个UserFactoryBean，这个类需要实现FactoryBean<UserDao>接口，并且泛型中要填入想要得到的类型。
+
+```java
+package com.itheima.factory;
+
+import com.itheima.dao.UserDao;
+import com.itheima.dao.impl.UserDaoImpl;
+import org.springframework.beans.factory.FactoryBean;
+
+public class UserDaoFactoryBean implements FactoryBean<UserDao> {
+
+   @Override
+   public UserDao getObject() throws Exception {
+      return new UserDaoImpl();
+   }
+
+   @Override
+   public Class<?> getObjectType() {
+      return UserDao.class;
+   }
+}
+```
+
+其中重写两个方法，第一个是要返回的类型，第二个是返回的对象是什么类型的，这里填入UserDao的字节码。
+
+然后在bean中，我们换一种新的写法。
+
+```xml
+<bean id="userDao" class="com.itheima.factory.UserDaoFactoryBean"/>
+```
+
+实际上又回归了最初的写法样式，这样更简单，并且能够得到相同的运行结果。
+
+还有一个重写方法是用来指定是单例还是非单例的
+
+```java
+@Override
+public boolean isSingleton() {
+   return false;
+}
+```

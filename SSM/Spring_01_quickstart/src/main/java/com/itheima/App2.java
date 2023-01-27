@@ -12,9 +12,12 @@ public class App2 {
 		ApplicationContext ctx = new ClassPathXmlApplicationContext("applicationContext.xml");
 
 		// 4、获取bean
-		BookDao bookDao = (BookDao)ctx.getBean("bookDao");
-		BookService bookService = (BookService)ctx.getBean("bookService");
-		bookDao.save();
-		bookService.save();
+		BookDao bookDao1 = (BookDao)ctx.getBean("bookDao");
+		BookDao bookDao2 = (BookDao)ctx.getBean("bookDao");
+		BookDao bookDao3 = (BookDao)ctx.getBean("bookDao");
+//		BookService bookService = (BookService)ctx.getBean("service3"); // 别名
+		System.out.println(bookDao1);
+		System.out.println(bookDao2);
+		System.out.println(bookDao3);
 	}
 }

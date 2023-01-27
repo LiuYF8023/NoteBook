@@ -1,6 +1,5 @@
 package com.itheima.dao;
 
-public interface BookDao {
-
+public interface UserDao {
 	public void save();
 }

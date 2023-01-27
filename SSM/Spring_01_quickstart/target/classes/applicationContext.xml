@@ -8,5 +8,11 @@
     <!--    2、配置bean-->
 
     <bean id="bookDao" class="com.itheima.dao.impl.BookDaoImpl"/>
-    <bean id="bookService" class="com.itheima.service.impl.BookServiceImpl"/>
+    <bean id="bookService" name="service service2 service3" class="com.itheima.service.impl.BookServiceImpl">
+    <!--
+        配置service与dao的关系
+        我们在service中，使用到了dao，所以我们在bean中应该在service中配置dao
+    -->
+        <property name="bookDao" ref="bookDao"/>
+    </bean>
 </beans>
