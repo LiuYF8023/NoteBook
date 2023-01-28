@@ -8,6 +8,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="Spring_01_quickstart" />
         <module name="Spring_02_bean_instance" />
+        <module name="Spring_03_spring_lifecycle" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>

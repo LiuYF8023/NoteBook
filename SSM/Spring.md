@@ -577,3 +577,129 @@ public boolean isSingleton() {
    return false;
 }
 ```
+
+# 八、bean生命周期
+
+## 8.1 init() 和 destroy()
+
+当我们需要对于容器进行初始化和销毁操作的时候，我们需要定义这么两个方法。
+
+```java
+public void init(){
+   System.out.println("init ...");
+}
+
+public void destroy(){
+   System.out.println("destory ...");
+}
+```
+
+在调用这两个方法的时候，我们还是进行bean配置。
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="bookDao" class="com.itheima.dao.impl.BookDaoImpl" init-method="init" destroy-method="destroy"/>
+    <bean id="bookService" class="com.itheima.service.impl.BookServiceImpl">
+        <property name="bookDao" ref="bookDao"/>
+    </bean>
+</beans>
+```
+
+其中
+
+- init-method="init" 表示初始化的方法
+- destroy-method="destroy" 表示销毁的方法
+
+当我们运行程序的时候，运行结果如下
+
+![image-20230128111126681](pictures/image-20230128111126681.png)
+
+但是此时，并没有出现销毁容器中的内容，所以我们需要添加一个close方法，对于容器进行关闭。
+
+![image-20230128111236486](pictures/image-20230128111236486.png)
+
+直接进行关闭操作的话，实际上因为我们ctx是ApplicationContext类型，是没有close方法的。我们剖析一下这个类
+
+![image-20230128111537277](pictures/image-20230128111537277.png)
+
+可以看到，ClassPathXmlApplicationContext实现类只是继承了ApplicationContext接口实现类，而ApplicationContext中是没有close方法的
+
+我们看一下在哪里有这个close方法，注意图中快捷键的用法，我们可以看到在AbstractApplicationContext中是有这个方法的，并且被声明为了public，所以是可以被子类继承的，那么我们可以通过ClassPathXmlApplicationContext子类，或者直接用AbstractApplicationContext，就可以调用容器的关闭方法。
+
+![image-20230128112003013](pictures/image-20230128112003013.png)
+
+## 8.2 设置关闭钩子
+
+当需要关闭虚拟机的时候，让容器关闭完成再退。这个时候需要提前注册一个钩子来完成这个操作
+
+```java
+public class App {
+   public static void main(String[] args) {
+      AbstractApplicationContext ctx = new ClassPathXmlApplicationContext("applicationContext.xml");
+      ctx.registerShutdownHook();
+      BookDao bookDao = (BookDao) ctx.getBean("bookDao");
+      bookDao.save();
+
+//    ctx.close();
+   }
+}
+```
+
+### 8.3 按照Spring接口的方式执行bean声明周期
+
+我们在service中实现相关的操作
+
+```java
+package com.itheima.service.impl;
+
+import com.itheima.dao.BookDao;
+import com.itheima.service.BookService;
+import org.springframework.beans.factory.DisposableBean;
+import org.springframework.beans.factory.InitializingBean;
+
+public class BookServiceImpl implements BookService, InitializingBean, DisposableBean {
+   private BookDao bookDao;
+   @Override
+   public void save() {
+      System.out.println("service ...");
+   }
+
+   public void setBookDao(BookDao bookDao) {
+      this.bookDao = bookDao;
+   }
+
+   @Override
+   public void destroy() throws Exception {
+      System.out.println("service destroy ...");
+
+   }
+
+   @Override
+   public void afterPropertiesSet() throws Exception {
+      System.out.println("service init ...");
+   }
+}
+```
+
+实现的两个接口
+
+- InitializingBean bean初始化接口
+- DisposableBean bean销毁接口
+
+重写的两个方法
+
+- destroy() 销毁的方法
+- afterPropertiesSet() 这个是初始化的方法，名字有点奇怪，在属性设置之后。
+
+![image-20230128114124472](pictures/image-20230128114124472.png)
+
+总的来看一下bean生命周期的几个部分
+
+![image-20230128114344833](pictures/image-20230128114344833.png)
+
+# 九、依赖注入方式
+
