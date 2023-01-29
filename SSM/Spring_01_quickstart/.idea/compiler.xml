@@ -10,6 +10,7 @@
         <module name="Spring_02_bean_instance" />
         <module name="Spring_07_di_collection" />
         <module name="Spring_08_datasource" />
+        <module name="Spring_09_container" />
         <module name="Spring_03_spring_lifecycle" />
         <module name="Spring_05_di_constructor" />
         <module name="Spring_06_di_autoware" />

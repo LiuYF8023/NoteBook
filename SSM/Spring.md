@@ -2,7 +2,7 @@
 
 [TOC]
 
-# 一、初识Spring
+# 1、初识Spring
 
 Spring提供若干项目，每个项目用于完成特定的功能
 
@@ -20,7 +20,7 @@ Spring的发展
 - Spring4.0 API变化
 - Spring5.0 全面支持JDK8
 
-# 二、Spring Framework系统架构
+# 2、Spring Framework系统架构
 
 ## 2.1 系统架构
 
@@ -64,7 +64,7 @@ Spring在单元测试和集成测试也进行了实现。
 
 ![image-20230113204416805](pictures/image-20230113204416805.png)
 
-# 三、核心概念
+# 3、核心概念
 
 为了解决耦合度偏高的问题，在使用对象的时候，程序中不要主动使用new产生对象，转换为由**外部提供对象**。对象的控制权由程序转移到外部的思想就是控制反转。（对象的控制权）
 
@@ -81,7 +81,7 @@ DI（dependency injection）依赖注入**（Bean的关系绑定）**
 
 最终效果：使用对象的时候可以直接从IOC容器中获取，并且获取到的Bean已经绑定了所有的依赖关系
 
-# 四、IoC入门案例思路分析及实现
+# 4、IoC入门案例思路分析及实现
 
 ## 4.1 IoC思路分析
 
@@ -296,7 +296,7 @@ public class App2 {
 }
 ```
 
-# 五、DI入门案例
+# 5、DI入门案例
 
 在四中我们虽然实现了bean的配置，但是我们发现，在程序中，还是避免不了创建对象，例如
 
@@ -356,7 +356,7 @@ public void setBookDao(BookDao bookDao) {
 - name标签 bookDao 指的是 service接口中命名的对象，即 private BookDao bookDao;
 - ref标签 bookDao 指的是在当前的xml文件中，<bean id="bookDao" class="com.itheima.dao.impl.BookDaoImpl"/>  这一条中的id。
 
-# 六、bean配置
+# 6、bean配置
 
 ## 6.1 bean基础配置
 
@@ -428,7 +428,7 @@ Spring管理的就是通用的对象，所以默认就是单例。
 
 封装实体的域对象
 
-# 七、bean实例化
+# 7、bean实例化
 
 ## 7.1 bean是如何创建的
 
@@ -578,7 +578,7 @@ public boolean isSingleton() {
 }
 ```
 
-# 八、bean生命周期
+# 8、bean生命周期
 
 ## 8.1 init() 和 destroy()
 
@@ -701,7 +701,7 @@ public class BookServiceImpl implements BookService, InitializingBean, Disposabl
 
 ![image-20230128114344833](pictures/image-20230128114344833.png)
 
-# 九、依赖注入方式
+# 9、依赖注入方式
 
 细分可以分为四种
 
@@ -913,7 +913,7 @@ public class BookServiceImpl implements BookService {
 
 看最后一条，自己开发的模块推荐使用setter注入。
 
-# 十、依赖自动装配
+# 10、依赖自动装配
 
 IoC容器根据bean所依赖的资源在容器中自动查找并注入到bean中的过程称为自动装配。
 
@@ -989,7 +989,7 @@ autowire="byName" 表示按照名字进行装配
 - 使用按名称装配时，byName 必须保障容器中具有指定名称的bean，因变量名与配置耦合，所以不推荐使用
 - 自动装配优先级低于setter注入与构造器注入，同时出现时自动装配配置失效。
 
-# 十一、集合注入
+# 11、集合注入
 
 集合注入比较少用，只需要看个写法就行了
 
@@ -1091,5 +1091,204 @@ public class BookDaoImpl implements BookDao {
 </beans>
 ```
 
-# 案例：数据源对象管理
+# 12、案例：Spring管理第三方数据源对象
+
+## 12.1 Druid
+
+我们以一个简单的例子Druid为例，我们需要明确需要配置那几个
+
+- jdbc驱动的名字
+- 数据库的url
+- 用户名
+- 密码
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource">
+        <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+        <property name="url" value="jdbc:mysql://localhost:3306/spring_db"/>
+        <property name="username" value="root"/>
+        <property name="password" value="lyf1577655659"/>
+    </bean>
+</beans>
+```
+
+driverClassName不会报错，而我们写driver会报错。
+
+然后我们在主程序中获取bean
+
+```java
+public class App {
+   public static void main(String[] args) {
+      ApplicationContext ctx = new ClassPathXmlApplicationContext("applicationContext.xml");
+      DataSource dataSource = (DataSource) ctx.getBean("dataSource");
+      System.out.println(dataSource);
+   }
+}
+```
+
+输出的内容如下
+
+![image-20230129144714300](pictures/image-20230129144714300.png)
+
+当然，对于数据库来说，我们是知道要配置哪些东西的，但是如果是一个陌生的bean拿过来让我们配置，应该怎么配置呢？
+
+## 12.2 C3P0
+
+在看一个c3p0的配置
+
+首先我们要配置maven，导入c3p0的坐标
+
+```xml
+<dependency>
+  <groupId>com.mchange</groupId>
+  <artifactId>c3p0</artifactId>
+  <version>0.9.5.2</version>
+</dependency>
+```
+
+然后我们配置好bean
+
+```xml
+<bean id="dataSource2" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+    <property name="driverClass" value="com.mysql.jdbc.Driver"/>
+    <property name="jdbcUrl" value="jdbc:mysql://localhost:3306/spring_db"/>
+    <property name="user" value="root"/>
+    <property name="password" value="lyf1577655659"/>
+</bean>
+```
+
+接下来就能够连接数据库了，结果如下
+
+![image-20230129145753934](pictures/image-20230129145753934.png)
+
+注意：Druid是带mysql驱动的，而c3p0不带驱动，但是我也没报错？很奇怪
+
+## 12.3 使用properties配置
+
+### 12.3.1 开启context命名空间
+
+![image-20230129152013206](pictures/image-20230129152013206.png)
+
+注意复制哪一行，不要复制错了
+
+### 12.3.2 使用context命名空间，加载指定properties文件
+
+```xml
+<context:property-placeholder location="jdbc.properties"/>
+```
+
+
+
+### 12.3.3 使用${}读取加载的属性值
+
+```xml
+<bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource">
+    <property name="driverClassName" value="${jdbc.driverClassName}"/>
+    <property name="url" value="${jdbc.url}"/>
+    <property name="username" value="${jdbc.username}"/>
+    <property name="password" value="${jdbc.password}"/>
+</bean>
+```
+
+注意在properties中，没有引号
+
+```xml
+jdbc.driverClassName=com.mysql.jdbc.Driver
+jdbc.url=jdbc:mysql://localhost:3306/spring_db
+jdbc.username=root
+jdbc.password=lyf1577655659
+```
+
+注意一个坑，如果我们用的变量，与系统的冲突了，那么会造成我们配置的东西不起作用了。
+
+例如
+
+```xml
+<bean id="bookDao" class="com.itheima.dao.impl.BookDaoImpl">
+    <property name="name" value="${username}"/>
+</bean>
+```
+
+这里的username在properties中是666，但是我们实际运行发现，输出的是
+
+![image-20230129152752929](pictures/image-20230129152752929.png)
+
+很明显不对，这个时候，我们需要加一个东西，在使用命名空间的时候
+
+```xml
+<context:property-placeholder location="jdbc.properties" system-properties-mode="NEVER"/>
+```
+
+这个就不会再调用系统的内容了，再次运行，输出正常
+
+![image-20230129152912842](pictures/image-20230129152912842.png)
+
+当我们需要加载多个配置文件
+
+![image-20230129153013646](pictures/image-20230129153013646.png)
+
+可以直接用逗号进行分隔，更好的方式是使用通配符，表示所有的都加载
+
+![image-20230129153126651](pictures/image-20230129153126651.png)
+
+更标准的要加上classpath，目前只能加载当前工程的配置文件
+
+![image-20230129153206013](pictures/image-20230129153206013.png)
+
+如果想要加载其他工程中的配置文件需要这样写
+
+![image-20230129153317859](pictures/image-20230129153317859.png)
+
+# 13、容器
+
+## 13.1 两种创建容器的方式
+
+```java
+package com.itheima;
+
+import com.itheima.dao.BookDao;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.context.support.FileSystemXmlApplicationContext;
+
+/**
+ * Hello world!
+ */
+public class App {
+   public static void main(String[] args) {
+      // 第一种方式 从类路径加载
+      ApplicationContext ctx = new ClassPathXmlApplicationContext("applicationContext.xml");
+      // 第二种方式 从绝对路径加载
+      ApplicationContext ctx2 = new FileSystemXmlApplicationContext("C:\\Users\\lyf\\NoteBook\\SSM\\Spring_09_container\\src\\main\\resources\\applicationContext.xml");
+
+      BookDao bookDao = (BookDao) ctx2.getBean("bookDao");
+      bookDao.save();
+   }
+}
+```
+
+## 13.2 三种获取容器的方式
+
+```java
+// 1、
+BookDao bookDao = (BookDao) ctx.getBean("bookDao");
+
+// 2、
+BookDao bookDao2 = ctx.getBean("bookDao", BookDao.class);
+
+// 3、
+BookDao bookDao3 = ctx.getBean(BookDao.class); // 如果有多个参数，这个不方便使用
+```
+
+## 13.3 容器类层次结构
+
+![image-20230129155623128](pictures/image-20230129155623128.png)
+
+## 13.4 BeanFactory
+
+BeanFactory是延迟加载bean，ApplicationContext是立即加载bean
 

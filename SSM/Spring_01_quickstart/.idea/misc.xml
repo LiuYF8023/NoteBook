@@ -20,6 +20,7 @@
         <option value="$PROJECT_DIR$/../Spring_06_di_autoware/pom.xml" />
         <option value="$PROJECT_DIR$/../Spring_07_di_collection/pom.xml" />
         <option value="$PROJECT_DIR$/../Spring_08_datasource/pom.xml" />
+        <option value="$PROJECT_DIR$/../Spring_09_container/pom.xml" />
       </list>
     </option>
   </component>

@@ -5,10 +5,10 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.itheima</groupId>
-  <artifactId>Spring_08_datasource</artifactId>
+  <artifactId>Spring_09_container</artifactId>
   <version>1.0-SNAPSHOT</version>
 
-  <name>Spring_08_datasource</name>
+  <name>Spring_09_container</name>
   <!-- FIXME change it to the project's website -->
   <url>http://www.example.com</url>
 
@@ -31,18 +31,6 @@
       <version>5.3.25</version>
       <scope>compile</scope>
     </dependency>
-    <dependency>
-      <groupId>com.alibaba</groupId>
-      <artifactId>druid</artifactId>
-      <version>1.1.16</version>
-    </dependency>
-    <!-- https://mvnrepository.com/artifact/com.mchange/c3p0 -->
-    <dependency>
-      <groupId>com.mchange</groupId>
-      <artifactId>c3p0</artifactId>
-      <version>0.9.5.2</version>
-    </dependency>
-
   </dependencies>
 
   <build>
