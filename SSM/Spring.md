@@ -703,3 +703,393 @@ public class BookServiceImpl implements BookService, InitializingBean, Disposabl
 
 # 九、依赖注入方式
 
+细分可以分为四种
+
+## 9.1 setter注入
+
+### 9.1.1 setter注入简单类型
+
+那么我们如果想注入简单类型，应该怎么做，我们在BookDao中进行演示
+
+```java
+package com.itheima.dao.impl;
+
+import com.itheima.dao.BookDao;
+
+public class BookDaoImpl implements BookDao {
+
+   private int connectionNum;
+   private String connectionName;
+
+   public void setConnectionNum(int connectionNum) {
+      this.connectionNum = connectionNum;
+   }
+
+   public void setConnectionName(String connectionName) {
+      this.connectionName = connectionName;
+   }
+
+   @Override
+   public void save() {
+      System.out.println("bookdao ...." + connectionName + ", " + connectionNum + ".");
+   }
+}
+```
+
+首先在BookDao中添加方法，然后在bean中进行配合
+
+```xml
+<bean id="bookDao" class="com.itheima.dao.impl.BookDaoImpl">
+    <property name="connectionName" value="mysql"/>
+    <property name="connectionNum" value="10"/>
+</bean>
+```
+
+一个小技巧
+
+![image-20230129095803324](pictures/image-20230129095803324.png)
+
+### 9.1.2 setter注入引用类型
+
+前面讲过，使用ref那个，如果我们想要注入多个引用，那么只需要这样做
+
+```java
+package com.itheima.service.impl;
+
+import com.itheima.dao.BookDao;
+import com.itheima.dao.UserDao;
+import com.itheima.service.BookService;
+import org.springframework.beans.factory.DisposableBean;
+import org.springframework.beans.factory.InitializingBean;
+
+public class BookServiceImpl implements BookService {
+   private BookDao bookDao;
+   private UserDao userDao;
+   @Override
+   public void save() {
+      bookDao.save();
+      userDao.save();
+   }
+
+   public void setBookDao(BookDao bookDao) {
+      this.bookDao = bookDao;
+   }
+
+   public void setUserDao(UserDao userDao) {
+      this.userDao = userDao;
+   }
+}
+```
+
+我们只需要添加set方法，并且在bean中进行配置即可
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="bookDao" class="com.itheima.dao.impl.BookDaoImpl"/>
+    <bean id="userDao" class="com.itheima.dao.impl.UserDaoImpl"/>
+    <bean id="bookService" class="com.itheima.service.impl.BookServiceImpl">
+        <property name="bookDao" ref="bookDao"/>
+        <property name="userDao" ref="userDao"/>
+    </bean>
+</beans>
+```
+
+
+
+## 9.2 构造器注入
+
+### 9.2.1 构造器注入简单类型
+
+简单类型在知道构造器注入引用类型之后就变得非常简单
+
+```java
+package com.itheima.dao.impl;
+
+import com.itheima.dao.BookDao;
+
+public class BookDaoImpl implements BookDao {
+
+	private int connectionNum;
+	private String connectionName;
+
+	public BookDaoImpl(int connectionNum, String connectionName) {
+		this.connectionNum = connectionNum;
+		this.connectionName = connectionName;
+	}
+
+	@Override
+	public void save() {
+		System.out.println("bookdao ....");
+	}
+}
+
+```
+
+同样的，在bean中进行配置
+
+```xml
+<bean id="bookDao" class="com.itheima.dao.impl.BookDaoImpl">
+    <constructor-arg name="connectionName" value="mysql"/>
+    <constructor-arg name="connectionNum" value="10"/>
+</bean>
+```
+
+思考一个问题就是，如果我们的形参名字变了，那么我们的name属性也要跟着变，所以这里的耦合度比较高
+
+有两种解决的方案
+
+1）使用type解决
+
+```xml
+<bean id="bookDao" class="com.itheima.dao.impl.BookDaoImpl">
+    <constructor-arg type="java.lang.String" value="mysql"/>
+    <constructor-arg type="int" value="10"/>
+</bean>
+```
+
+但是如果两个参数的类型是一样的，那么又不行了
+
+2）使用index占位
+
+```xml
+<bean id="bookDao" class="com.itheima.dao.impl.BookDaoImpl">
+    <constructor-arg index="0" value="mysql"/>
+    <constructor-arg index="1" value="10"/>
+</bean>
+```
+
+
+
+### 9.2.2 构造器注入引用类型
+
+常类似，代码如下
+
+```java
+package com.itheima.service.impl;
+
+import com.itheima.dao.BookDao;
+import com.itheima.dao.UserDao;
+import com.itheima.dao.impl.BookDaoImpl;
+import com.itheima.dao.impl.UserDaoImpl;
+import com.itheima.service.BookService;
+
+public class BookServiceImpl implements BookService {
+   private BookDao bookDao;
+   private UserDao userDao;
+
+   public BookServiceImpl(BookDao bookDao, UserDao userDao) {
+      this.bookDao = bookDao;
+      this.userDao = userDao;
+   }
+
+   @Override
+   public void save() {
+      bookDao.save();
+   }
+
+}
+```
+
+然后我们配置的时候，用另外一个标签
+
+```xml
+<bean id="bookDao" class="com.itheima.dao.impl.BookDaoImpl"/>
+<bean id="userDao" class="com.itheima.dao.impl.UserDaoImpl"/>
+<bean id="bookService" class="com.itheima.service.impl.BookServiceImpl">
+    <constructor-arg name="bookDao" ref="bookDao"/>
+    <constructor-arg name="userDao" ref="userDao"/>
+</bean>
+```
+
+要注意的是ref这里指的是 构造器的形参名称
+
+## 9.3 依赖注入方式选择
+
+![image-20230129102437602](pictures/image-20230129102437602.png)
+
+看最后一条，自己开发的模块推荐使用setter注入。
+
+# 十、依赖自动装配
+
+IoC容器根据bean所依赖的资源在容器中自动查找并注入到bean中的过程称为自动装配。
+
+## 10.1 自动装配方式
+
+### 10.1.1 按类型（常用）
+
+```java
+package com.itheima.service.impl;
+
+import com.itheima.dao.BookDao;
+import com.itheima.service.BookService;
+
+public class BookServiceImpl implements BookService {
+
+   private BookDao bookDao;
+
+   @Override
+   public void save() {
+      System.out.println("service ...");
+   }
+}
+```
+
+注意！ 我们使用自动类型装配的时候，不需要写set方法或者构造器方法了！
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="bookDao" class="com.itheima.dao.impl.BookDaoImpl"/>
+    <bean id="bookService" class="com.itheima.service.impl.BookServiceImpl" autowire="byType"/>
+</beans>
+```
+
+autowire="byType"表示按照类型进行装箱，但是这个时候，不能有两个同类型的bean，例如
+
+```xml
+<bean id="bookDao" class="com.itheima.dao.impl.BookDaoImpl"/>
+<bean id="bookDao2" class="com.itheima.dao.impl.BookDaoImpl"/>
+```
+
+就会报错。
+
+### 10.1.2 按名称
+
+autowire="byName" 表示按照名字进行装配
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="bookDao" class="com.itheima.dao.impl.BookDaoImpl"/>
+    <bean id="bookDao2" class="com.itheima.dao.impl.BookDaoImpl"/>
+    <bean id="bookService" class="com.itheima.service.impl.BookServiceImpl" autowire="byName"/>
+</beans>
+```
+
+例如我们还是这样写，由于我们的set方法名字为 setBookDao，也就是会自动找到bookDao这个bean。如果set方法的名字为setBookDao2，那么会自动遭到bookDao2这个bean。
+
+### 10.1.3 按构造方法
+
+### 10.1.4 不启用自动装配
+
+## 10.2 依赖自动装配特征
+
+- 自动装配用于引用类型依赖注入，**不能用于简单类型**
+- 使用按类型装配时，byType 必须保障容器中相同类型的bean唯一，推荐使用
+- 使用按名称装配时，byName 必须保障容器中具有指定名称的bean，因变量名与配置耦合，所以不推荐使用
+- 自动装配优先级低于setter注入与构造器注入，同时出现时自动装配配置失效。
+
+# 十一、集合注入
+
+集合注入比较少用，只需要看个写法就行了
+
+```java
+package com.itheiam.dao.impl;
+
+import com.itheiam.dao.BookDao;
+
+import java.util.*;
+
+public class BookDaoImpl implements BookDao {
+
+   private int[] array;
+   private List<String> list;
+   private Set<String> set;
+   private Map<String,String> map;
+   private Properties properties;
+
+   public void setArray(int[] array) {
+      this.array = array;
+   }
+
+   public void setList(List<String> list) {
+      this.list = list;
+   }
+
+   public void setSet(Set<String> set) {
+      this.set = set;
+   }
+
+   public void setMap(Map<String, String> map) {
+      this.map = map;
+   }
+
+   public void setProperties(Properties properties) {
+      this.properties = properties;
+   }
+
+   @Override
+   public void save() {
+      System.out.println(Arrays.toString(array));
+      System.out.println(list);
+      System.out.println(set);
+      System.out.println(map);
+      System.out.println(properties);
+   }
+}
+```
+
+在bean中的配置
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="bookDao" class="com.itheiam.dao.impl.BookDaoImpl">
+        <property name="array">
+            <array>
+                <value>1</value>
+                <value>2</value>
+                <value>3</value>
+                <value>4</value>
+            </array>
+        </property>
+        <property name="list">
+            <list>
+                <value>1</value>
+                <value>2</value>
+                <value>3</value>
+                <value>4</value>
+            </list>
+        </property>
+        <property name="set">
+            <set>
+                <value>1</value>
+                <value>2</value>
+                <value>3</value>
+                <value>3</value>
+            </set>
+        </property>
+        <property name="map">
+            <map>
+                <entry key="1" value="2"/>
+                <entry key="3" value="2"/>
+                <entry key="2" value="2"/>
+                <entry key="14" value="2"/>
+            </map>
+        </property>
+        <property name="properties">
+            <props>
+                <prop key="afasf">asfasf</prop>
+                <prop key="dfgfd">asfafd</prop>
+                <prop key="sgd">adfadf</prop>
+            </props>
+        </property>
+    </bean>
+</beans>
+```
+
+# 案例：数据源对象管理
+

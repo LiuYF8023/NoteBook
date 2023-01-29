@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="bookDao" class="com.itheiam.dao.impl.BookDaoImpl">
+        <property name="array">
+            <array>
+                <value>1</value>
+                <value>2</value>
+                <value>3</value>
+                <value>4</value>
+            </array>
+        </property>
+        <property name="list">
+            <list>
+                <value>1</value>
+                <value>2</value>
+                <value>3</value>
+                <value>4</value>
+            </list>
+        </property>
+        <property name="set">
+            <set>
+                <value>1</value>
+                <value>2</value>
+                <value>3</value>
+                <value>3</value>
+            </set>
+        </property>
+        <property name="map">
+            <map>
+                <entry key="1" value="2"/>
+                <entry key="3" value="2"/>
+                <entry key="2" value="2"/>
+                <entry key="14" value="2"/>
+            </map>
+        </property>
+        <property name="properties">
+            <props>
+                <prop key="afasf">asfasf</prop>
+                <prop key="dfgfd">asfafd</prop>
+                <prop key="sgd">adfadf</prop>
+            </props>
+        </property>
+    </bean>
+</beans>

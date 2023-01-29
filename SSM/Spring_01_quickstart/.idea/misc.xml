@@ -15,6 +15,11 @@
         <option value="$PROJECT_DIR$/pom.xml" />
         <option value="$PROJECT_DIR$/../Spring_02_bean_instance/pom.xml" />
         <option value="$PROJECT_DIR$/../Spring_03_spring_lifecycle/pom.xml" />
+        <option value="$PROJECT_DIR$/../Spring_04_di_set/pom.xml" />
+        <option value="$PROJECT_DIR$/../Spring_05_di_constructor/pom.xml" />
+        <option value="$PROJECT_DIR$/../Spring_06_di_autoware/pom.xml" />
+        <option value="$PROJECT_DIR$/../Spring_07_di_collection/pom.xml" />
+        <option value="$PROJECT_DIR$/../Spring_08_datasource/pom.xml" />
       </list>
     </option>
   </component>
