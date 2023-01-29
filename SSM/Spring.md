@@ -1292,3 +1292,139 @@ BookDao bookDao3 = ctx.getBean(BookDao.class); // 如果有多个参数，这个
 
 BeanFactory是延迟加载bean，ApplicationContext是立即加载bean
 
+# 14、注解开发
+
+## 14.1 注解开发定义bean
+
+我们之前进行spring开发的时候，用的是配置bean的方法，要给出bean的id、class，写起来非常麻烦，spring后期提供了注解开发的方式，简化了开发
+
+我们使用的注解是 @Component 我们的xml文件书写方法如下
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="
+           http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.springframework.org/schema/context
+           http://www.springframework.org/schema/context/spring-context.xsd
+       ">
+    <context:component-scan base-package="com.itheima"/>
+</beans>
+```
+
+base-package="com.itheima" 表示具体在哪个包下扫描这个注解。
+
+注意@Component("xxx")和@Component的区别
+
+- 前者是使用byName的方式
+- 后者是使用byType的方式
+
+体现在主程序中就是，前者传入用于获取bean的名称，后者传入的是类的字节码
+
+```java
+/**
+ * Hello world!
+ */
+public class App {
+   public static void main(String[] args) {
+        ApplicationContext ctx = new ClassPathXmlApplicationContext("applicationContext.xml");
+        BookDao bookDao = (BookDao) ctx.getBean("bookDao");
+        System.out.println(bookDao);
+      BookService bookService = ctx.getBean(BookService.class);
+      System.out.println(bookService);
+    }
+}
+```
+
+为了能够更好的区分各层，@Component 又被分为了三种
+
+- @Controller 用于表现层bean定义
+- @Service 用于业务层bean定义
+- @Repository 用于数据层bean定义
+
+业务层注解
+
+```java
+package com.itheima.service.Impl;
+
+import com.itheima.dao.BookDao;
+import com.itheima.service.BookService;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
+
+//@Component
+@Service
+public class BookServiceImpl implements BookService {
+   private BookDao bookDao;
+   @Override
+   public void save() {
+      System.out.println("service ...");
+      bookDao.save();
+   }
+
+   public void setBookDao(BookDao bookDao) {
+      this.bookDao = bookDao;
+   }
+}
+```
+
+数据层注解
+
+```java
+package com.itheima.dao.Impl;
+
+import com.itheima.dao.BookDao;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
+
+//@Component("bookDao")
+@Repository("bookDao")
+public class BookDaoImpl implements BookDao {
+   @Override
+   public void save() {
+      System.out.println("dao ...");
+   }
+}
+```
+
+## 14.2 纯注解开发
+
+Spring3.0之后，升级了纯注解开发的方式，使用Java类代替配置文件。
+
+首先我们要定义一个类用于替代我们之前的配置文件
+
+![image-20230129214640917](pictures/image-20230129214640917.png)
+
+注意两个注解的作用
+
+- @Configuration 表示当前类是配置类，其作用是替代原始配置文件的壳子
+- @ComponentScan 表示扫描的位置，如果有多个可以在大括号里面用逗号分隔，其替代的是<context:component-scan base-package="com.itheima"/>
+
+另外一点需要改变的是，main函数中，我们在创建对象的时候，使用的是new AnnotationConfigApplicationContext 的方式
+
+```java
+package com.itheima;
+
+import com.itheima.config.SpringConfig;
+import com.itheima.dao.BookDao;
+import com.itheima.service.BookService;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+/**
+ * Hello world!
+ */
+public class AppForAnnotation {
+   public static void main(String[] args) {
+        ApplicationContext ctx = new AnnotationConfigApplicationContext(SpringConfig.class);
+        BookDao bookDao = (BookDao) ctx.getBean("bookDao");
+        System.out.println(bookDao);
+      BookService bookService = ctx.getBean(BookService.class);
+      System.out.println(bookService);
+    }
+}
+```
