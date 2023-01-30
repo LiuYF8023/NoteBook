@@ -1428,3 +1428,255 @@ public class AppForAnnotation {
     }
 }
 ```
+
+## 14.3 注解开发bean作用范围配置
+
+在前面我们使用配置文件的方式，通过配置scope属性，设置当前类的单例和多例模式，在注解开发中，我们也可以通过注解的方式控制。
+
+```java
+@Repository
+//@Scope("singleton") 单例
+@Scope("prototype")
+public class BookDaoImpl implements BookDao {
+   @Override
+   public void save() {
+      System.out.println("dao ...");
+   }
+}
+```
+
+我们使用@Scope控制
+
+![image-20230130100351730](pictures/image-20230130100351730.png)
+
+## 14.4 生命周期
+
+之前我们介绍了使用配置和继承接口两种方式进行bean生命周期的控制，当我们使用注解开发之后，就变得更为简单了，只需要在初始化方法和销毁方法之前添加注解即可。
+
+```java
+package com.itheima.dao.Impl;
+
+import com.itheima.dao.BookDao;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Repository;
+
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
+
+@Repository
+//@Scope("singleton") 单例
+@Scope("prototype")
+public class BookDaoImpl implements BookDao {
+   @Override
+   public void save() {
+      System.out.println("dao ...");
+   }
+   @PostConstruct
+   public void init(){
+      System.out.println("init ...");
+   }
+   @PreDestroy
+   public void destroy(){
+      System.out.println("destory ...");
+   }
+}
+```
+
+## 14.5 注解开发依赖注入
+
+在下面这个案例中，由于在BookService中没有进行依赖注入，所以获取BookDao的时候出现了错误
+
+![image-20230130102131794](pictures/image-20230130102131794.png)
+
+我们使用自动装箱注解，就能够保证bookDao不再是空对象，并且@Autowired放在类中的任何位置都行
+
+```java
+package com.itheima.service.impl;
+
+import com.itheima.dao.BookDao;
+import com.itheima.service.BookService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+@Service
+public class BookServiceImpl implements BookService {
+   @Autowired
+   private BookDao bookDao;
+   public void save(){
+      System.out.println("book service save ...");
+      bookDao.save();
+   }
+
+   public void setBookDao(BookDao bookDao) {
+      this.bookDao = bookDao;
+   }
+}
+```
+
+更神奇的是，这个注解使用之后，可以不写set方法，都能保证程序正常运行。程序更加简洁
+
+![image-20230130102448678](pictures/image-20230130102448678.png)
+
+如果我有两个实现类
+
+![image-20230130103148909](pictures/image-20230130103148909.png)
+
+这个时候就需要按照名称进行装配
+
+![image-20230130103224977](pictures/image-20230130103224977.png)
+
+我们在装配的时候也要说明具体装配的是哪一个
+
+![image-20230130103239904](pictures/image-20230130103239904.png)
+
+使用@Value可以进行简单类型的注入，但是一般我们都是将这些写在配置文件中，那么如何加载配置文件中的内容，首先我们需要在配置类中加上注解@PropertySource("jdbc.properties")，并且这里不支持星号
+
+```java
+@Configuration
+@ComponentScan("com.itheima")
+@PropertySource("jdbc.properties")
+public class SpringConfig {
+}
+```
+
+然后就可以使用$符号进行加载
+
+![image-20230130104809243](pictures/image-20230130104809243.png)
+
+## 14.6 第三方bean管理
+
+### 14.6.1 最原始写法
+
+我们在SpringConfig中，手写代码获取，还是以Druid为例
+
+```java
+package com.itheima.config;
+
+import com.alibaba.druid.pool.DruidDataSource;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+import javax.sql.DataSource;
+
+@Configuration
+public class SpringConfig {
+
+   @Bean
+   public DataSource dataSource(){
+      DruidDataSource ds = new DruidDataSource();
+      ds.setDriverClassName("com.mysql.jdbc.Driver");
+      ds.setUrl("jdbc:mysql://127.0.0.1:3306/spring_db");
+      ds.setUsername("root");
+      ds.setPassword("lyf1577655659");
+      return ds;
+   }
+}
+```
+
+在SpringConfig中用@Bean来写，有几个就加几个@bean，但是这样越来越多之后，容易把这个配置类写爆
+
+### 14.6.2 扫描式
+
+这种方式也不推荐，因为有两个@Configuration
+
+![image-20230130111306504](pictures/image-20230130111306504.png)
+
+### 14.6.3 导入式
+
+@Import(JdbcConfig.class)只需要这一个，在JdbcConfig中不再需要写注解@Configuration
+
+```java
+@Configuration
+@Import(JdbcConfig.class)
+public class SpringConfig {
+
+}
+```
+
+
+
+### 14.6.4 第三方bean注入资源
+
+#### 1）注入简单类型
+
+注入简单类型@Value的方式
+
+```java
+package com.itheima.config;
+
+import com.alibaba.druid.pool.DruidDataSource;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
+
+import javax.sql.DataSource;
+
+@PropertySource("jdbc.properties")
+public class JdbcConfig {
+   @Value("${jdbc.driverClassName}")
+   private String driver;
+   @Value("${jdbc.url}")
+   private String url;
+   @Value("${jdbc.username}")
+   private String username;
+   @Value("${jdbc.password}")
+   private String password;
+   @Bean
+   public DataSource dataSource(){
+      DruidDataSource ds = new DruidDataSource();
+      ds.setDriverClassName(driver);
+      ds.setUrl(url);
+      ds.setUsername(username);
+      ds.setPassword(password);
+      return ds;
+   }
+}
+```
+
+#### 2）注入引用类型
+
+注意我现在传入一个形参
+
+```java
+@Bean
+public DataSource dataSource(BookDao bookDao){
+   System.out.println(bookDao);
+   DruidDataSource ds = new DruidDataSource();
+   ds.setDriverClassName(driver);
+   ds.setUrl(url);
+   ds.setUsername(username);
+   ds.setPassword(password);
+   return ds;
+}
+```
+
+也就是说我现在要获取这个引用类型的对象，那么怎么获取，首先我们要在**要获取的类中添加注解**，然后**在配置类中进行扫描**，注意二者缺一不可，只有这样，spring才能够获取到这个引用类型。
+
+扫描
+
+```java
+@Configuration
+@ComponentScan({"com.itheima.dao.Impl"})
+@Import(JdbcConfig.class)
+public class SpringConfig {
+
+}
+```
+
+添加注解
+
+```java
+@Repository
+public class BookDaoImpl implements BookDao {
+
+   @Override
+   public void save() {
+      System.out.println("dao ...");
+   }
+}
+```
+
+### 14.6.5 总结
+
+![image-20230130113448687](pictures/image-20230130113448687.png)
