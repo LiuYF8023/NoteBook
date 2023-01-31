@@ -6,7 +6,119 @@
     namespace:名称空间
 -->
 <mapper namespace="com.itheima.mapper.BrandMapper">
-    <select id="selectAll" resultType="Brand">
+<!--    <sql id="brand_column">-->
+<!--        id,brand_name as brandName,company_name as companyName,ordered,description,status-->
+<!--    </sql>-->
+    <resultMap id="brandResultMap" type="com.itheima.pojo.Brand">
+        <result column="brand_name" property="brandName"/>
+        <result column="company_name" property="companyName"/>
+    </resultMap>
+    <update id="update">
+        update tb_brand
+        set brand_name = #{brandName},
+        company_name = #{companyName},
+        ordered = #{ordered},
+        description = #{description},
+        status = #{status}
+        where id = #{id}
+    </update>
+    <update id="update2">
+        update tb_brand
+        <set>
+            <if test="brandName != null and brandName != ''">
+                brand_name=#{brandName},
+            </if>
+            <if test="companyName != null and brandName != ''">
+                company_name=#{companyName}
+            </if>
+            <if test="ordered != null">
+                ordered = #{ordered}
+            </if>
+            <if test="description != null">
+                description = #{description}
+            </if>
+            <if test="status != null">
+                status = #{status}
+            </if>
+        </set>
+        where id=#{id}
+    </update>
+    <delete id="deleteById">
+        delete from tb_brand where id = #{id};
+    </delete>
+
+    <delete id="deleteByIds">
+        delete from tb_brand where id in
+        <foreach collection="ids" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>;
+    </delete>
+
+
+    <!-- todo 查询所有-->
+    <select id="selectAll" resultMap="brandResultMap">
         select * from tb_brand;
     </select>
+
+    <!-- todo 查询详情-->
+    <!--
+        参数占位符
+            ${}: 不会替换成？ 容易sql注入
+            #{}: 会替换成？
+    -->
+    <select id="selectById" parameterType="int" resultMap="brandResultMap">
+        select * from tb_brand where id <![CDATA[
+            <
+        ]]> #{id};
+    </select>
+
+    <!-- todo 按条件查询-->
+<!--    <select id="selectByCondition" resultMap="brandResultMap">-->
+<!--        select * from tb_brand where status = #{status} and company_name like #{companyName} and brand_name like #{brandName}-->
+<!--    </select>-->
+
+    <select id="selectByCondition" resultMap="brandResultMap">
+        select *
+        from tb_brand
+<!--        where 1 = 1-->
+        <where>
+            <if test="status != null">
+                and status = #{status}
+            </if>
+            <if test="companyName != null and companyName != ''">
+                and company_name like #{companyName}
+            </if>
+            <if test="brandName != null and brandName != ''">
+                and brand_name like #{brandName}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectByConditionSingle" resultMap="brandResultMap">
+        select *
+        from tb_brand
+        <where>
+            <choose>
+                <when test="status != null">
+                    status = #{status}
+                </when>
+                <when test="companyName != null and companyName != ''">
+                    company_name like #{companyName}
+                </when>
+                <when test="brandName != null and brandName != ''">
+                    brand_name like #{brandName}
+                </when>
+            </choose>
+        </where>
+    </select>
+
+    <insert id="add">
+        insert into tb_brand(brand_name,company_name,ordered,description,status)
+        values (#{brandName},#{companyName},#{ordered},#{description},#{status});
+    </insert>
+
+    <insert id="add2" useGeneratedKeys="true" keyProperty="id">
+        insert into tb_brand(brand_name,company_name,ordered,description,status)
+        values (#{brandName},#{companyName},#{ordered},#{description},#{status});
+    </insert>
 </mapper>
