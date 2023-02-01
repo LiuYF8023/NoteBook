@@ -7,6 +7,8 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="Spring_13_annontion_bean_third" />
+        <module name="Spring_14_mybatis" />
+        <module name="Spring_15_aop_demo" />
       </profile>
     </annotationProcessing>
   </component>

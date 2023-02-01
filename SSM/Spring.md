@@ -1680,3 +1680,481 @@ public class BookDaoImpl implements BookDao {
 ### 14.6.5 总结
 
 ![image-20230130113448687](pictures/image-20230130113448687.png)
+
+# 15、Spring整合MyBatis
+
+## 15.1 MyBatis注解开发
+
+```java
+package com.itheima.dao;
+
+import com.itheima.domain.Account;
+import org.apache.ibatis.annotations.*;
+
+import java.util.List;
+
+public interface AccountDao {
+   @Select("select * from tb_brand where id = #{id}")
+   Account selectById(int id);
+
+   @Select("select * from tb_brand")
+   List<Account> selectAll();
+
+   @Delete("delete from tb_brand where id = #{id}")
+   int deleteById(int id);
+
+   @Update("update tb_brand set company_name = #{companyName} where id = #{id}")
+   int updateById(@Param("companyName") String companyName,@Param("id") int id);
+
+   @Insert("insert into tb_brand (brand_name, company_name, ordered, description, status) VALUES (#{brandName},#{companyName},#{ordered},#{description},#{status})")
+   int insert(Account account);
+}
+```
+
+## 15.2 导入坐标
+
+### 15.2.1 spring-jdbc
+
+```xml
+<dependency>
+  <groupId>org.springframework</groupId>
+  <artifactId>spring-jdbc</artifactId>
+  <version>5.3.25</version>
+</dependency>
+```
+
+### 15.2.2 mybatis-spring
+
+```xml
+<dependency>
+  <groupId>org.mybatis</groupId>
+  <artifactId>mybatis-spring</artifactId>
+  <version>2.0.7</version>
+</dependency>
+```
+
+### 15.2.3 目前已经有的jar包
+
+![image-20230201130604166](pictures/image-20230201130604166.png)
+
+## 15.3 项目结构
+
+![image-20230201132515223](pictures/image-20230201132515223.png)
+
+我们来看一下整个项目在做什么事，分析一下运行的流程。
+
+### 15.3.1 config包
+
+在config包下，我们有三个类，其中SpringConfig我们之前提过，是spring加载时的配置类
+
+#### 1）SpringConfig
+
+```java
+package com.itheima.config;
+
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
+
+@Configuration
+@ComponentScan("com.itheima")
+@Import({MyBatisConfig.class, JdbcConfig.class})
+public class SpringConfig {
+
+}
+```
+
+- @Configuration 配置
+- @ComponentScan("com.itheima") 扫描哪个包下
+- @Import({MyBatisConfig.class, JdbcConfig.class}) 其他的配置文件，进行导入
+
+#### 2）JdbcConfig
+
+```java
+package com.itheima.config;
+
+import com.alibaba.druid.pool.DruidDataSource;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.PropertySource;
+
+import javax.sql.DataSource;
+
+@PropertySource("jdbc.properties")
+public class JdbcConfig {
+   @Value("${jdbc.driverClassName}")
+   private String driver;
+   @Value("${jdbc.url}")
+   private String url;
+   @Value("${jdbc.username}")
+   private String username;
+   @Value("${jdbc.password}")
+   private String password;
+   @Bean
+   public DataSource dataSource(){
+      DruidDataSource ds = new DruidDataSource();
+      ds.setDriverClassName(driver);
+      ds.setUrl(url);
+      ds.setUsername(username);
+      ds.setPassword(password);
+      return ds;
+   }
+}
+```
+
+这个之前也提过，主要是通过Druid获取数据源，其中还配置了数据库连接的一些参数
+
+#### 3）MyBatisConfig
+
+```java
+package com.itheima.config;
+
+import org.mybatis.spring.SqlSessionFactoryBean;
+import org.mybatis.spring.mapper.MapperScannerConfigurer;
+import org.springframework.context.annotation.Bean;
+
+import javax.sql.DataSource;
+
+public class MyBatisConfig {
+
+   @Bean
+   public SqlSessionFactoryBean sqlSessionFactoryBean(DataSource dataSource){
+      SqlSessionFactoryBean ssfb = new SqlSessionFactoryBean();
+      ssfb.setDataSource(dataSource);
+      return ssfb;
+   }
+
+   @Bean
+   public MapperScannerConfigurer mapperScannerConfigurer(){
+      MapperScannerConfigurer msc = new MapperScannerConfigurer();
+      msc.setBasePackage("com.itheima.dao");
+      return msc;
+   }
+}
+```
+
+MyBatis配置有两个方法，其实际上就是把xml文件配置的方式改成了注解bean配置。
+
+- sqlSessionFactoryBean方法 专门用来生成SqlSession对象
+- mapperScannerConfigurer方法 是取代xml文件中的Mapper代理
+
+![image-20230201133306949](pictures/image-20230201133306949.png)
+
+### 15.3.2 dao包
+
+dao包中，定义一个接口，这个接口中定义了一系列MyBatis数据库方法，使用注解来实现的。
+
+```java
+package com.itheima.dao;
+
+import com.itheima.domain.Account;
+import org.apache.ibatis.annotations.*;
+
+import java.util.List;
+
+public interface AccountDao {
+   @Select("select * from tb_brand where id = #{id}")
+   Account selectById(int id);
+
+   @Select("select * from tb_brand")
+   List<Account> selectAll();
+
+   @Delete("delete from tb_brand where id = #{id}")
+   int deleteById(int id);
+
+   @Update("update tb_brand set company_name = #{companyName} where id = #{id}")
+   int updateById(@Param("companyName") String companyName,@Param("id") int id);
+
+   @Insert("insert into tb_brand (brand_name, company_name, ordered, description, status) VALUES (#{brandName},#{companyName},#{ordered},#{description},#{status})")
+   int insert(Account account);
+}
+```
+
+### 15.3.3 domain包
+
+domain包定义的是实体类
+
+### 15.3.4 service包
+
+service包中定义的是AccountService抽象类和AccountServiceImpl实现类
+
+#### 1）AccountService抽象类
+
+```java
+package com.itheima.service;
+
+import com.itheima.domain.Account;
+import org.apache.ibatis.annotations.*;
+
+import java.util.List;
+
+public interface AccountService {
+   Account selectById(int id);
+
+   List<Account> selectAll();
+
+   int deleteById(int id);
+
+   int updateById(@Param("companyName") String companyName, @Param("id") int id);
+
+   int insert(Account account);
+}
+```
+
+定义的是与AccountDao中相同的方法
+
+#### 2）AccountServiceImpl实现类
+
+```java
+package com.itheima.service.Impl;
+
+import com.itheima.dao.AccountDao;
+import com.itheima.domain.Account;
+import com.itheima.service.AccountService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+public class AccountServiceImpl implements AccountService {
+
+   @Autowired
+   private AccountDao accountDao; // 自动装配，保证accountDao不会是空对象。
+
+   @Override
+   public Account selectById(int id) {
+      return accountDao.selectById(id);
+   }
+
+   @Override
+   public List<Account> selectAll() {
+      return accountDao.selectAll();
+   }
+
+   @Override
+   public int deleteById(int id) {
+      return accountDao.deleteById(id);
+   }
+
+   @Override
+   public int updateById(String companyName, int id) {
+      return accountDao.updateById(companyName, id);
+   }
+
+   @Override
+   public int insert(Account account) {
+      return accountDao.insert(account);
+   }
+}
+```
+
+AccountServiceImpl实现类将AccountDao对象通过@Autowired注解进行自动装配，然后每个方法返回的实际上是dao层对象调用的结果。
+
+### 15.5.5 main方法
+
+```java
+package com.itheima;
+
+import com.itheima.config.SpringConfig;
+import com.itheima.dao.AccountDao;
+import com.itheima.domain.Account;
+import com.itheima.service.AccountService;
+import org.apache.ibatis.io.Resources;
+import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.SqlSessionFactory;
+import org.apache.ibatis.session.SqlSessionFactoryBuilder;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.List;
+
+/**
+ * Hello world!
+ */
+public class App2 {
+   public static void main(String[] args) throws IOException {
+      ApplicationContext ctx = new AnnotationConfigApplicationContext(SpringConfig.class);
+      AccountService accountService = ctx.getBean(AccountService.class);
+      System.out.println(accountService.selectAll());
+   }
+}
+```
+
+在main中，我们只需要通过注解创建bean容器，然后通过AccountService类获取bean，这样我们调用AccountService对象中的方法，实际上就是通过业务层获取了持久层的数据（因为在业务层中调用了持久层抽象类的方法）。
+
+# 16、Spring整合JUnit
+
+## 16.1 导入包
+
+```xml
+<dependency>
+  <groupId>junit</groupId>
+  <artifactId>junit</artifactId>
+  <version>4.12</version>
+  <scope>test</scope>
+</dependency>
+<!-- https://mvnrepository.com/artifact/org.springframework/spring-test -->
+<dependency>
+  <groupId>org.springframework</groupId>
+  <artifactId>spring-test</artifactId>
+  <version>5.3.25</version>
+  <scope>test</scope>
+</dependency>
+```
+
+## 16.2 测试程序
+
+```java
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(classes = {
+      SpringConfig.class
+})
+public class AccountServiceTest {
+   @Autowired
+   private AccountService accountService;
+
+   @Test
+   public void testSelectAll(){
+      System.out.println(accountService.selectAll());
+   }
+}
+```
+
+# 17、AOP
+
+## 17.1 AOP简介
+
+AOP（Aspect Oriented Programming）面向切面编程，一种编程范式，指导开发者如何组织程序结构，能够在不惊动原始设计的基础上为其进行功能增强。Spring理念：无入侵式编程。
+
+![image-20230201164243100](pictures/image-20230201164243100.png)
+
+![image-20230201164336634](pictures/image-20230201164336634.png)
+
+
+
+## 17.2 AOP入门案例
+
+### 17.2.1 导入坐标
+
+![image-20230201165515784](pictures/image-20230201165515784.png)
+
+
+
+### 17.2.2 制作连接点方法（原始操作，Dao接口与实现类）
+
+![image-20230201165603357](pictures/image-20230201165603357.png)
+
+### 17.2.3 制作共性功能（通知类与通知）
+
+![image-20230201165728706](pictures/image-20230201165728706.png)
+
+### 17.2.4 定义切入点
+
+```java
+@Pointcut("execution(void com.itheima.dao.BookDao.update())")
+private void pt() {
+}
+```
+
+@Pointcut("execution(void com.itheima.dao.BookDao.update())")这句话的意思是，当执行到update方法的时候，进行切入
+
+### 17.2.5 绑定切入点与通知关系（切面）
+
+```java
+@Before("pt()")
+public void method() {
+   System.out.println(System.currentTimeMillis());
+}
+```
+
+@Before("pt()")表示在pt()这个方法之前运行，但是现在还没法运行，需要加其他的注解
+
+![image-20230201170127025](pictures/image-20230201170127025.png)
+
+最终我们需要在SpringConfig中启动aop编程。
+
+
+
+## 17.3 AOP工作流程
+
+- Spring容器启动
+- 读取所有切面配置中的切入点
+- 初始化bean，判定bean对应的类中的方法是否匹配到任意切入点
+  - 匹配失败，创建对象
+  - 匹配成功，创建原始对象（目标对象）的代理对象
+- 获取bean执行方法
+  - 获取bean，调用方法并执行，完成操作
+  - 获取的bean是代理对象时，根据代理对象的运行模式运行原始方法与增强的内容，完成操作
+
+![image-20230201171840625](pictures/image-20230201171840625.png)
+
+
+
+## 17.4 切入点表达式
+
+切入点：要进行增强的方法
+
+切入点表达式：要进行增强的方法的描述方式，有两种
+
+- 执行com.itheima.dao包下的BookDao接口中的无参数update方法
+- 执行com.itheima.dao.impl包下的BookDaoImpl类中的无参数update方法
+
+切入点表达式的标准格式
+
+```
+动作关键字（访问修饰符 返回值 包名.类/接口名.方法名（参数）异常名）
+execution(public User com.itheima.service.UserService.findById(int))
+```
+
+- 动作关键字：描述切入点的行为动作，例如execution表示执行到指定切入点
+- 访问修饰符：public，private等。可以省略
+
+可以使用通配符
+
+- *表示单个独立的任意符号，可以独立出现，也可以作为前缀或者后缀的匹配符出现 
+- .. 表示多个连续的任意符号，可以独立出现，常用语简化包名与参数的书写
+- + 专用于匹配子类类型
+
+
+
+例如我们可以这样魔改
+
+![image-20230201174216267](pictures/image-20230201174216267.png)
+
+![image-20230201174426637](pictures/image-20230201174426637.png)
+
+## 17.5 AOP通知类型
+
+AOP通知描述了抽取的共同特性功能，根据共性功能抽取的位置不同，最终运行代码时要将其加入到合适位置
+
+```java
+@Before("pt()")
+public void before() {
+   System.out.println(System.currentTimeMillis());
+}
+
+@After("pt()")
+public void after() {
+   System.out.println(System.currentTimeMillis());
+}
+
+@Around("pt()")
+public Object around(ProceedingJoinPoint pjp) throws Throwable {
+   System.out.println("around before...");
+   // 表示对原始操作的调用
+   Object ret = pjp.proceed();
+   System.out.println("around after...");
+   return ret;
+}
+```
+
+![image-20230201175728530](pictures/image-20230201175728530.png)
+
+# 18、Spring事务
+
+事务作用：在数据层保障一系列的数据库操作同成功同失败
+
+Spring事务作用：在数据层或业务层保障一系列的数据库操作同成功同失败
