@@ -6,8 +6,12 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="SpringMVC_01_quickstart" />
+        <module name="SpringMVC_01_mvcquickstart" />
+        <module name="SpringMVC_02_bean_load" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="SpringMVC_01_quickstart" target="1.7" />
+    </bytecodeTargetLevel>
   </component>
 </project>

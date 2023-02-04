@@ -6,8 +6,11 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="JavaWeb_01_quickstart" />
+        <module name="JavaWeb_02_request_and_response" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="JavaWeb_01_quickstart" target="1.7" />
+    </bytecodeTargetLevel>
   </component>
 </project>

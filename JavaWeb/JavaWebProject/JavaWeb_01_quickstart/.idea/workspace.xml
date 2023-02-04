@@ -10,25 +10,118 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5c916014-8531-4ef1-af54-025968b3968a" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/web.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/index.jsp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../../SSM/SpringMVCProject/SpringMVC_01_quickstart/.idea/compiler.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../../SSM/SpringMVCProject/SpringMVC_01_quickstart/.idea/encodings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../../SSM/SpringMVCProject/SpringMVC_01_quickstart/.idea/jarRepositories.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../../SSM/SpringMVCProject/SpringMVC_01_quickstart/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../../SSM/SpringMVCProject/SpringMVC_01_quickstart/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../../SSM/SpringMVCProject/SpringMVC_01_quickstart/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../../SSM/SpringMVCProject/SpringMVC_01_quickstart/pom.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../../SSM/SpringMVCProject/SpringMVC_01_quickstart/src/main/java/com/itheima/App.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../../SSM/SpringMVCProject/SpringMVC_01_quickstart/src/test/java/com/itheima/AppTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../SSM/SpringMVCProject/SpringMVC_01_mvcquickstart/pom.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../SSM/SpringMVCProject/SpringMVC_01_mvcquickstart/src/main/webapp/WEB-INF/web.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../SSM/SpringMVCProject/SpringMVC_01_mvcquickstart/src/main/webapp/index.jsp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../SSM/SpringMVCProject/SpringMVC_02_bean_load/pom.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../SSM/SpringMVCProject/SpringMVC_02_bean_load/src/main/webapp/WEB-INF/web.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../SSM/SpringMVCProject/SpringMVC_02_bean_load/src/main/webapp/index.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../JavaWeb.md" beforeDir="false" afterPath="$PROJECT_DIR$/../../JavaWeb.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/JavaWeb_01_quickstart.war" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/JavaWeb_01_quickstart/META-INF/MANIFEST.MF" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/JavaWeb_01_quickstart/WEB-INF/lib/backport-util-concurrent-3.1.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/JavaWeb_01_quickstart/WEB-INF/lib/classworlds-1.1-alpha-2.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/JavaWeb_01_quickstart/WEB-INF/lib/common-tomcat-maven-plugin-2.2.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/JavaWeb_01_quickstart/WEB-INF/lib/commons-cli-1.2.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/JavaWeb_01_quickstart/WEB-INF/lib/commons-codec-1.6.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/JavaWeb_01_quickstart/WEB-INF/lib/commons-compress-1.4.1.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/JavaWeb_01_quickstart/WEB-INF/lib/commons-io-2.2.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/JavaWeb_01_quickstart/WEB-INF/lib/commons-lang-2.6.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/JavaWeb_01_quickstart/WEB-INF/lib/commons-logging-1.1.3.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/JavaWeb_01_quickstart/WEB-INF/lib/doxia-sink-api-1.0-alpha-7.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/JavaWeb_01_quickstart/WEB-INF/lib/ecj-4.2.2.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/JavaWeb_01_quickstart/WEB-INF/lib/guava-10.0.1.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/JavaWeb_01_quickstart/WEB-INF/lib/httpclient-4.3.1.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/JavaWeb_01_quickstart/WEB-INF/lib/httpcore-4.3.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/JavaWeb_01_quickstart/WEB-INF/lib/jcl-over-slf4j-1.7.5.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/JavaWeb_01_quickstart/WEB-INF/lib/jsch-0.1.27.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/JavaWeb_01_quickstart/WEB-INF/lib/jsr305-1.3.9.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/JavaWeb_01_quickstart/WEB-INF/lib/jtidy-4aug2000r7-dev.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/JavaWeb_01_quickstart/WEB-INF/lib/maven-archiver-2.4.2.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/JavaWeb_01_quickstart/WEB-INF/lib/maven-artifact-2.0.6.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/JavaWeb_01_quickstart/WEB-INF/lib/maven-artifact-manager-2.2.1.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/JavaWeb_01_quickstart/WEB-INF/lib/maven-core-2.0.6.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/JavaWeb_01_quickstart/WEB-INF/lib/maven-error-diagnostics-2.0.6.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/JavaWeb_01_quickstart/WEB-INF/lib/maven-filtering-1.0.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/JavaWeb_01_quickstart/WEB-INF/lib/maven-model-2.0.6.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/JavaWeb_01_quickstart/WEB-INF/lib/maven-monitor-2.0.6.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/JavaWeb_01_quickstart/WEB-INF/lib/maven-plugin-api-2.2.1.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/JavaWeb_01_quickstart/WEB-INF/lib/maven-plugin-descriptor-2.0.6.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/JavaWeb_01_quickstart/WEB-INF/lib/maven-plugin-parameter-documenter-2.0.6.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/JavaWeb_01_quickstart/WEB-INF/lib/maven-plugin-registry-2.2.1.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/JavaWeb_01_quickstart/WEB-INF/lib/maven-profile-2.2.1.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/JavaWeb_01_quickstart/WEB-INF/lib/maven-project-2.2.1.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/JavaWeb_01_quickstart/WEB-INF/lib/maven-reporting-api-2.0.6.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/JavaWeb_01_quickstart/WEB-INF/lib/maven-repository-metadata-2.0.6.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/JavaWeb_01_quickstart/WEB-INF/lib/maven-settings-2.0.6.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/JavaWeb_01_quickstart/WEB-INF/lib/plexus-archiver-2.1.1.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/JavaWeb_01_quickstart/WEB-INF/lib/plexus-build-api-0.0.4.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/JavaWeb_01_quickstart/WEB-INF/lib/plexus-classworlds-2.2.2.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/JavaWeb_01_quickstart/WEB-INF/lib/plexus-component-annotations-1.5.5.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/JavaWeb_01_quickstart/WEB-INF/lib/plexus-container-default-1.0-alpha-9-stable-1.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/JavaWeb_01_quickstart/WEB-INF/lib/plexus-interactivity-api-1.0-alpha-4.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/JavaWeb_01_quickstart/WEB-INF/lib/plexus-interpolation-1.13.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/JavaWeb_01_quickstart/WEB-INF/lib/plexus-io-2.0.3.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/JavaWeb_01_quickstart/WEB-INF/lib/plexus-utils-3.0.15.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/JavaWeb_01_quickstart/WEB-INF/lib/slf4j-api-1.7.5.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/JavaWeb_01_quickstart/WEB-INF/lib/tomcat-annotations-api-7.0.47.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/JavaWeb_01_quickstart/WEB-INF/lib/tomcat-api-7.0.47.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/JavaWeb_01_quickstart/WEB-INF/lib/tomcat-catalina-7.0.47.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/JavaWeb_01_quickstart/WEB-INF/lib/tomcat-catalina-ha-7.0.47.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/JavaWeb_01_quickstart/WEB-INF/lib/tomcat-coyote-7.0.47.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/JavaWeb_01_quickstart/WEB-INF/lib/tomcat-dbcp-7.0.47.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/JavaWeb_01_quickstart/WEB-INF/lib/tomcat-el-api-7.0.47.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/JavaWeb_01_quickstart/WEB-INF/lib/tomcat-embed-core-7.0.47.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/JavaWeb_01_quickstart/WEB-INF/lib/tomcat-embed-logging-juli-7.0.47.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/JavaWeb_01_quickstart/WEB-INF/lib/tomcat-embed-logging-log4j-7.0.47.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/JavaWeb_01_quickstart/WEB-INF/lib/tomcat-jasper-7.0.47.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/JavaWeb_01_quickstart/WEB-INF/lib/tomcat-jasper-el-7.0.47.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/JavaWeb_01_quickstart/WEB-INF/lib/tomcat-jdbc-7.0.47.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/JavaWeb_01_quickstart/WEB-INF/lib/tomcat-jsp-api-7.0.47.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/JavaWeb_01_quickstart/WEB-INF/lib/tomcat-juli-7.0.47.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/JavaWeb_01_quickstart/WEB-INF/lib/tomcat-servlet-api-7.0.47.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/JavaWeb_01_quickstart/WEB-INF/lib/tomcat-tribes-7.0.47.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/JavaWeb_01_quickstart/WEB-INF/lib/tomcat-util-7.0.47.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/JavaWeb_01_quickstart/WEB-INF/lib/tomcat7-maven-plugin-2.2.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/JavaWeb_01_quickstart/WEB-INF/lib/tomcat7-war-runner-2.2.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/JavaWeb_01_quickstart/WEB-INF/lib/wagon-file-1.0-beta-2.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/JavaWeb_01_quickstart/WEB-INF/lib/wagon-http-lightweight-1.0-beta-2.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/JavaWeb_01_quickstart/WEB-INF/lib/wagon-http-shared-1.0-beta-2.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/JavaWeb_01_quickstart/WEB-INF/lib/wagon-provider-api-1.0-beta-2.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/JavaWeb_01_quickstart/WEB-INF/lib/wagon-ssh-1.0-beta-2.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/JavaWeb_01_quickstart/WEB-INF/lib/wagon-ssh-common-1.0-beta-2.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/JavaWeb_01_quickstart/WEB-INF/lib/wagon-ssh-external-1.0-beta-2.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/JavaWeb_01_quickstart/WEB-INF/lib/xml-apis-1.0.b2.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/JavaWeb_01_quickstart/WEB-INF/lib/xz-1.0.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/JavaWeb_01_quickstart/WEB-INF/web.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../JavaWeb_02_request_and_response/src/main/webapp/WEB-INF/web.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/JavaWeb_01_quickstart/a.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/JavaWeb_01_quickstart/index.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/../JavaWeb_02_request_and_response/src/main/webapp/index.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/itheima/web/WebServletDemo1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/itheima/web/WebServletDemo2.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/itheima/web/WebServletDemo3.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-archiver/pom.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/tomcat/conf/logging.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/tomcat/conf/tomcat-users.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/tomcat/conf/web.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/tomcat/logs/access_log.2023-02-03" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/tomcat/work/Tomcat/localhost/JavaWeb_01_quickstart/SESSIONS.ser" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/tomcat/work/Tomcat/localhost/JavaWeb_01_quickstart/org/apache/jsp/index_jsp.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/tomcat/work/Tomcat/localhost/JavaWeb_01_quickstart/org/apache/jsp/index_jsp.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/tomcat/work/Tomcat/localhost/_/org/apache/jsp/index_jsp.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/tomcat/work/Tomcat/localhost/_/org/apache/jsp/index_jsp.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../../../SSM/SpringMVC.md" beforeDir="false" afterPath="$PROJECT_DIR$/../../../SSM/SpringMVC.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../SSM/SpringMVCProject/SpringMVC_01_quickstart/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../../SSM/SpringMVCProject/SpringMVC_01_quickstart/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../SSM/SpringMVCProject/SpringMVC_01_quickstart/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../../SSM/SpringMVCProject/SpringMVC_01_quickstart/.idea/encodings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../SSM/SpringMVCProject/SpringMVC_01_quickstart/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../../SSM/SpringMVCProject/SpringMVC_01_quickstart/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../SSM/SpringMVCProject/SpringMVC_01_quickstart/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../../SSM/SpringMVCProject/SpringMVC_01_quickstart/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../SSM/SpringMVCProject/SpringMVC_01_quickstart/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../JavaWeb_02_request_and_response/pom.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -42,6 +135,9 @@
         <option value="Class" />
       </list>
     </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../../.." />
   </component>
   <component name="LogFilters">
     <option name="FILTER_ERRORS" value="false" />
@@ -57,10 +153,12 @@
     <option name="generalSettings">
       <MavenGeneralSettings>
         <option name="mavenHome" value="$USER_HOME$/apache-maven-3.8.7" />
+        <option name="useMavenConfig" value="true" />
         <option name="userSettingsFile" value="C:\Users\lyf\apache-maven-3.8.7\conf\settings.xml" />
       </MavenGeneralSettings>
     </option>
   </component>
+  <component name="ProjectId" id="2LFpYZzapxwpqUVFL4oV6cIBxSX" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <ConfirmationsSetting value="1" id="Add" />
   </component>
@@ -74,14 +172,18 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "WebServerToolWindowFactoryState": "false",
+    "jdk.selected.JAVA_MODULE": "1.8",
+    "last_opened_file_path": "C:/Users/lyf/NoteBook/SSM/SpringMVCProject/SpringMVC_01_quickstart",
     "project.structure.last.edited": "Modules",
     "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.0",
-    "settings.editor.selected.configurable": "MavenSettings"
+    "settings.editor.selected.configurable": "fileTemplates"
   }
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.itheima.res" />
+      <recent name="com.itheima" />
       <recent name="com.itheima.web" />
     </key>
   </component>
@@ -182,7 +284,10 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1675394529054</updated>
-      <workItem from="1675394530531" duration="3938000" />
+      <workItem from="1675394530531" duration="4798000" />
+      <workItem from="1675476734317" duration="20000" />
+      <workItem from="1675476783195" duration="18000" />
+      <workItem from="1675476818390" duration="7368000" />
     </task>
     <servers />
   </component>

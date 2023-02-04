@@ -454,219 +454,280 @@ public class WebServletDemo3 extends HttpServlet {
 
 
 
+# 5、Request和Response
 
+![image-20230204101027902](pictures/image-20230204101027902.png)
 
-## 3.2 Response对象
-
-### 3.2.1 功能：设置响应消息
-
-设置响应行
-
-格式：HTTP/1.1 200 OK
-
-设置状态码：setStatus(int sc)
-
-设置响应头
-
-setHeader(String name,String value)
-
-设置响应空行
-
-使用步骤
-
-获取输出流
-
-字符输出流：PrintWriter getWriter()
-
-字节输出流：ServletOutputStream getOutputStream()
-
-使用输出流，将数据输出到客户端浏览器
-
-### 3.2.2 案例
-
-1⃣️  完成重定向
-
-1）资源跳转的方式
-
-![Untitled](pictures/Untitled%202.png)
-
-我们重定向我们一共需要做两件事，第一件事是设置状态码，第二件事是设置响应头的location
-
-首先我们新建两个class文件，分别是responseDemo1和responseDemo2。
-
-然后我们在访问responseDemo1时，会自动调用doGet方法，那么我们需要在doGet中调用doPost方法，并且要在doPost方法中实现重定向的功能，为了验证我们正确重定向，我们在responseDemo2的doGet方法中打印一句话。
-
-代码如下
+## 5.1 Request请求对象
 
 ```java
-@WebServlet("/responseDemo1")
-public class responseDemo1 extends HttpServlet {
-    @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        this.doPost(req,resp);
-    }
+package com.itheima.web;
 
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        // 设置状态码
-        resp.setStatus(302);
-        // 设置location响应头
-        resp.setHeader("location","/responseDemo2");
-    }
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+
+@WebServlet("/demo4")
+public class WebServletDemo1 extends HttpServlet {
+   @Override
+   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+      // 使用request对象，获取请求数据
+      // 格式 url?name=XXX
+      String name = req.getParameter("name");
+
+      // 将获取的数据输出到页面中
+      resp.setHeader("content-type","text/html;charset=utf-8");
+      resp.getWriter().write(name + "你好！");
+   }
+
+   @Override
+   protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+   }
 }
 ```
 
-```java
-@WebServlet("/responseDemo2")
-public class responseDemo2 extends HttpServlet {
-    @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        System.out.println("我是重定向过来的！");
-    }
 
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-    }
-}
-```
+最终我们在地址栏中输入demo4?name=lyf
 
-重定向成功
+![image-20230204102255004](pictures/image-20230204102255004.png)
 
-![Untitled](pictures/Untitled%203.png)
+### 5.1.1 Request 继承体系
 
-**进阶**
+![image-20230204102453284](pictures/image-20230204102453284.png)
 
-另一个简单的重定向方法`resp.sendRedirect("/responseDemo2");` 只需要这一行代码就可以
+Tomcat需要解析请求数据，封装为request对象，并且创建request对象传递到service方法中。
 
-2）重定向的特点
+使用request对象，由于RequestFacade只是一个实现类，其实现的是HttpServletRequest接口中的方法，所以我们只需要去看接口的api文档
 
-地址栏发生变化
+我们尝试打印对象
 
-重定向可以访问其他站点（服务器）的资源
+![image-20230204103049704](pictures/image-20230204103049704.png)
 
-重定向是两次请求
+### 5.1.2 Request 获取请求数据
 
-3）转发的特点
+#### 1）请求行
 
-转发地址栏路径不变
+![image-20230204103738537](pictures/image-20230204103738537.png)
 
-转发只能访问当前服务器下的资源
+上面的方法调用之后，对应的结果如下
 
-转发是一次请求
+![image-20230204104105904](pictures/image-20230204104105904.png)
 
-4）路径写法
+第二行输出为空是因为我们设置了资源虚拟目录为/ ，我们把它改回去默认，输出如下
 
-路径的分类
+![image-20230204104601324](pictures/image-20230204104601324.png)
 
-**相对路径**：通过相对路径不可以确定唯一资源
 
-例如 ./index/html 就是一个相对路径
 
-规则：找到当前资源和目标资源之间的相对位置关系，注意是当前资源为基准，来看目标资源应该怎么找
+#### 2）请求头
 
-例如：
-
-当前资源 http://localhost/day15/index.html
-
-目标资源 http://localhost/day15/responseDemo2
-
-那么相对路径就是./responseDemo2
-
-例如：
-
-当前资源 http://localhost/day15/demo/index.html
-
-目标资源 http://localhost/day15/responseDemo2
-
-那么相对路径就是../responseDemo2
-
-./ 当前目录
-
-../ 后退一级目录
-
-../../ 后退两级目录
-
-**绝对路径：**
-
-例如 [http://localhost/day15/responseDemo2](http://localhost/day15/responseDemo2) 这种以/开头的路径叫做绝对路径
-
-规则：判断定义的路径给谁用的？判断这个请求由哪里发出
-
-给客户端浏览器使用：需要加虚拟目录，比如在客户端进行资源访问，这个就是客户端发出的。
-
-给服务器用：不需要加虚拟目录，比如服务器之间的转发
-
-这里有个问题
-
-由于我们Tomcat的虚拟路径设置的是/ ，所以在进行服务器页面转发的时候
-
-![Untitled](pictures/Untitled%204.png)
-
-这个地方应该写什么呢？黑马的教程中，设置的虚拟目录是/day15，所以这里不用写虚拟路径直接/responseDemo2，那么我的虚拟路径写的是/，写了/responseDemo2是正确的，但是我把虚拟路径写成/feng，然后直接这里填/responseDemo2也是正确的。。
-
-注意一个问题：如果我们把虚拟目录写死了，那么一旦改变了虚拟目录，那么所有的都需要去改。
+![image-20230204104807216](pictures/image-20230204104807216.png)
 
 ```java
-// 动态获取虚拟目录
-String contextPath = req.getContextPath();
+System.out.println(req.getHeader("user-agent"));
 ```
 
-顺便看一下，虚拟目录设置为/ 和 /feng 有什么区别
+返回的是用户系统的信息
 
-首先我们设置为/ ，打开页面地址是这样的，我们要访问responseDemo1就应该加上/responseDemo1
+![image-20230204105023114](pictures/image-20230204105023114.png)
 
-![Untitled](pictures/Untitled%205.png)
+#### 3）请求体
 
-如果设置为/feng，打开页面地址是这样的，我们要访问responseDemo1就应该加上responseDemo1就行，注意少了个斜杠。
+![image-20230204104813124](pictures/image-20230204104813124.png)
 
-![Untitled](pictures/Untitled%206.png)
+请求体是post请求中才有的
 
-但是如果是html页面是没有办法动态获取虚拟路径的，这个时候我们使用JSP是可以实现的，后面再说。
-
-2⃣️  服务器输出字符数据到浏览器
-
-首先来看一个比较简单的部分，我们使用PrintWriter获取字符的输出流，然后输出到页面上
-
-```java
-// 1、 获取字符输出流
-PrintWriter pw = resp.getWriter();
-
-// 2、输出
-pw.write("你们 hello http!!");
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <form action="/demo3" method="post">
+        <input type="text" name="username">
+        <input type="password" name="password">
+        <input type="submit">
+    </form>
+</body>
+</html>
 ```
 
-浏览器的默认编码格式是GBK，而我们resp.getWriter();获取的是ISO编码，这就是编码和解码不一致导致的，我们在获取流之前，就应该规定编码。
-
-![Untitled](pictures/Untitled%207.png)
-
-现在虽然能够输出，但是只是恰巧。如果其他的浏览器默认不是GBK呢？
-
-```java
-// 告诉浏览器，服务器发送的消息体数据的编码，建议浏览器使用该编码
-resp.setHeader("content-type","text/html;charset=utf-8");
-```
-
-但是还有一个更简单的方法
-
-`resp.setContentType("text/html;charset=utf-8"); // 服务器发送给客户端的` 是一个响应头，这行代码一般写到doGet的最前面。
-
-3⃣️  服务器输出字节数据到浏览器
-
-步骤与2⃣️ 类似，只不过是获取字节流
+注意表单中/demo3是跳转的位置
 
 ```java
 @Override
-protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+   // post请求体
+   BufferedReader reader = req.getReader();
+   String line = reader.readLine();
+   System.out.println(line);
 
-    // 设置编码格式
-    resp.setContentType("text/html;charset=UTF-8");
-    // 1、获取字节输出流
-    ServletOutputStream sos = resp.getOutputStream();
-    // 2、输出
-    sos.write("你好 Hello".getBytes());
 }
 ```
 
-4⃣️  验证码
+
+
+![image-20230204105907465](pictures/image-20230204105907465.png)
+
+两种获取请求方式的区别
+
+![image-20230204110143447](pictures/image-20230204110143447.png)
+
+后面我们只要在post方法中，调用doGet方法，转而调用doGet方法进行统一处理即可。
+
+
+
+请求参数如果有乱码，应该怎么处理
+
+![image-20230204112122528](pictures/image-20230204112122528.png)
+
+
+
+```java
+// post 解决乱码
+request.setCharacterEncoding("UTF-8");
+
+String username = request.getParameter("username");
+System.out.println(username);
+
+// GET解决
+// 先对乱码数据进行编码，转为字节数组
+byte[] bytes = username.getBytes(StandardCharsets.ISO_8859_1);
+
+// 字节数组解码
+String string = new String(bytes, StandardCharsets.UTF_8);
+System.out.println("解决乱码后" + string);
+```
+
+
+
+![image-20230204113356585](pictures/image-20230204113356585.png)
+
+
+
+### 5.1.3 Request 请求转发
+
+请求转发是一种在服务器内部的资源跳转方式
+
+![image-20230204113818133](pictures/image-20230204113818133.png)
+
+只需要一行代码
+
+```java
+request.getRequestDispatcher("/rep6").forward(request, response);
+```
+
+实现从demo5 跳转到demo6
+
+![image-20230204120032516](pictures/image-20230204120032516.png)
+
+## 5.2 Response
+
+### 5.2.1 Response 设置响应数据功能介绍
+
+#### 1）响应行
+
+![image-20230204120737728](pictures/image-20230204120737728.png)
+
+
+
+#### 2）响应头
+
+![image-20230204120743561](pictures/image-20230204120743561.png)
+
+
+
+#### 3）响应体
+
+![image-20230204120749309](pictures/image-20230204120749309.png)
+
+
+
+### 5.2.2 Response 完成重定向
+
+一种资源跳转的方式，当浏览器请求资源a无法找到，那么资源A会返回一个状态码，然后给出另一个资源的位置信息，浏览器拿着这个资源信息再去寻找其他的资源。
+
+![image-20230204123252536](pictures/image-20230204123252536.png)
+
+```java
+// 设置响应状态码 302
+response.setStatus(302);
+// 设置响应头
+response.setHeader("location","/Respdemo2");
+```
+
+还有简化的方式书写重定向
+
+```java
+response.sendRedirect("/Respdemo2");
+```
+
+注意与转发的区别。
+
+- 重定向地址栏路径发生改变，请求转发地址栏路径不发生改变
+- 重定向可以定义到任意位置的资源，请求转发只能转发到当前服务器的内部
+- 重定向是两次请求，请求转发是一次请求
+
+
+
+路径问题：
+
+明确路径给谁使用，如果浏览器使用，则需要加虚拟目录。如果是给服务端使用，不需要加虚拟目录。
+
+
+
+动态获取虚拟目录
+
+```java
+String contextPath = request.getContextPath();
+response.sendRedirect(contextPath + "/Respdemo2");
+```
+
+
+
+### 5.2.3 Response 响应字符数据
+
+![image-20230204124734506](pictures/image-20230204124734506.png)
+
+
+
+```java
+PrintWriter writer = response.getWriter();
+writer.write("aaaaaaaa");
+```
+
+写到页面上。流不需要关闭。
+
+### 5.2.4 Response 响应字节数据
+
+![image-20230204125436223](pictures/image-20230204125436223.png)
+
+一般是用来向页面上写入图片等信息。
+
+![image-20230204125713837](pictures/image-20230204125713837.png)
+
+可以使用IOUtils实现流的对拷
+
+```java
+IOUtils.copy(fis,os)
+```
+
+# 6、JSP
+
+## 6.1 概念
+
+Java Server Pages，java服务端页面，里面即可以写静态内容，也可以写动态内容，这一块基本没人用了，暂时不看。
+
+
+
+# 7、会话跟踪技术
+
+
 

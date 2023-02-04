@@ -5,21 +5,35 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4be2df9b-ccd6-4c2b-86db-76a5b3a5225f" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/itheima/App.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/com/itheima/AppTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../SpringMVC_01_mvcquickstart/src/main/webapp/WEB-INF/web.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../SpringMVC_01_mvcquickstart/src/main/webapp/index.jsp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../SpringMVC_02_bean_load/pom.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../SpringMVC_02_bean_load/src/main/webapp/WEB-INF/web.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../SpringMVC_02_bean_load/src/main/webapp/index.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../JavaWeb/JavaWeb.md" beforeDir="false" afterPath="$PROJECT_DIR$/../../../JavaWeb/JavaWeb.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../JavaWeb/JavaWebProject/JavaWeb_01_quickstart/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../../JavaWeb/JavaWebProject/JavaWeb_01_quickstart/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../JavaWeb/JavaWebProject/JavaWeb_01_quickstart/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../../JavaWeb/JavaWebProject/JavaWeb_01_quickstart/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../JavaWeb/JavaWebProject/JavaWeb_01_quickstart/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../../JavaWeb/JavaWebProject/JavaWeb_01_quickstart/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../JavaWeb/JavaWebProject/JavaWeb_01_quickstart/target/tomcat/logs/access_log.2023-02-03" beforeDir="false" afterPath="$PROJECT_DIR$/../../../JavaWeb/JavaWebProject/JavaWeb_01_quickstart/target/tomcat/logs/access_log.2023-02-03" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../SpringMVC.md" beforeDir="false" afterPath="$PROJECT_DIR$/../../SpringMVC.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../SpringMVC_01_mvcquickstart/pom.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+        <option value="Interface" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../../.." />
@@ -36,7 +50,9 @@
     </option>
   </component>
   <component name="ProjectId" id="2LCz4AWjMxq0IPQW8gIArEAsVZP" />
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="1" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="showLibraryContents" value="true" />
   </component>
@@ -46,9 +62,35 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "WebServerToolWindowFactoryState": "false",
-    "settings.editor.selected.configurable": "MavenSettings"
+    "jdk.selected.JAVA_MODULE": "1.8",
+    "last_opened_file_path": "C:/Users/lyf/NoteBook/SSM/SpringMVCProject/SpringMVC_02_bean_load/src/main",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2",
+    "settings.editor.selected.configurable": "MavenSettings",
+    "spring.configuration.checksum": "394e118803ca1732e3ea4a4113725adf"
   }
 }]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\lyf\NoteBook\SSM\SpringMVCProject\SpringMVC_02_bean_load\src\main" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration default="true" type="JetRunConfigurationType">
+      <module name="SpringMVC_01_quickstart" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
+      <module name="SpringMVC_01_quickstart" />
+      <option name="filePath" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -58,6 +100,8 @@
       <option name="presentableId" value="Default" />
       <updated>1675389660101</updated>
       <workItem from="1675389661496" duration="1036000" />
+      <workItem from="1675424087710" duration="5095000" />
+      <workItem from="1675476773999" duration="44000" />
     </task>
     <servers />
   </component>
