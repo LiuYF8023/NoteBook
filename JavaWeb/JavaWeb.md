@@ -729,5 +729,301 @@ Java Server Pages，java服务端页面，里面即可以写静态内容，也�
 
 # 7、会话跟踪技术
 
+## 7.1 会话
+
+用户打开浏览器，访问web服务器的资源，会话建立，直到有一方断开连接，会话才结束，在一次会话中可以包含多次请求和响应。
+
+## 7.2 会话跟踪
+
+一种维护浏览器状态的方法，服务器需要识别多次请求是否来自同一个浏览器，以便在同义次会话的多次请求之间共享数据。
+
+## 7.3 客户端会话跟踪技术 Cookie
+
+### 7.3.1 Cookie基本使用
+
+Cookie能够将数据保存到客户端，以后每次请求都携带Cookie数据进行访问
+
+#### 1）创建Cookie对象，设置数据
+
+```java
+// 发送cookie
+// 创建cookie对象
+Cookie cookie = new Cookie("username","zs");
+```
+
+#### 2）发送cookie到客户端：使用response对象
+
+// 发送cookie
+response.addCookie(cookie);
+
+#### 3）获取cookie
+
+```java
+Cookie[] cookies = request.getCookies();
+for (Cookie cookie1 : cookies) {
+   System.out.println(cookie1.getName()  +" "+ cookie1.getValue());
+}
+```
+
+### 7.3.2 Cookie原理
+
+Cookie实现是基于http协议的
+
+响应头：set-cookie
+
+请求头：cookie
+
+![image-20230204161740771](pictures/image-20230204161740771.png)
 
 
+
+### 7.3.3 Cookie使用细节
+
+#### 1）cookie存活时间
+
+默认情况下，当浏览器关闭，cookie失效
+
+cookie的持久化
+
+```java
+cookie.setMaxAge(7 * 24 * 60 * 60);
+```
+
+#### 2）cookie存储中文
+
+默认情况下不能存储中文，会报错
+
+使用URL编码
+
+```java
+// 发送cookie
+// 创建cookie对象
+String name = "张三";
+name = URLEncoder.encode(name,"UTF-8");
+Cookie cookie = new Cookie("username",name);
+// 设置存活时间 7天
+cookie.setMaxAge(7 * 24 * 60 * 60);
+// 发送cookie
+response.addCookie(cookie);
+```
+
+使用URL解码
+
+```java
+Cookie[] cookies = request.getCookies();
+for (Cookie cookie1 : cookies) {
+   if (cookie1.getName().equals("username")) {
+      System.out.println(cookie1.getName() + " " + URLDecoder.decode(cookie1.getValue()));
+   }
+}
+```
+
+## 7.4 服务端会话跟踪技术 Session
+
+### 7.4.1 Session基本使用
+
+服务端会话跟踪技术：将数据保存到服务端
+
+JavaEE提供HttpSession接口，来实现一次会话的多次请求间数据共享功能。
+
+![image-20230204163722435](pictures/image-20230204163722435.png)
+
+
+
+```JAVA
+// 获取session
+HttpSession session = request.getSession();
+
+// 存储数据到session中
+session.setAttribute("username","zs");
+```
+
+
+
+```JAVA
+// 获取session对象
+HttpSession session = request.getSession();
+System.out.println(session.getAttribute("username"));
+```
+
+### 7.4.2 Session原理
+
+session是基于Cookie实现的，在一次会话的多次请求之间获取的都是同一个session对象
+
+![image-20230204164252727](pictures/image-20230204164252727.png)
+
+![image-20230204164437372](pictures/image-20230204164437372.png)
+
+
+
+### 7.4.3 Session使用细节
+
+#### 1）Session钝化、活化
+
+服务器重启的时候，Session中的数据不会丢失
+
+钝化：在服务器正常关闭之后，tomcat会将session数据写入硬盘的文件中
+
+活化：再次启动服务器之后，从文件中加载数据到session中
+
+
+
+#### 2）Session销毁
+
+默认情况下，无操作，30分钟自动销毁
+
+调用Session对象的invalidate方法
+
+```java
+session.invalidate();
+```
+
+
+
+# 8、Filter
+
+过滤器可以把对资源的请求拦截下来，从而实现一些特殊的功能
+
+![image-20230204165456206](pictures/image-20230204165456206.png)
+
+## 8.1 Filter 快速入门
+
+![image-20230204170411263](pictures/image-20230204170411263.png)
+
+放行操作
+
+```java
+package com.itheima;
+
+
+import javax.servlet.*;
+import javax.servlet.annotation.WebFilter;
+import java.io.IOException;
+
+@WebFilter("/*")
+public class FilterDemo implements Filter {
+   @Override
+   public void init(FilterConfig filterConfig) throws ServletException {
+   }
+
+   @Override
+   public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
+      System.out.println("do filter ...");
+
+      // 放行
+      filterChain.doFilter(servletRequest,servletResponse);
+   }
+
+   @Override
+   public void destroy() {
+
+   }
+}
+```
+
+## 8.2 Filter 执行流程
+
+放行前和放行后我们都可以进行一些操作
+
+![image-20230204170544564](pictures/image-20230204170544564.png)
+
+```java
+@Override
+public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
+   // 1、放行前，对request数据进行处理
+   System.out.println("do filter ...");
+
+   // 放行
+   filterChain.doFilter(servletRequest,servletResponse);
+   
+   // 放行后 对response数据进行出咯
+   // 
+   System.out.println("do filter 2");
+}
+```
+
+## 8.3 Filter 使用细节
+
+### 8.3.1 拦截路径的配置
+
+![image-20230204170905314](pictures/image-20230204170905314.png)
+
+### 8.3.2 过滤器链
+
+![image-20230204171303444](pictures/image-20230204171303444.png)
+
+# 9、Listener
+
+监听器可以监听在application、session、request三个对象创建，销毁或者往其中添加修改删除属性时自动执行代码的功能组件
+
+
+
+# 10、AJAX
+
+## 10.1 概述
+
+异步的JavaScript和XML
+
+- 作用
+  - 与服务器进行数据交换：通过AJAX可以给服务器发送请求，并获取服务器响应的数据
+    - ![image-20230204171945816](pictures/image-20230204171945816.png)
+  - 异步交互：可以在不重新加载整个页面的情况下， 与服务器交换数据并更新部分网页的技术
+
+![image-20230204172431821](pictures/image-20230204172431821.png)
+
+## 10.2 AJAX 快速入门
+
+
+
+## 10.3 Axios异步框架
+
+
+
+# 11、 JSON
+
+JavaScript对象表示法
+
+![image-20230204172819876](pictures/image-20230204172819876.png)
+
+## 11.1 JSON 基础语法
+
+![image-20230204173113480](pictures/image-20230204173113480.png)
+
+```json
+var json = {
+  "name":"zhangsan",
+  "age":23,
+  "addr":["beijing","shanghai","xian"]
+};
+```
+
+## 11.2 Java对象和JSON数据的转换
+
+![image-20230204173357288](pictures/image-20230204173357288.png)
+
+使用一个库
+
+![image-20230204173450647](pictures/image-20230204173450647.png)
+
+```java
+package com.itheima;
+
+import com.alibaba.fastjson.JSON;
+
+public class jsontojava {
+   public static void main(String[] args) {
+      // 1、将java对象转为json
+      User user = new User();
+      user.setName("zhangsan");
+      user.setAge(12);
+      String jsonStr = JSON.toJSONString(user);
+      System.out.println(jsonStr);
+      // 2、将json转为java对象
+
+      User user2 = JSON.parseObject(jsonStr,User.class);
+      System.out.println(user2);
+   }
+}
+```
+
+![image-20230204173933075](pictures/image-20230204173933075.png)
