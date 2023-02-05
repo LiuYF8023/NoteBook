@@ -8,11 +8,21 @@
   <component name="ExternalStorageConfigurationManager" enabled="true" />
   <component name="FrameworkDetectionExcludesConfiguration">
     <file type="web" url="file://$PROJECT_DIR$" />
+    <file type="web" url="file://$PROJECT_DIR$/../SpringMVC_03_request_mapping" />
+    <file type="web" url="file://$PROJECT_DIR$/../SpringMVC_04_request_param" />
+    <file type="web" url="file://$PROJECT_DIR$/../SpringMVC_05_response" />
+    <file type="web" url="file://$PROJECT_DIR$/../SpringMVC_06_rest" />
+    <file type="web" url="file://$PROJECT_DIR$/../SpringMVC_07_rest_demo" />
   </component>
   <component name="MavenProjectsManager">
     <option name="originalFiles">
       <list>
         <option value="$PROJECT_DIR$/pom.xml" />
+        <option value="$PROJECT_DIR$/../SpringMVC_03_request_mapping/pom.xml" />
+        <option value="$PROJECT_DIR$/../SpringMVC_04_request_param/pom.xml" />
+        <option value="$PROJECT_DIR$/../SpringMVC_05_response/pom.xml" />
+        <option value="$PROJECT_DIR$/../SpringMVC_06_rest/pom.xml" />
+        <option value="$PROJECT_DIR$/../SpringMVC_07_rest_demo/pom.xml" />
       </list>
     </option>
   </component>
