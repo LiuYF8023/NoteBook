@@ -7,6 +7,8 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="springmvc_08_ssm" />
+        <module name="SpringMVC_10_page" />
+        <module name="SpringMVC_11_interceptor" />
       </profile>
     </annotationProcessing>
   </component>

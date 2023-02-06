@@ -1432,3 +1432,337 @@ public class BookController {
 
 ## 6.3 异常处理器
 
+### 6.3.1 常见的异常
+
+![image-20230206191023640](pictures/image-20230206191023640.png)
+
+所有的异常都写在表现层。
+
+使用AOP的思想，做面向切面编程。
+
+### 6.3.2 异常处理器写法
+
+SpringMVC中提供了异常处理器，能够进行集中的、同一的处理项目中出现的异常。
+
+怎么定义异常处理器，新建一个类，然后进行如下的书写，这个类是定义在controller中的。
+
+```java
+package com.itheima.controller;
+
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+@RestControllerAdvice
+public class ProjectExceptionAdvice {
+   // 处理所有异常
+   @ExceptionHandler(Exception.class)
+   public Result doException(Exception e){
+      System.out.println("处理异常");
+      return new Result(666,null,"处理异常");
+   }
+}
+```
+
+
+
+![image-20230206191940217](pictures/image-20230206191940217.png)
+
+### 6.3.3 异常处理方案
+
+异常能抛出了，那么怎么进行统一的处理
+
+异常分类
+
+-  业务异常
+  - 规范的用户行为产生异常
+  - 不规范的用户行为操作产生的异常
+- 系统异常
+  - 项目运行过程中可预计且无法避免的异常
+- 其他异常
+  - 编程人员未预期到的异常
+
+
+
+将自己写的异常类，然后把异常包装成自己写的异常类。
+
+SystemException 系统异常
+
+```java
+package com.itheima.exception;
+
+public class SystemException extends RuntimeException {
+   private Integer code;
+
+   public Integer getCode() {
+      return code;
+   }
+
+   public void setCode(Integer code) {
+      this.code = code;
+   }
+
+   public SystemException(Integer code, String message) {
+      super(message);
+      this.code = code;
+   }
+
+   public SystemException(Integer code, String message, Throwable cause) {
+      super(message, cause);
+      this.code = code;
+   }
+
+}
+```
+
+
+
+业务异常BussinessException
+
+```java
+package com.itheima.exception;
+
+public class BussinessException extends RuntimeException {
+   private Integer code;
+
+   public Integer getCode() {
+      return code;
+   }
+
+   public void setCode(Integer code) {
+      this.code = code;
+   }
+
+   public BussinessException(Integer code, String message) {
+      super(message);
+      this.code = code;
+   }
+
+   public BussinessException(Integer code, String message, Throwable cause) {
+      super(message, cause);
+      this.code = code;
+   }
+
+}
+```
+
+
+
+
+
+在异常处理器类中，进行同一的包装
+
+```java
+package com.itheima.controller;
+
+import com.itheima.exception.BussinessException;
+import com.itheima.exception.SystemException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+@RestControllerAdvice
+public class ProjectExceptionAdvice {
+   // 系统异常
+   @ExceptionHandler(SystemException.class)
+   public Result doSystemException(SystemException e){
+      // 1、记录日志
+
+      // 2、发送消息给运维
+
+      // 3、发送邮件给开发人员
+
+      return new Result(e.getCode(),null,e.getMessage());
+   }
+
+   // 业务异常
+   @ExceptionHandler(BussinessException.class)
+   public Result doBusinessException(BussinessException e){
+      return new Result(e.getCode(),null,e.getMessage());
+   }
+
+   // 第三类 处理所有异常
+   @ExceptionHandler(Exception.class)
+   public Result doException(Exception e){
+//    System.out.println("处理异常");
+//    return new Result(666,null,"处理异常");
+      return new Result(Code.SYSTEM_UNKNOW,null,"系统繁忙");
+   }
+}
+```
+
+# 7、拦截器
+
+## 7.1 拦截器概念
+
+一种动态拦截方法调用的机制，在SpringMVC中动态拦截控制器方法的执行
+
+作用
+
+- 在指定的方法调用前后执行预先设定的代码
+- 阻止原始方法的执行
+
+![image-20230206201732029](pictures/image-20230206201732029.png)
+
+
+
+拦截器与过滤器区别
+
+- 归属不同：Filter属于Servlet技术，Interceptor属于SpringMVC技术
+- 拦截内容不同：Filter对所有访问进行增强，Interceptor仅对SpringMVC的访问进行增强
+
+
+
+## 7.2 入门案例
+
+### 7.2.1 拦截器功能类
+
+```java
+package com.itheima.interceptor;
+
+import org.springframework.stereotype.Component;
+import org.springframework.web.servlet.HandlerInterceptor;
+import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+@Component
+public class ProjectInterceptor implements HandlerInterceptor {
+   @Override
+   public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+      System.out.println("preHandle...");
+      return true;
+   }
+
+   @Override
+   public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
+      System.out.println("postHandle...");
+   }
+
+   @Override
+   public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
+      System.out.println("afterCompletion...");
+   }
+}
+```
+
+### 7.2.2 配置拦截器的执行位置
+
+```java
+package com.itheima.config;
+
+import com.itheima.controller.interceptor.ProjectInterceptor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
+
+@Configuration
+public class SpringMvcSupport extends WebMvcConfigurationSupport {
+   @Autowired
+   private ProjectInterceptor projectInterceptor;
+   @Override
+   protected void addResourceHandlers(ResourceHandlerRegistry registry) {
+      registry.addResourceHandler("/pages/**").addResourceLocations("/page/");
+   }
+
+   @Override
+   protected void addInterceptors(InterceptorRegistry registry) {
+      registry.addInterceptor(projectInterceptor).addPathPatterns("/books/*");
+   }
+}
+```
+
+当我们执行/books/* 的时候就会拦截，例如我们按照id进行查询
+
+![image-20230206204356315](pictures/image-20230206204356315.png)
+
+拦截器会在方法执行前，执行后起作用
+
+```java
+registry.addInterceptor(projectInterceptor).addPathPatterns("/books","/books/*");
+```
+
+可以添加多个拦截路径。
+
+
+
+```java
+public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+   System.out.println("preHandle...");
+   return false;
+}
+```
+
+只会输出一个preHandle，会终止我们原始方法的输出。
+
+还有更简单的写法，我们就不用写SpringMvcSupport这个配置类了，直接继承接口，其中有个addInterceptors这个方法
+
+```java
+@Configuration
+@ComponentScan({"com.itheima.controller"})
+@EnableWebMvc
+public class SpringMvcConfig implements WebMvcConfigurer {
+   @Autowired
+   private ProjectInterceptor projectInterceptor;
+   @Override
+   public void addInterceptors(InterceptorRegistry registry) {
+      registry.addInterceptor(projectInterceptor).addPathPatterns("/books","/books/*");
+   }
+}
+```
+
+![image-20230206205158992](pictures/image-20230206205158992.png)
+
+```java
+public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+    System.out.println("preHandle...");
+    return true;
+}   
+```
+
+handler 能够用来反射
+
+
+
+### 7.2.3 多拦截器执行顺序
+
+当我有两个拦截器的时候，
+
+```java
+package com.itheima.config;
+
+import com.itheima.controller.interceptor.ProjectInterceptor;
+import com.itheima.controller.interceptor.ProjectInterceptor2;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+@Configuration
+@ComponentScan({"com.itheima.controller"})
+@EnableWebMvc
+public class SpringMvcConfig implements WebMvcConfigurer {
+   @Autowired
+   private ProjectInterceptor projectInterceptor;
+   @Autowired
+   private ProjectInterceptor2 projectInterceptor2;
+   @Override
+   public void addInterceptors(InterceptorRegistry registry) {
+      registry.addInterceptor(projectInterceptor).addPathPatterns("/books","/books/*");
+      registry.addInterceptor(projectInterceptor2).addPathPatterns("/books","/books/*");
+   }
+}
+```
+
+![image-20230206210111508](pictures/image-20230206210111508.png)
+
+先执行的是第一个这个拦截器的preHandle，booksave相当于访问了资源，等出来的时候，先执行2，再执行1。
+
+当拦截器return false时，只会执行第一个，后面都被终止了
+
+![image-20230206210353894](pictures/image-20230206210353894.png)
+
+![image-20230206210524249](pictures/image-20230206210524249.png)
