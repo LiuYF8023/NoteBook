@@ -1,0 +1,7 @@
+0:0:0:0:0:0:0:1 - - [05/Feb/2023:20:26:35 +0800] "GET / HTTP/1.1" 200 52 http-bio-80-exec-2 612
+0:0:0:0:0:0:0:1 - - [05/Feb/2023:20:26:40 +0800] "GET /pages/books.html HTTP/1.1" 200 6059 http-bio-80-exec-3 49
+0:0:0:0:0:0:0:1 - - [05/Feb/2023:20:27:34 +0800] "GET /pages/books.html HTTP/1.1" 200 6030 http-bio-80-exec-4 20
+0:0:0:0:0:0:0:1 - - [05/Feb/2023:20:27:34 +0800] "GET /books HTTP/1.1" 200 310 http-bio-80-exec-6 90
+0:0:0:0:0:0:0:1 - - [05/Feb/2023:20:29:39 +0800] "GET /pages/books.html HTTP/1.1" 200 6070 http-bio-80-exec-8 23
+0:0:0:0:0:0:0:1 - - [05/Feb/2023:20:29:39 +0800] "GET /books HTTP/1.1" 200 310 http-bio-80-exec-10 3
+0:0:0:0:0:0:0:1 - - [05/Feb/2023:20:29:44 +0800] "POST /books HTTP/1.1" 200 30 http-bio-80-exec-10 60
