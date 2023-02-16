@@ -7,6 +7,9 @@
   </component>
   <component name="ExternalStorageConfigurationManager" enabled="true" />
   <component name="FrameworkDetectionExcludesConfiguration">
+    <file type="web" url="file://$PROJECT_DIR$/../../../Maven/maven_02_ssm" />
+    <file type="web" url="file://$PROJECT_DIR$/../../../Maven/maven_03_pojo" />
+    <file type="web" url="file://$PROJECT_DIR$/../../../Maven/maven_04_dao" />
     <file type="web" url="file://$PROJECT_DIR$" />
     <file type="web" url="file://$PROJECT_DIR$/../SpringMVC_10_page" />
     <file type="web" url="file://$PROJECT_DIR$/../SpringMVC_11_interceptor" />
@@ -17,6 +20,10 @@
         <option value="$PROJECT_DIR$/pom.xml" />
         <option value="$PROJECT_DIR$/../SpringMVC_10_page/pom.xml" />
         <option value="$PROJECT_DIR$/../SpringMVC_11_interceptor/pom.xml" />
+        <option value="$PROJECT_DIR$/../../../Maven/maven_02_ssm/pom.xml" />
+        <option value="$PROJECT_DIR$/../../../Maven/maven_03_pojo/pom.xml" />
+        <option value="$PROJECT_DIR$/../../../Maven/maven_04_dao/pom.xml" />
+        <option value="$PROJECT_DIR$/../../../Maven/maven_01_parent/pom.xml" />
       </list>
     </option>
   </component>

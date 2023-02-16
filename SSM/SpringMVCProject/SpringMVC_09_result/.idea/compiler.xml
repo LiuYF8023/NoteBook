@@ -6,8 +6,11 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="springmvc_08_ssm" />
         <module name="SpringMVC_10_page" />
+        <module name="maven_04_dao" />
+        <module name="springmvc_08_ssm" />
+        <module name="maven_02_ssm" />
+        <module name="maven_03_pojo" />
         <module name="SpringMVC_11_interceptor" />
       </profile>
     </annotationProcessing>
