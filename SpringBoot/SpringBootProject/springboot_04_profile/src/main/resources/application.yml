@@ -1,0 +1,39 @@
+spring:
+  profiles:
+    active: pro
+---
+# 测试环境
+spring:
+  config:
+    activate:
+      on-profile: test
+server:
+  port: 81
+---
+# 开发环境
+spring:
+  config:
+    activate:
+      on-profile: dev
+server:
+  port: 80
+---
+# 生产环境
+spring:
+  config:
+    activate:
+      on-profile: pro
+server:
+  port: 82
+
+
+lesson: SpringBoot
+
+enterprise:
+  name: lyf
+  age: 24
+  tel: 16620909823
+  subject:
+    - Java
+    - mysql
+    - SpringBoot

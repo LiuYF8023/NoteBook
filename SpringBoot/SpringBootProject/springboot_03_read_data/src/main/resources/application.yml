@@ -1,0 +1,12 @@
+lesson: SpringBoot
+server:
+  port: 80
+
+enterprise:
+  name: lyf
+  age: 24
+  tel: 16620909823
+  subject:
+    - Java
+    - mysql
+    - SpringBoot
