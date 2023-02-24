@@ -1,7 +1,7 @@
 package com.itheima.controller;
 
-public class Result {
-	private Object data;
+public class Result<T> {
+	private T data;
 	private Integer code;
 	private String msg;
 
@@ -9,13 +9,13 @@ public class Result {
 
 	}
 
-	public Result(Integer code, Object data, String msg) {
+	public Result(Integer code, T data, String msg) {
 		this.data = data;
 		this.code = code;
 		this.msg = msg;
 	}
 
-	public Result(Integer code, Object data) {
+	public Result(Integer code, T data) {
 		this.data = data;
 		this.code = code;
 	}
@@ -33,7 +33,7 @@ public class Result {
 		return data;
 	}
 
-	public void setData(Object data) {
+	public void setData(T data) {
 		this.data = data;
 	}
 
