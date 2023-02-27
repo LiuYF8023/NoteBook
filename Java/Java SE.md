@@ -3061,7 +3061,7 @@ Lambda表达式支持将代码块作为方法参数，通过表达式来创建�
 
 - 形参列表：如果形参列表中只有一个参数，形参列表的圆括号可以省略
 - 箭头 →
-- 代码块：如果代码块只有一条语句，则可以省略代码块的花括号。
+- 代码块：如果代码块只有一条语句，则可以省略代码块的花括号{}。lambda代码块只有一条return语句，甚至可以省略return关键字，lambda表达式会自动返回语句的返回值。
 
 Lambda表达式的几种简化写法
 
@@ -3115,17 +3115,156 @@ interface Flyable {
 
 第三个粗体代码，Lambda表达式的代码块中只有一行语句，这行语句的返回值将作为该代码块的返回值。
 
-上面的程序为什么能够运行呢？
+**Lambda表达式实际上将会被当成任意类型的对象**
 
 ### 6.8.2 Lambda表达式与函数式接口
 
 函数式接口代表只包含一个抽象方法的接口。函数式接口可以包含多个默认方法、类方法，但只能声明一个抽象方法。
 
-Lambda表达式的目标类型必须是明确得到函数式接口，为了保证Lambda表达式的目标类型是一个明确的函数式接口，可以有如下三种常见的方式。
+Lambda表达式的**目标类型必须是明确得到函数式接口**，为了保证Lambda表达式的目标类型是一个明确的函数式接口，可以有如下三种常见的方式。
 
 - 将Lambda表达式赋值给函数式接口类型的变量
 - 将Lambda表达式作为函数式接口类型的参数传给某个方法
 - 使用函数式接口对Lambda表达式进行强制类型转换
+
+典型的函数式接口（默认只有一个抽象方法）
+
+- XxxFunction
+- XxxConsumer
+- XxxPredicate
+- XxxSupplier
+
+### 6.8.3 方法引用与构造器引用
+
+如果lambda表达式的代码块只有一条代码，则可以在代码块中使用方法引用和构造器引用。
+
+方法引用和构造器引用都需要使用两个英文冒号。
+
+#### 1）引用类方法
+
+我们定义一个函数式接口
+
+```java
+@FunctionalInterface
+interface Converter {
+   Integer converter(String form);
+}
+```
+
+该接口中定义了一个抽象方法，用于把字符串类型转换为整形。我们使用lambda表达式
+
+```java
+Converter converter = form -> Integer.valueOf(form);
+```
+
+lambda表达式将Integer.valueOf方法的值作为返回值
+
+同样也可以进行简化书写
+
+```java
+Converter converter1 = Integer::valueOf;
+System.out.println(converter1.converter("98"));
+```
+
+#### 2）引用特定对象的实例方法
+
+```java
+Converter converter2 = "12345"::indexOf;
+System.out.println(converter2.converter("3"));
+```
+
+#### 3）引用某类对象的实例方法
+
+```java
+Mytest mt = (a, b, c) -> a.substring(b,c);
+String str = mt.test("akhfkas",2,5);
+System.out.println(str);
+
+Mytest mt2 = String::substring;
+String str2 = mt2.test("akhfkas",2,5);
+System.out.println(str2);
+```
+
+#### 4）引用构造器
+
+```java
+YourTest yt = (String a) -> new JFrame(a);
+
+JFrame jf = yt.win("我的窗口");
+System.out.println(jf);
+
+YourTest yt2 = JFrame::new;
+```
+
+### 6.8.4 Lambda表达式与匿名内部类的联系和区别
+
+```java
+package lambda;
+
+public class LambdaAndInner {
+   private int age = 12;
+   private static String name = "lyf";
+
+   public void test() {
+      String book = "Java";
+      Displayable dis = () -> {
+         // 访问effective final的局部变量
+         System.out.println("book的局部变量为：" + book);
+         // 访问外部类的实例变量和类变量
+         System.out.println(age);
+         System.out.println(name);
+      };
+      dis.display();
+      System.out.println(dis.add(1, 3));
+   }
+
+   public static void main(String[] args) {
+      LambdaAndInner lambdaAndIn = new LambdaAndInner();
+      lambdaAndIn.test();
+   }
+}
+
+interface Displayable {
+   void display();
+
+   default int add(int a, int b) {
+      return a + b;
+   }
+}
+```
+
+book是一个隐式的局部变量，不允许被修改。
+
+#### lambda表达式和匿名内部类的区别
+
+- 匿名内部类可以为任意的接口创建实例。但是Lambda表达式只能为函数式接口创建实例。
+
+- 匿名内部类可以为抽象类或者普通类创建实例；但Lambda表达式只能为函数式接口创建实例。
+
+- 匿名内部类实现的抽象方法的方法体允许调用接口中定义的默认方法。但Lambda表达式的代码块不允许调用接口中定义的默认方法
+
+  - ```java
+    		Displayable dis = () -> {
+      			// 访问effective final的局部变量
+      			System.out.println("book的局部变量为：" + book);
+      			// 访问外部类的实例变量和类变量
+      			System.out.println(age);
+      			System.out.println(name);
+      			System.out.println(add(1,3)); // 报错
+      		};
+    ```
+
+### 6.8.5 使用lambda表达式调用Arrays的类方法
+
+```java
+       int[] arr2 = new int[]{3, -4, 25, 16, 30, 18};
+//    Arrays.parallelPrefix(arr2, (left, right) -> right + left);
+      Arrays.parallelPrefix(arr2, (right, left) -> left + right);
+```
+
+从左边开始做累加操作
+
+结果 [3, -1, 24, 40, 70, 88]
 
 ## 6.9 枚举类
 
@@ -4082,7 +4221,80 @@ public class TimeTest {
 
 ## 7.5 正则表达式
 
+### 7.5.1 创建正则表达式
 
+#### 正则表达式中的特殊字符
+
+$ 匹配一行的结尾
+
+^ 匹配一行的开头
+
+( ) 标记子表达式的开始和结束位置
+
+[ ] 用于确定中括号表达式的开始和结束位置
+
+{ } 用于标记子表达式前面出现频度
+
+\* 指定前面子表达式可以出现0次或者多次
+
+\+ 指定前面子表达式可以出现1次或者多次
+
+？指定前面子表达式可以出现0次或者1次
+
+. 匹配除换行符\n之外的任何单字符
+
+\ 用于转义下一个字符
+
+| 选定两项之间的任选一项
+
+#### 预定义字符
+
+\d 匹配0-9所有数字
+
+\D 匹配非数字
+
+\s 匹配所有空白字符 空格、制表符、回车符、换页符、换行符
+
+\S 匹配所有非空白字符
+
+\w 匹配所有的单词字符，包括0-9所有数字、26个英文字母
+
+\W 匹配所有的非单词字符
+
+#### 方括号表达式
+
+表示枚举 [abc] 匹配abc中任意一个字符
+
+表示范围 [a-f] 表示a-f范围内的任意字符
+
+表示求否 [^ abc 】表示非abc的任意字符
+
+表示与 [a-z && [def]] a-z的任意字符或者def的交集
+
+表示并
+
+#### 数量标识符
+
+### 7.5.2 使用正则表达式
+
+```java
+package lambda;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import static java.util.regex.Pattern.*;
+
+public class FindGroup {
+   public static void main(String[] args) {
+      String str = "37068719981013497X";
+      Matcher m = Pattern.compile("^[1-9]\\d{5}(18|19|([23]\\d))\\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\\d{3}[0-9Xx]$").matcher(str);
+      while (m.find()) {
+         System.out.println(m.group());
+      }
+   }
+}
+```
 
 ## 7.6 变量处理和方法处理
 
@@ -5011,7 +5223,7 @@ public class DiamondTest {
 }
 ```
 
-java9 允许在创建内部类的时候使用菱形语法
+java9 允许在创建匿名内部类的时候使用菱形语法
 
 ```java
 package chap9;
@@ -5046,7 +5258,7 @@ interface Foo<T>{
 }
 ```
 
-第二个匿名内部类，我们使用通配符，系统内推断的上限就是Object类型。
+第二个匿名内部类，我们使用通配符，系统内推断的上限就是Object类型。如果是继承，上限就是继承类的类型
 
 ## 9.2 深入泛型
 
@@ -5082,6 +5294,14 @@ interface Map<K,V> {
 
 泛型可以表示一个通用的类型，灵活性比较高。
 
+要注意，我们定义类的类型通配符，在构造方法中不用写对应的统配类型，但是在调用该构造器的时候可以使用。即
+
+```java
+Apple<T> apple = new Apple<>()
+```
+
+
+
 ### 9.2.2 从泛型类派生子类
 
 如果一个类定义了泛型，比如下面的类
@@ -5100,6 +5320,12 @@ public class Apple<String>{}
 
 所以List<String> 和 List<Integer> 是同一个类。
 
+**静态方法、静态初始化块或静态变量的声明和初始化不允许使用泛型参数**
+
+instanceof运算符后不能使用泛型类。
+
+
+
 ## 9.3 类型通配符
 
 Java泛型设计的原则就是只要代码在编译的时候没有出现警告，那么就不会遇到ClassCastException异常。
@@ -5110,7 +5336,244 @@ Java泛型设计的原则就是只要代码在编译的时候没有出现警告�
 
 ### 9.3.2 设定类型通配符的上限
 
-### 9.3.2 设定类型通配符的下限
+比如我们有一个父类，两个子类是继承该父类的。我们要限制这两个子类继承父类的泛型通配符，可以这样写
+
+```java
+List<? extends Shape>
+```
+
+### 9.3.3 设定类型通配符的下限
+
+比如Foo是Bar的子类，当程序需要一个A<？super Bar>的变量时，就可以将A<Foo> 或者 A<Object>赋值给A<？super Bar>类型的变量
+
+### 9.3.4 设定泛型形参的上限
+
+如果泛型需要设定多个上限，（至多可以有一个父类上限，但是可以有多个接口上限）接口上限必须位于类上限的后面。
+
+```java
+public class Apple<T extends Number & java.io.Serializable>{
+    
+}
+```
+
+
 
 ## 9.4 泛型方法
+
+### 9.4.1 定义泛型方法
+
+将Object数组的所有元素添加到一个Collection集合中
+
+如果我们的参数的泛型写的是Object类型，那么他实际上与String冲突，也就是说，String类型的没办法放到我们的集合中。还有一个问题就是<?>类型，违背了集合中不允许放入未知类型变量的设计初衷，所以才出现了泛型方法
+
+泛型方法是在声明方法的时候定义一个或者多个泛型参数
+
+```java
+修饰符 <T,S> 返回值类型 方法名(形参列表){
+
+}
+```
+
+```java
+package generic;
+
+import java.util.ArrayList;
+import java.util.Collection;
+
+public class GenericMethodTest {
+   static <T> void fromArrayTpCollection(T[] a, Collection<T> c){
+      for (T t:a){
+         c.add(t);
+      }
+   }
+
+   public static void main(String[] args) {
+      Object[] oa = new Object[100];
+      Collection<Object> co = new ArrayList<>();
+      // 下面代码中T代表Object类型
+      fromArrayTpCollection(oa,co);
+
+      String[] sa = new String[100];
+      Collection<String> cs = new ArrayList<>();
+      // 线面代码中T代表String类型
+      fromArrayTpCollection(sa,cs);
+
+      Integer[] ia = new Integer[100];
+      Float[] fa = new Float[100];
+      Number[] na = new Number[100];
+      Collection<Number> cn = new ArrayList<>();
+      //下面的T都是代表Number类型 因为Integer Float的上限都是Number
+      fromArrayTpCollection(ia,cn);
+      fromArrayTpCollection(fa,cn);
+      fromArrayTpCollection(na,cn);
+      
+   }
+}
+```
+
+方法中定义的泛型只能在该方法中使用，在接口、类声明中定义的泛型则可以在整个接口、类中使用
+
+上面的程序中，我们并没有传入实际的类型，这全靠编译器自我判断。
+
+但是如果我们一个参数是String 一个是Number，那么编译器无法判断这个T到底应该是什么类型
+
+```java
+static <T> void test(Collection<? extends T> from,Collection<T> to){
+   for (T t:from){
+      to.add(t);
+   }
+}
+	public static void main(String[] args) {
+		// String 的父类是Object
+		// String和Number没关系
+		List<String> as = new ArrayList<>();
+		List<Object> ao = new ArrayList<>();
+		test(as,ao);
+	}
+```
+
+当我们的?传入String 他的上限是Object，这样不会报错。
+
+那么什么时候使用通配符？什么时候使用泛型呢？
+
+### 9.4.2 类型通配符和泛型方法的区别
+
+先来看一下类型通配符的写法
+
+```java
+public interface Collection<E>{
+	boolean containsAll(Collection<?> c);
+	boolean addAll(Conllection<? extends E> c);
+}
+```
+
+也可以采用泛型方法的形式
+
+```java
+public interface Collection<E>{
+	<T> boolean containsAll(Collection<T> c);
+	<T extends E> boolean addAll(Conllection<T> c);
+}
+```
+
+仔细看不难发现其实是一个意思
+
+泛型方法允许泛型形参被用来表示方法的一个或者多个参数之间的类型依赖关系，或者方法返回值与参数之间的类型依赖关系。如果没有这种依赖关系，那么不应该用泛型方法。
+
+
+
+### 9.4.3 Java 7的菱形语法与泛型构造器
+
+允许构造器后使用一对尖括号来代表泛型，但是如果程序显式指定了泛型构造器中声明的泛型形参的实际类型，则不可以使用菱形语法
+
+```java
+package generic;
+
+public class GenericDiamondTest {
+   public static void main(String[] args) {
+      MyClass<String> ms = new MyClass<>("你好");
+      MyClass<String> mi = new <Integer> MyClass<String>(5);
+//    MyClass<String> m = new <Integer> MyClass<>(5);
+   }
+}
+
+class MyClass<E>{
+    public <T> MyClass(T t){
+      System.out.println("t 参数的值为：" + t);
+   }
+}
+```
+
+第二行显式指定T是Integer类型，E是String类型
+
+
+
+### 9.4.4 泛型方法与方法重载
+
+因为泛型允许设定统配符的上限，也允许设定通配符的下限，有时候就会造成歧义
+
+```java
+public static <T> void copy(Collection<T> dest,Collection<? extends T> src){
+   
+}
+
+public static <T> T copy(Collection<? super T> dest,Collection<T> src){
+
+}
+```
+
+上面的程序，如果我们这样进行传参
+
+```java
+List<Number> ln = new ArrayList<>();
+List<Integer> li = new ArrayList<>();
+copy(ln,li);
+```
+
+实际上两个方法都是可以匹配到的
+
+
+
+### 9.4.5 Java 8改进的类型推断
+
+通过调用方法的上下文推断泛型的目标类型，可以在方法的调用链中，将推断得到的泛型传递到最后一个方法
+
+```java
+MyUtil<String> ls = MyUtil.nil();
+MyUtil<String> mu = MyUtil.<String>nil();
+```
+
+上面两个是完全相同的写法，因为前面的语句能够根据后面的语句动态的获取到类型。
+
+刚才讲到，链式会以最后一个为类型判断的标准，下面这个head方法并不知道是什么类型的
+
+```java
+String s = MyUtil.nil().head();
+```
+
+写成下面的才正确
+
+```java
+String s = MyUtil.<String>nil().head();
+```
+
+
+
+## 9.5 擦除和转换
+
+### 9.5.1 擦除
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
