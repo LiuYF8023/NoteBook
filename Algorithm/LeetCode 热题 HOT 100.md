@@ -189,11 +189,130 @@ while(right < s.length()){
 return Math.max(res,right - left);
 ```
 
-# 4、两两交换链表中的节点
+# 4、寻找两个正序数组的中位数
 
-## 4.1 常规思路及代码
+## 4.1 不保证时间复杂度的情况
 
-### 4.1.1 思路
+```java
+public double findMedianSortedArrays(int[] nums1, int[] nums2) {
+   int[] res = new int[nums1.length + nums2.length];
+   int index = 0;
+   for (int i = 0; i < nums1.length; i++) {
+      res[index++] = nums1[i];
+   }
+   for (int i = 0; i < nums2.length; i++) {
+      res[index++] = nums2[i];
+   }
+   Arrays.sort(res);
+   double result = 0;
+   // 中位数如果是单数 那么就在 length / 2的位置
+   // 如果是双数 那么就在 length / 2 和 length / 2 - 1的位置
+   if (res.length % 2 != 0) {
+      result = res[res.length / 2];
+   } else {
+      result = (res[res.length / 2] + res[res.length / 2 - 1]) * 1.0 / 2;
+   }
+   return result;
+}
+```
+
+能过，但是复杂度比较高，应该是m+n+ (m+n)*log(m+n)
+
+题目要求log(m+n)
+
+## 4.2 分治思想
+
+
+
+# 5、最长回文子串
+
+## 5.1 暴力求解
+
+超时了
+
+```java
+import java.util.ArrayList;
+import java.util.HashMap;
+
+class Solution {
+   public String longestPalindrome(String s) {
+      if (s.length() == 1) {
+          return s;
+      }
+      Map<Integer, String> map = new HashMap<>();
+      for (int i = 0; i < s.length(); i++) {
+         for (int j = i + 1; j <= s.length(); j++) {
+            if (judge(s.substring(i, j))) {
+               map.put(s.substring(i, j).length(), s.substring(i, j));
+            }
+         }
+      }
+      // 找到最大的key
+      int max = 0;
+      for (Integer i : map.keySet()) {
+         if (i > max) {
+            max = i;
+         }
+      }
+      return map.get(max);
+//        System.out.println(judge("bb"));
+   }
+
+   public boolean judge(String str) {
+      String leftStr = new StringBuffer(str.substring(0, str.length() / 2)).toString();
+      String rightStr = null;
+      if (str.length() % 2 == 0) {
+         rightStr = new StringBuffer(str.substring(str.length() / 2, str.length())).reverse().toString();
+      } else {
+         rightStr = new StringBuffer(str.substring(str.length() / 2 + 1, str.length())).reverse().toString();
+      }
+      return leftStr.equals(rightStr);
+   }
+}
+//leetcode submit region end(Prohibit modification and deletion)
+```
+
+## 5.2 双指针方式
+
+我们首先外部的大循环是遍历字符串的每一个位置，同时，只要我们选定了一个位置，那么我们使用双指针向该位置的两边进行扩散，然后一直判断当前左右指针指向的值是不是一样的，不一样则退出，记录下长度。注意最长回文奇数长度和偶数长度的我们要分开进行判断
+
+```java
+class Solution {
+
+   public String longestPalindrome(String s) {
+      String res = "";
+      for (int i = 0; i < s.length(); i++) {
+         String s1 = helper(s,i,i);
+         String s2 = helper(s,i,i+1);
+         res = s1.length() > res.length() ? s1 : res;
+         res = s2.length() > res.length() ? s2 : res;
+      }
+      return res;
+   }
+
+   public String helper(String str,int left,int right){
+      while(left >= 0 && right < str.length() && str.charAt(left) == str.charAt(right)){
+         // 向两边扩散
+         left--;
+         right++;
+      }
+      // 最终返回的是当前的最长回文子串
+      // left + 1的原因是，当我们上一个对称字符判断成功，left会左移
+      // 如果此时不成功，那么应该从left的右边第一个字符开始切割，右边界正好切不到，所以是right
+      return str.substring(left + 1,right);
+   }
+
+}
+//leetcode submit region end(Prohibit modification and deletion)
+```
+
+我们来分析一下两种方法的时间复杂度，首先之前那种暴力解法，时间复杂度应该是O(n方)，使用双指针的方式，外层循环是O(n)，内层循环最大是（所有元素都比较了一次）应该是O(n/2)，所以最终相当于节省了一半的时间。因为字符串的长度是1000，也就是说之前方法的大概是在一百万级别，修改之后是在50万级别。
+
+# 24、两两交换链表中的节点
+
+## 24.1 常规思路及代码
+
+### 24.1.1 思路
 
 既然要求两两交换，并且不能修改节点的值，例如1-2-3-4-5，那么我们把这个链表拆分为两个链,1-3-5和2-4，然后再按照先遍历2-4的一个，再遍历1-3-5的一个，串起来即可。
 

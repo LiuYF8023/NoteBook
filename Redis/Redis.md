@@ -1249,14 +1249,399 @@ st1中tom和st2中tom分数不一样，但交集还是有tom。所以比较的�
 
 ## **3、Redis的Java客户端**
 
+### 3.1 Jedis
+
+#### 3.1.1 引入依赖
+
+```xml
+<!-- https://mvnrepository.com/artifact/redis.clients/jedis -->
+<dependency>
+    <groupId>redis.clients</groupId>
+    <artifactId>jedis</artifactId>
+    <version>4.3.1</version>
+</dependency>
+```
+
+#### 3.1.2 建立连接
+
+```java
+	@Before
+	public void setUp() throws Exception {
+		// 建立连接
+		jedis = new Jedis("192.168.26.128", 6379);
+
+		// 设置密码
+		jedis.auth("qwer");
+
+		// 选择库
+		jedis.select(0);
+
+	}
+```
+
+#### 3.1.3 插入获取数据
+
+```java
+	@Test
+	public void test() {
+		// 测试String
+		// 插入数据
+		String result = jedis.set("name", "张三");
+		System.out.println("result = " + result);
+
+		// 获取数据
+		String name = jedis.get("name");
+		System.out.println("name = " + name);
+	}
+```
+
+#### 3.1.4 释放资源
+
+```java
+@After
+public void tearDown() throws Exception {
+   // 释放资源
+   if (jedis != null){
+      jedis.close();
+   }
+}
+```
+
+### 3.2 Jedis连接池
+
+Jedis本身是线程不安全的，频繁的创建和销毁连接会造成性能损耗，因此使用Jedis连接池代替之前的连接方式
+
+#### 3.2.1 Jedis连接池配置类
+
+```java
+package com.itheima.jedis.util;
+
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
+import redis.clients.jedis.JedisPoolConfig;
+
+import java.time.Duration;
+
+public class JedisConnectionFactory {
+   public static final JedisPool jedisPool;
+
+   static {
+      JedisPoolConfig jedisPoolConfig = new JedisPoolConfig();
+      // 最大连接
+      jedisPoolConfig.setMaxTotal(8);
+      // 最大空闲连接
+      jedisPoolConfig.setMaxIdle(8);
+      // 最小空闲连接
+      jedisPoolConfig.setMinIdle(0);
+
+      // 设置等待时长 ms
+      Duration duration = Duration.ofSeconds(2);
+      jedisPoolConfig.setMaxWait(duration);
+
+      // 创建连接池对象
+      jedisPool = new JedisPool(jedisPoolConfig, "192.168.26.128", 6379, 1000, "qwer");
+   }
+   // 获取 jedis对象
+   public static Jedis getJedis(){
+      return jedisPool.getResource();
+   }
+}
+```
+
+### 3.2 Spring Data Redis
+
+![image-20230227211023215](pictures/image-20230227211023215.png)
+
+
+
+Jedis不支持数据序列化和反序列化
+
+#### 3.2.1 常用API
+
+![image-20230227211445889](pictures/image-20230227211445889.png)
+
+其返回的对象就是对于各种类型的操作。
+
+#### 3.2.2 快速入门
+
+##### 1）引入依赖
+
+```xml
+<!--        Redis依赖-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
+
+<!--        连接池依赖-->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-pool2</artifactId>
+        </dependency>
+```
+
+##### 2）配置文件
+
+```yaml
+spring:
+  redis:
+    host: 192.168.26.128
+    port: 6379
+    password: qwer
+    lettuce:
+      pool:
+        max-active: 8 # 最大连接
+        max-idle: 8 # 最大空间连接
+        min-idle: 0 # 最小空闲连接
+        max-wait: 100 # 连接等待时间
+```
+
+##### 3）注入RedisTemplate
+
+```java
+@Autowired
+private RedisTemplate redisTemplate;
+```
+
+最好加上泛型
+
+```java
+@Autowired
+private RedisTemplate<String,String> redisTemplate;
+```
+
+##### 4）编写测试
+
+```java
+@Test
+void RedisTest() {
+   // 插入数据
+   redisTemplate.opsForValue().set("name","李四");
+   // 读取一条String类型的数据
+   Object name = redisTemplate.opsForValue().get("name");
+   System.out.println("name = " + name);
+}
+```
+
+
+
+#### 3.2.3 配置RedisConfig进行序列化和反序列化
+
+注意在redis数据库中，保存的是16进制，难道还加密了？
+
+![image-20230227213121126](pictures/image-20230227213121126.png)
+
+实际上是底层被ObjectOutputString序列化了。
+
+我们需要重新定义一下RedisTemplate
+
+```java
+@Configuration
+public class RedisConfig {
+   @Bean
+   public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory redisConnectionFactory) {
+      // 创建RedisTemplate对象
+      RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
+      // 设置连接工厂
+      redisTemplate.setConnectionFactory(redisConnectionFactory);
+      // 创建JSON序列化工具
+      GenericJackson2JsonRedisSerializer jsonRedisSerializer = new GenericJackson2JsonRedisSerializer();
+      // 设置Key的序列化
+      redisTemplate.setKeySerializer(RedisSerializer.string());
+      redisTemplate.setHashKeySerializer(RedisSerializer.string());
+      // 设置Value的序列化
+      redisTemplate.setValueSerializer(jsonRedisSerializer);
+      redisTemplate.setHashValueSerializer(jsonRedisSerializer);
+      // 返回
+      return redisTemplate;
+   }
+}
+```
+
+上面的代码首先自己定义了RedisTemplate对象，然后将其连接到我们的工厂。之后针对key和value分别使用不同的序列化工具进行序列化，这里key使用RedisSerialize.string()序列化工具。而value使用的是json序列化工具。
+
+
+
+尝试添加实体类到Redis中
+
+```java
+@Test
+void testSaveUser() {
+   // 写入数据
+   redisTemplate.opsForValue().set("user:100",new User("虎哥",21));
+   // 获取数据
+   redisTemplate.opsForValue().get("user:100");
+
+}
+```
+
+结果，并且是JSON风格，因为我们使用JSON对于value进行了序列化。
+
+```java
+{
+  "@class": "com.itheima.redis.pojo.User",
+  "name": "虎哥",
+  "age": 21
+}
+```
+
+#### 3.2.4 使用StringRedisTemplate完成手动序列化和反序列化
+
+##### 1）操作实体类对象
+
+为了节省内存，统一使用String序列化器，要求只能存储String类型的key和value，那么如果想存储对象，那么只能手工完成对象的序列化和反序列化。
+
+Spring默认提供了StringRedisTemplate类，其key和value的序列化方法默认就是String，那么我们就不用再去配置RedisTemplate这个配置类了
+
+ObjectMapper是一个序列化工具，也有其他的序列化工具，比如fastjson。
+
+```java
+// JSON 工具
+public static final ObjectMapper mapper = new ObjectMapper();
+```
+
+```java
+@Test
+void testStringRedisTemplate() throws JsonProcessingException {
+   // 准备对象
+   User user = new User("虎哥哥",29);
+   // 手动序列化
+   String jsonStr = mapper.writeValueAsString(user);
+   // 手写一条数据到Redis
+   stringRedisTemplate.opsForValue().set("user:200",jsonStr);
+   // 读取数据
+   String val = stringRedisTemplate.opsForValue().get("user:200");
+
+   // 反序列化
+   User user200 = mapper.readValue(val,User.class);
+   System.out.println("user200" + user200);
+}
+```
+
+![image-20230227221153362](pictures/image-20230227221153362.png)
+
+能够节省不少空间
+
+
+
+##### 2）操作Hash
+
+```java
+@Test
+void testHash() {
+   stringRedisTemplate.opsForHash().put("user:400","name","虎哥");
+   stringRedisTemplate.opsForHash().put("user:400","age","13");
+
+   Map<Object, Object> entries = stringRedisTemplate.opsForHash().entries("user:400");
+   System.out.println("entries = " + entries);
+}
+```
+
+![image-20230227221941413](pictures/image-20230227221941413.png)
+
 
 
 # **二、Redis实战**
 
-## 2.1 黑马实战项目
+## 2.1 短信登录功能
+
+### 2.1.1 导入黑马点评项目
+
+数据库的表，直接用hmfp.sql这个脚本文件生成。
+
+![image-20230228210959705](pictures/image-20230228210959705.png)
+
+项目的架构
+
+![image-20230228212032575](pictures/image-20230228212032575.png)
+
+前端部署在Nginx，后端部署在tomcat上，实现前后端分离。前端通过Nginx向后端请求，然后在后端查询数据并反馈给前端。
+
+### 2.1.2 项目结构
+
+![image-20230228223245005](pictures/image-20230228223245005.png)
+
+### 2.1.3 **基于Session实现短信验证码登录**
+
+![image-20230228223802535](pictures/image-20230228223802535.png)
 
 
 
 # **三、Redis高级**
 
 # **四、Redis原理**
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

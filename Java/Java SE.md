@@ -5543,27 +5543,385 @@ String s = MyUtil.<String>nil().head();
 
 ### 9.5.1 擦除
 
+当我们把一个Apple<>泛型对象的返回值赋给一个Apple时，Apple的对象只知道他的类型是Number，如果我们想将其赋值给别的类型，就会报错
+
+```java
+package generic;
+
+public class ErasureTest {
+   public static void main(String[] args) {
+      Apple<Number> a = new Apple<>();
+      Apple b = a;
+      Number bb = b.getSize();
+      Integer cc = b.getSize(); 报错！！！！
+   }
+}
+
+class Apple<T extends Number> {
+   T size;
+
+   public Apple() {
+
+   }
+
+   public Apple(T size) {
+
+   }
+
+   public T getSize() {
+      return size;
+   }
+
+   public void setSize(T size) {
+      this.size = size;
+   }
+}
+```
+
+同样的逻辑，如果是List<String> 
+
+### 9.5.2 转换
+
+```java
+public class ErasureTest2 {
+   public static void main(String[] args) {
+      List<Integer> li = new ArrayList<>();
+      li.add(6);
+      li.add(9);
+      List list = li;
+      List<String> ls = list;
+      System.out.println(ls.get(0));
+   }
+}
+```
+
+下面这段程序只有在输出的时候会进行报错
+
+![image-20230227155349209](pictures/image-20230227155349209.png)
+
+List list = li; 这句赋值的时候，已经丢失了原有的泛型信息，Java又是允许把List对象赋给一个List类型的变量，所以程序可以编译通过，但是运行的时候实际上是把String类型的赋值到Integer类型的集合中，所以会报错。
+
+
+
+### 9.6 泛型与数组
+
+不允许创建下面这两种泛型集合对象
+
+```java
+List<String> lsa = new ArrayList<String>[10]
+```
+
+```java
+List<String> lsa = new ArrayList[10];
+```
+
+因为 他们都会在转型的过程中丢失类型，导致赋值给别的类型集合的时候出现运行时异常。（编译器很难检查出错误）
+
+但是下面的写法是允许的
+
+```java
+List<?>[] lsa = new ArrayList<?>[10];
+```
+
+返回泛型类型的数组也不被允许
+
+```java
+return new T[coll.size()];
+```
 
 
 
 
 
+# 第十章 异常处理
+
+异常分为两种：Checked异常和Runtime异常
+
+Checked异常必须处理，Runtime异常无需处理。
+
+## 10.1 异常概述
+
+不能仅仅做“对”的事情，更要做的全面
+
+## 10.2 异常处理机制
+
+程序运行过程中出现意外，系统自动生成一个Exception对象来同时程序。
+
+### 10.2.1 使用try catch捕获异常
+
+try代码块中负责抛出异常，catch代码块负责捕获不同的异常
+
+### 10.2.2 异常类的继承体系
+
+<img src="pictures/image-20230228141210105.png" alt="image-20230228141210105" style="zoom: 50%;" />
+
+非正常情况分为两类
+
+- Error 指与虚拟机相关的问题，例如系统崩溃、虚拟机错误、动态链接失败等，这种错误无法捕获、无法恢复
+- Exception 指程序出现的异常，可以被捕获
 
 
 
+异常捕获的时候，先捕获小异常，再捕获大异常。
 
 
 
+### 10.2.3 Java7新增的多异常捕获
+
+使用一个catch块捕获多个异常
+
+- 中间用|分隔
+- 异常变量有隐式的final修饰，因此程序不能对异常变量进行重新赋值
+
+```java
+package annotation;
+
+public class MultiExceptionTest {
+   public static void main(String[] args) {
+      try {
+         int a = Integer.parseInt(args[0]);
+         int b = Integer.parseInt(args[1]);
+         int c = a / b;
+         System.out.println("c = " + c);
+      } catch (IndexOutOfBoundsException | NumberFormatException | ArithmeticException e) {
+         System.out.println("发生了数组越界、数字格式异常、算数异常之一");
+//       e = ArithmeticException("test"); 错误
+      } catch (Exception e) {
+         System.out.println("未知异常");
+         e = new RuntimeException("test");
+      }
+
+   }
+}
+```
 
 
 
+### 10.2.4 异常访问信息
+
+异常对象的常用方法
+
+- getMassage 返回该异常的详细描述字符串
+- printStackTrace 将该异常的跟踪栈信息输出到标准错误输出
+- printStackTrace(PrintAStream s) 将该异常的跟踪栈信息输出到指定输出流
+- getStackTrace 返回该异常的跟踪栈信息
+
+```java
+public static void main(String[] args) {
+   try {
+      FileInputStream fis = new FileInputStream("a.txt");
+   } catch (IOException e) {
+      System.out.println(e.getMessage());
+      e.printStackTrace();
+   }
+}
+```
+
+![image-20230228143325813](pictures/image-20230228143325813.png)
 
 
 
+### 10.2.5 使用finally回收资源
 
+finally回收的是一些物理资源，而JVM的垃圾回收机制不会回收任何物理资源，其回收的是堆内存中对象所占用的内存。
 
+catch和finally都是可选的
 
+注意如果再finally块中定义的return或者throw语句，将会导致try、catch中的return throw失效
 
+```java
+public class FinallyFlowTest {
+   public static void main(String[] args) {
+      boolean a = test();
+      System.out.println(a);
+   }
+
+   public static boolean test() {
+      try{
+         return true;
+      }finally {
+          return false;
+      }
+   }
+}
+```
+
+输出结果是false
+
+因为try中的return并不会立即终止方法，而是去finally执行。如果finally中也有return  throw 那么方法会彻底停止
+
+### 10.2.6 异常处理的嵌套
+
+通常情况下不要超过两层嵌套
+
+### 10.2.7 Java9增强的自动关闭资源的try语句
+
+java9中允许在try后面跟一对小括号，小括号中的内容是必须关闭的资源，这样就可以避免书写繁琐的finally。
+
+前提是被关闭的资源必须都实现了AutoCloseable或者Closeable接口。其中
+
+- Closeable是AutoCloseable的子接口，Closeable接口的close方法声明抛出了IOException，因此只能抛出IOException或其子类。
+- AutoCloseable中可以抛出任何异常，因为他接口里的方法声明抛出了Exception
+
+```java
+public class AutocloseTest {
+   public static void main(String[] args) throws IOException {
+      try (
+            BufferedReader br = new BufferedReader(new FileReader("AutoCloseTest.java"));
+            PrintStream ps = new PrintStream(new FileOutputStream("a.txt"))
+      ) {
+         System.out.println(br.readLine());
+         ps.println("aksfka");
+      }
+   }
+}
+```
+
+并且再次增强，只需要将资源的对象放到括号内，他们之间用分号分隔。**前提是资源需要被final修饰**
+
+```java
+public class AutocloseTest {
+   public static void main(String[] args) throws IOException {
+      final BufferedReader br = new BufferedReader(new FileReader("AutoCloseTest.java"));
+      PrintStream ps = new PrintStream(new FileOutputStream("a.txt"))
+      try (br;ps) {
+         System.out.println(br.readLine());
+         ps.println("aksfka");
+      }
+   }
+}
+```
+
+## 10.3 Checked异常和Runtime异常体系
+
+只有java中有Checked异常
+
+Checked异常如果知道怎么处理，就应该在catch代码块中进行处理，但是大部分情况是不知道怎么处理的，所以一般都是抛出异常。
+
+### 10.3.1 使用throws声明抛出异常
+
+throws声明抛出异常只在方法签名中使用，并且这种抛出异常的方法与try catch是不共存的
+
+如果我们在某段代码中调用了一个带throws声明的方法，那么我们需要用try catch获取这段代码，或者在这段代码所在的方法中throws异常。
+
+```java
+package annotation;
+
+import java.io.FileInputStream;
+
+public class ThrowsTest2 {
+   public static void main(String[] args) throws Exception {
+      test();
+      // 或者是
+      try{
+      	test();
+      }catch{
+      	...
+      }
+   }
+
+   public static void test() throws Exception{
+      FileInputStream fis = new FileInputStream("a.txt");
+   }
+}
+```
+
+### 10.3.2 方法重写时声明抛出异常的机制
+
+子类方法声明抛出的异常应该是父类方法抛出异常类型的**子类或者相同**
+
+比如子类继承父类的方法，父类方法中抛出的是IOException，子类如果想要抛出Exception，就会报错。
+
+## 10.4 使用throw抛出异常
+
+throw是在方法中使用的，是自己抛出的异常
+
+### 10.4.1 抛出异常
+
+某些异常是我们程序员自己抛出的异常，其抛出的应该是异常实例，而且每次只能抛出一个异常。
+
+并且throw抛出的异常如果是Checked异常，那么可以位于try或者带throws的方法中
+
+如果抛出的是runtime异常，那么可以在任何合适的地方抛出异常
+
+### 10.4.2 自定义异常类
+
+```java
+package annotation;
+
+public class AuctionException extends Exception{
+   public AuctionException(){
+      
+   }
+   
+   public AuctionException(String message) {
+       super(message);
+   }
+}
+```
+
+### 10.4.3 catch和throw同时使用
+
+```java
+public void bid(String bidPrice) throws AuctionException {
+   double d = 0.0;
+   try {
+       d = Double.parseDouble(bidPrice);
+   }catch (Exception e){
+      e.printStackTrace();
+      throw new AuctionException(".....");
+   }
+}
+```
+
+在main函数中，由于在bid中throw了这个异常，所以在main函数还可以捕获到这个异常
+
+### 10.4.4 Java7增强的throw语句
+
+Java7对于throw给出更为严格的检查
+
+```java
+package annotation;
+
+import java.io.FileInputStream;
+
+public class ThrowTest2 {
+   public static void main(String[] args) throws Exception {
+      try{
+         new FileInputStream("a.txt");
+      }catch (Exception e){
+         e.printStackTrace();
+         throw e;
+      }
+   }
+}
+```
+
+比如上面这个只会抛出FileNotFoundException，所以还可以这样写
+
+```java
+package annotation;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+
+public class ThrowTest2 {
+   public static void main(String[] args) throws FileNotFoundException {
+      try{
+         new FileInputStream("a.txt");
+      }catch (Exception e){
+         e.printStackTrace();
+         throw e;
+      }
+   }
+}
+```
+
+### 10.4.5 异常链
+
+在真实的业务中，往往不希望把底层的异常传递到用户界面，所以我们需要把原始的异常信息交给管理员，而给用户展示的是我们经过处理之后的简单易懂的信息。
+
+## 10.5 Java的异常跟踪栈
 
 
 
