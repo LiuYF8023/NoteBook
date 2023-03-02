@@ -308,6 +308,173 @@ class Solution {
 
 我们来分析一下两种方法的时间复杂度，首先之前那种暴力解法，时间复杂度应该是O(n方)，使用双指针的方式，外层循环是O(n)，内层循环最大是（所有元素都比较了一次）应该是O(n/2)，所以最终相当于节省了一半的时间。因为字符串的长度是1000，也就是说之前方法的大概是在一百万级别，修改之后是在50万级别。
 
+# 11、盛水最多的容器
+
+## 11.1 思路及代码
+
+### 11.1.1 贪心
+
+把所有的情况能够盛的水都计算一遍就行了
+
+```java
+class Solution {
+   public int maxArea(int[] height) {
+      int max = 0;
+      for (int i = 0; i < height.length; i++) {
+         for (int j = i + 1; j < height.length; j++) {
+            // 计算长度
+            int x = j - i;
+            int y = Math.min(height[i], height[j]);
+            if (x * y > max) {
+               max = x * y;
+            }
+         }
+      }
+      return max;
+   }
+}
+//leetcode submit region end(Prohibit modification and deletion)
+```
+
+果然，超时了
+
+### 11.1.2 双指针 移动较低的一边
+
+```java
+public int maxArea(int[] height) {
+      int left = 0;
+      int right = height.length - 1;
+      int area = 0;
+      while(left < right){
+         // 计算当前的面积
+         int areaTemp = (right - left) * Math.min(height[left],height[right]);
+         if(areaTemp > area){
+            area = areaTemp;
+         }else {
+            // 移动指针 移动较小的那个，因为面积取决于较小的高度
+            if(height[left] < height[right]){
+               left++;
+            }else {
+               right--;
+            }
+         }
+      }
+      return area;
+   }
+```
+
+
+
+# 15、三数之和
+
+## 15.1 思路与代码
+
+### 15.1.1 思路
+
+我们需要先对数组进行排序。
+
+我们循环遍历整个数字，取出当前位置作为基准，然后在后面的去找两个值，使其保证和为0
+
+left = i + 1 
+
+right = len - 1
+
+如果找到了三个值，他们的和为0，那么我们先把他们加入到res中。之前我们需要判断i所在位置是不是重复的，比如
+
+-4 -1 -1 0 1 2 这种，两个-1 找出的结果是一样的，没有必要重复添加
+
+然后我们需要判断的是，例如-2 0 0 2 2 这种，如果nums[left] == nums[left + 1]是一样的，那么没必要继续加入结果集，同理nums[right] == nums[right - 1] 这种的也不需要加入结果集，我们直接移动左右指针进行跳过。
+
+然后我们继续收缩左右指针即可。
+
+### 15.1.2 代码
+
+```java
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+//leetcode submit region begin(Prohibit modification and deletion)
+class Solution {
+   public List<List<Integer>> threeSum(int[] nums) {
+      // 特殊情况
+      // 如果排序之后，最小值都是0 那么一定数组全是0
+      List<List<Integer>> res = new ArrayList<>();
+      Arrays.sort(nums);
+
+      for (int i = 0; i < nums.length; i++) {
+         if (nums[i] > 0) { // 如果当前的数字大于0，那么通过之后的一定组合不成三数之和等于0
+            break;
+         }
+         if (i > 0 && nums[i] == nums[i - 1]) { // 相当于重复的
+            continue;
+         }
+         int left = i + 1;
+         int right = nums.length - 1;
+         while (left < right) {
+            int sum = nums[i] + nums[left] + nums[right];
+            if (sum == 0) {
+               res.add(Arrays.asList(nums[i], nums[left], nums[right]));
+               while (left < right && nums[left] == nums[left + 1]) {
+                  left++;
+               }
+               while (left < right && nums[right] == nums[right - 1]) {
+                  right--;
+               }
+               left++;
+               right--;
+            } else if (sum < 0) {
+               left++;
+            } else if (sum > 0) {
+               right--;
+            }
+         }
+      }
+      return res;
+   }
+}
+//leetcode submit region end(Prohibit modification and deletion)
+```
+
+
+
+# 20、有效的括号
+
+## 20.1 思路及代码
+
+### 20.1.1 思路
+
+使用一个栈进行匹配处理，匹配上的就出栈，最终看栈是否为空，不为空说明有的没正确匹配。
+
+### 20.1.2 代码
+
+```java
+class Solution {
+    public boolean isValid(String s) {
+        // 先处理一下字符串
+        Stack<Character> stack = new Stack<>();
+        for (int i = 0; i < s.length(); i++) {
+            if(!stack.empty()){
+                if(stack.peek().equals('(') && s.charAt(i) == ')' ||
+                        stack.peek().equals('[') && s.charAt(i) == ']' ||
+                        stack.peek().equals('{') && s.charAt(i) == '}'
+                  ){
+                    stack.pop();
+                }else {
+                    stack.push(s.charAt(i));
+                }
+            }else {
+                stack.push(s.charAt(i));
+            }
+        }
+
+        return stack.empty();
+    }
+}
+```
+
+
+
 # 24、两两交换链表中的节点
 
 ## 24.1 常规思路及代码
@@ -315,6 +482,8 @@ class Solution {
 ### 24.1.1 思路
 
 既然要求两两交换，并且不能修改节点的值，例如1-2-3-4-5，那么我们把这个链表拆分为两个链,1-3-5和2-4，然后再按照先遍历2-4的一个，再遍历1-3-5的一个，串起来即可。
+
+
 
 
 
