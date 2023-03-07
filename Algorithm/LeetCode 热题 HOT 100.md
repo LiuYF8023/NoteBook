@@ -481,7 +481,33 @@ class Solution {
 
 ### 24.1.1 思路
 
-既然要求两两交换，并且不能修改节点的值，例如1-2-3-4-5，那么我们把这个链表拆分为两个链,1-3-5和2-4，然后再按照先遍历2-4的一个，再遍历1-3-5的一个，串起来即可。
+对于只给首节点的，我们最好给他加上一个头结点
+
+编程的细节上还要注意，如果我们new ListNode()，那么这个时候是创建了一个节点，如果我们只是进行赋值，比如ListNode temp  = pre; 那么这个temp表示的是指向这个节点的指针。
+
+### 24.1.2 代码
+
+```java
+class Solution {
+	public ListNode swapPairs(ListNode head) {
+		// 定义头结点
+		ListNode pre = new ListNode(0);
+		pre.next = head;
+
+		ListNode temp = pre;
+		// 这个temp 是指向pre头节点的
+		while (temp.next != null && temp.next.next != null) {
+		    ListNode start = temp.next;
+		    ListNode end = temp.next.next;
+			temp.next = end;
+			start.next = end.next;
+			end.next = start;
+			temp = start;
+		}
+		return pre.next;
+	}
+}
+```
 
 
 

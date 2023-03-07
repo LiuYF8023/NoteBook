@@ -6156,3 +6156,233 @@ public class Test {
 
 # 第十八章 类加载机制与反射
 
+## 18.1 类的加载、连接和初始化
+
+### 18.1.1 JVM和类
+
+当调用java命令运行某个Java程序时，该命令将会启动一个Java虚拟机进程，同一个JVM的所有线程、变量都处于一个进程里。
+
+JVM被终止的情况
+
+- 程序运行到最后正常结束
+- 程序运行到System.exit() 或 Runtime.getRuntime().exit()
+- 程序运行过程中遇到未捕获的异常或者错误
+- 程序所在平台强制结束JVM进程。
+
+### 18.1.2 类的加载
+
+类加载（类初始化）过程：加载、连接、初始化
+
+类加载是指将类的class文件读入内存，并为之创建一个java.lang.Class对象。
+
+开发者可以通过继承ClassLoader创建自己的类加载器
+
+加载类的二进制数据的不同来源
+
+- 本地文件系统加载class文件
+- jar包加载class文件
+- 网络加载class文件
+- 把一个Java源文件动态编译，并执行加载
+
+
+
+### 18.1.3 类的连接
+
+类被加载之后，就会生成一个Class对象，并进入连接阶段，这个阶段负载把类的二进制数据整合到JRE中
+
+- 验证：验证加载的类是否结构正确
+- 准备：类准备阶段负责为类的类变量分配内存
+- 解析：将类的二进制数据中的符号引用替换成直接引用
+
+### 18.1.4 类的初始化
+
+主要是对类变量进行初始化。
+
+- 声明类变量时指定初始值
+- 使用静态初始化块为类变量指定初始值
+
+初始化的过程
+
+- 当前类先加载并连接
+- 如果其直接父类没有被加载，则先加载其直接父类。同样道理，直接父类的直接父类没有被加载，那么先加载直接父类的直接父类
+- 类中的初始化语句，系统依次执行
+
+
+
+### 18.1.5 类初始化的时机
+
+系统初始化类或接口的时机
+
+- 创建类的实例：new、反射 、反序列化
+- 调用类的类方法
+- 访问类或接口的类变量，或者赋值
+- 使用反射方式强制创建某个类或者接口对应的java.lang.Class对象
+- 初始化某个类的子类
+- 使用java.exe 运行某个主类
+
+
+
+一段程序来看加载和初始化的区别
+
+```java
+package Reflection;
+
+class Tester{
+   static {
+      System.out.println("Tester类的静态初始化块");
+   }
+}
+public class ClassLoaderTest {
+   public static void main(String[] args) throws ClassNotFoundException {
+      ClassLoader cl = ClassLoader.getSystemClassLoader();
+      cl.loadClass("Reflection.Tester");
+      System.out.println("===========分割线=============");
+      Class.forName("Reflection.Tester");
+   }
+}
+```
+
+使用ClassLoader并不会进行类的初始化，Class.forName可以进行类的初始化，所以在分隔符之后才输出
+
+![image-20230302150851748](pictures/image-20230302150851748.png)
+
+## 18.2 类加载器
+
+### 18.2.1 类加载机制
+
+负责将.class文件加载到内存中，并为之生成对应的java.lang.Class对象。
+
+载入到JVM的类有一个唯一的标识（全限定类名（包括包名和类名）），但是在JVM中，一个类使用全限定类名和类加载器作为唯一标识（类名、包名、类加载器）
+
+当JVM启动的时候，会形成由三个类加载器组成的初始类加载器层次结构
+
+- Bootstrap ClassLoader：根类加载器（类加载器）负责加载Java的核心类，当执行java.exe 时，使用-D 可以执行加载附加的类
+- Extension ClassLoader：扩展类加载器
+- System ClassLoader：系统类加载器
+
+JVM的类加载机制主要有三种
+
+- 全盘负责：当一个类加载器负责加载某个Class时，该Class所依赖的和引用的其他Class也将由该类加载器负责载入。除非是显式声明。
+- 父类委托：先让父类加载器试图加载Class，只有在父类加载器无法加载该类时才尝试从自己的类路径中加载该类。（并不是类继承上的父子关系）
+- 缓存机制：缓存机制保证所有加载过的Class都会被缓存。
+
+```java
+package Reflection;
+
+import java.io.IOException;
+import java.net.URL;
+import java.util.Enumeration;
+
+public class ClassLoaderProTest {
+
+   public static void main(String[] args) throws IOException {
+      ClassLoader cl = ClassLoader.getSystemClassLoader();
+      System.out.println("系统类加载器：" + cl);
+
+      Enumeration<URL> eml = cl.getResources("");
+      while (eml.hasMoreElements()){
+         System.out.println(eml.nextElement());
+      }
+      // 获取系统类加载器的父类加载器，得到扩展类加载器
+      ClassLoader cl2 = cl.getParent();
+      System.out.println("扩展类加载器" + cl2);
+      System.out.println("扩展类加载器的加载路径" + System.getProperty("java.ext.dirs"));
+      System.out.println("扩展类加载器的parent：" + cl2.getParent());
+   }
+}
+```
+
+![image-20230302160045885](pictures/image-20230302160045885.png)
+
+系统类的加载路径是程序运行的当前路径
+
+类加载器加载Class的过程
+
+1. 当前Class是否载入过，有的话直接进入8
+2. 父类加载器不存在，调到第四步，父类加载器存在进入第三步
+3. 请求使用父类加载器去载入目标类，载入成功进入8，否则执行5
+4. 请求使用根类加载器来载入目标类，成功则跳入8，否在跳入7
+5. 当前类加载器尝试寻找Class文件，如果找到执行6，否则跳入7
+6. 从文件中加载Class，成功后跳入8
+7. 抛出ClassNotFoundException
+8. 返回java.lang.class对象
+
+
+
+### 18.2.2 创建并使用自定义的类加载器
+
+通常来说我们重写findClass方法，因为loadClass方法的实现比较复杂，loadClass的步骤如下
+
+- findLoadedClass 方法检查是否已经加载过类，如果加载了则直接返回
+- 父类加载器上调用loadClass方法，如果父类加载器为null，则调用根类加载器
+- 调用findClass方法
+
+下面的例子在加载类之前先编译该类的源文件，从而实现Java之前先编译该程序的目标，可以通过ClassLoader直接运行Java源文件
+
+
+
+### 18.2.3 URLClassLoader
+
+
+
+### 18.3 通过反射查看类信息
+
+编译时根本无法预知该对象和类可能输入哪些类，程序只依靠运行时信息来发现该对象和类的真实信息，就必须使用反射。
+
+### 18.3.1 获取Class对象
+
+获取Class对象的三种方式
+
+- 使用Class类的forName静态方法，传入的参数应该是某个类的全限定类名（完成包名）
+- 调用某个对象的class属性获取类对应的Class对象，例如Person.class会返回Person类对应的Class对象
+- 调用对象的getClass方法，所有的Java对象都可以调用该方法，该方法会返回该对象所属类对应的Class对象
+
+第二种更有优势
+
+- 编译阶段就可以检查要访问的Class对象是否存在
+- 无需调用方法，性能高
+
+
+
+### 18.3.2 从Class中获取信息
+
+可以获取构造器、方法、成员变量、注解等等
+
+案例
+
+
+
+### 18.3.3 Java8新增的方法参数反射
+
+
+
+## 18.6 反射和泛型
+
+在反射中使用泛型，可以避免使用反射生成的对象需要强制类型转换
+
+### 18.6.1 泛型和Class类
+
+```java
+package Reflection;
+
+import java.util.Date;
+
+public class ObjectFactory {
+   public static <T> T getInstance(Class<T> cls){  // <T> 表示泛型方法 T 是返回值类型 Class<T> cls 传入的类型可以是泛型
+      try {
+         return cls.newInstance();
+      } catch (InstantiationException e) {
+         throw new RuntimeException(e);
+      } catch (IllegalAccessException e) {
+         throw new RuntimeException(e);
+      }
+   }
+
+   public static void main(String[] args) {
+      Date d = ObjectFactory.getInstance(Date.class);
+   }
+}
+```
+
+通过定义泛型，可以避免强制类型转换
+
